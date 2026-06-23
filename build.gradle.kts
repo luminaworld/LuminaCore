@@ -13,6 +13,9 @@ repositories {
 dependencies {
     compileOnly("io.papermc.paper:paper-api:26.1.2.build.+")
     compileOnly("org.apache.logging.log4j:log4j-core:2.20.0")
+    
+    implementation("org.jetbrains.kotlin:kotlin-stdlib:2.3.0")
+    implementation("org.jetbrains.kotlin:kotlin-reflect:2.3.0")
 }
 
 kotlin {
@@ -33,4 +36,13 @@ tasks.withType<JavaCompile> {
 
 tasks.withType<ProcessResources> {
     filteringCharset = "UTF-8"
+}
+
+tasks.jar {
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+    
+    from(configurations.runtimeClasspath.get().map { if (it.isDirectory) it else zipTree(it) }) {
+        exclude("META-INF/*.SF", "META-INF/*.DSA", "META-INF/*.RSA")
+        exclude("META-INF/MANIFEST.MF")
+    }
 }

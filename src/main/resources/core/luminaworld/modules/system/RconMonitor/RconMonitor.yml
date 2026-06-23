@@ -1,22 +1,24 @@
-# -------------------------------------------------------------
-# RCON Monitor - Module Configuration
-# -------------------------------------------------------------
-
-# Module Settings
+# =========================================================================
+# RconMonitor (ระบบเฝ้าระวังและตรวจสอบการเชื่อมต่อ RCON)
+# คำอธิบาย: ระบบความปลอดภัยขั้นสูงสำหรับดูแลความปลอดภัยของเซิร์ฟเวอร์
+# โดยจะทำการเฝ้าระวังและดักฟังการล็อกอินเข้าสู่ระบบ RCON (Remote Console) จากภายนอก
+# รวมถึงตรวจสอบคำสั่งต่างๆ ที่สั่งรันผ่าน RCON และทำรายงานส่งตรงไปที่ Discord Webhook ทันที
+# เพื่อป้องกันการแฮกหรือควบคุมเซิร์ฟเวอร์โดยผู้ไม่หวังดี
+# =========================================================================
 settings:
   enabled: true
   
-  # Send webhook when RCON login detected
+  # ส่งรายงานไป Discord ทันทีเมื่อมีการล็อกอินเข้า RCON
   notify-login: true
   
-  # Send webhook when command is executed via RCON
+  # ส่งรายงานไป Discord ทันทีเมื่อมีการใช้คำสั่งผ่าน RCON
   notify-command: true
   
-  # Dedicated Discord Webhook URL for Rcon monitoring
-  # (If empty, it falls back to shared webhook URL in config.yml)
+  # ลิงก์ Discord Webhook เฉพาะสำหรับการเฝ้าระวัง RCON
+  # (หากปล่อยว่างไว้ จะกลับไปใช้ Webhook URL หลักที่ระบุใน config.yml)
   discord-webhook-url: ""
   
-  # Warning message printed to Console (Customizable)
+  # ข้อความเตือนที่แสดงบนหน้าจอคอนโซลเซิร์ฟเวอร์
   console-warning: "[LuminaCore] RCON Login detected from IP: %ip%"
 
 # When someone logs into RCON

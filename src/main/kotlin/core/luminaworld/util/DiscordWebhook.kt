@@ -35,14 +35,13 @@ class DiscordWebhook(val url: String) {
         // ใช้ AsyncScheduler ของ Folia เสมอ
         Bukkit.getAsyncScheduler().runNow(plugin) { _ ->
             try {
-                val client = HttpClient.newHttpClient()
                 val request = HttpRequest.newBuilder()
                     .uri(URI.create(url))
                     .header("Content-Type", "application/json")
                     .POST(HttpRequest.BodyPublishers.ofString(jsonPayload))
                     .build()
 
-                client.sendAsync(request, HttpResponse.BodyHandlers.ofString())
+                httpClient.sendAsync(request, HttpResponse.BodyHandlers.ofString())
                     .thenAccept { response ->
                         if (response.statusCode() !in 200..299) {
                             plugin.logger.warning("Failed to send Discord Webhook. Status: ${response.statusCode()} | Response: ${response.body()}")
@@ -104,6 +103,11 @@ class DiscordWebhook(val url: String) {
     }
 
     companion object {
+        // Singleton HttpClient สำหรับ reuse ทั่วทั้ง plugin (ประหยัดทรัพยากรกว่าสร้างใหม่ทุกครั้ง)
+        private val httpClient: java.net.http.HttpClient = java.net.http.HttpClient.newBuilder()
+            .connectTimeout(java.time.Duration.ofSeconds(10))
+            .build()
+
         /**
          * แปลง ConfigurationSection จาก Config ไปเป็น DiscordWebhook อิมเมจเดียล
          */

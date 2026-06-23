@@ -2,11 +2,18 @@ package core.luminaworld.modules.features.PathConverter
 
 import core.luminaworld.LuminaCore
 import core.luminaworld.module.LuminaModule
+import org.bukkit.event.HandlerList
 
 class PathConverterModule(plugin: LuminaCore) : LuminaModule(plugin, "PathConverter") {
+    private var listener: PathConverterListener? = null
+
     override fun onEnable() {
-        plugin.server.pluginManager.registerEvents(PathConverterListener(plugin, this), plugin)
+        listener = PathConverterListener(plugin, this)
+        plugin.server.pluginManager.registerEvents(listener!!, plugin)
     }
 
-    override fun onDisable() {}
+    override fun onDisable() {
+        listener?.let { HandlerList.unregisterAll(it) }
+        listener = null
+    }
 }

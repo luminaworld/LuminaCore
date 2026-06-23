@@ -9,13 +9,14 @@ import org.bukkit.event.EventPriority
 import org.bukkit.event.Listener
 import org.bukkit.event.block.BlockBreakEvent
 import java.util.ArrayDeque
+import java.util.Collections
 
 class VeinMinerListener(
     private val plugin: LuminaCore,
     private val module: VeinMinerModule
 ) : Listener {
 
-    private val processingBlocks = HashSet<Block>()
+    private val processingBlocks = Collections.synchronizedSet(HashSet<Block>())
 
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
     fun onBlockBreak(event: BlockBreakEvent) {
@@ -25,6 +26,10 @@ class VeinMinerListener(
 
         if (!module.isEnabled) return
         if (!module.isModeEnabled(player)) return
+        
+        val requireSneak = module.config?.getBoolean("settings.require-sneak", false) ?: false
+        if (requireSneak && !player.isSneaking) return
+
         if (!item.type.name.endsWith("_PICKAXE")) return
         if (processingBlocks.contains(block)) return
 

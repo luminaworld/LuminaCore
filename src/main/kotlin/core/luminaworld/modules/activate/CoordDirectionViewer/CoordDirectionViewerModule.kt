@@ -3,14 +3,20 @@ package core.luminaworld.modules.activate.CoordDirectionViewer
 import core.luminaworld.LuminaCore
 import core.luminaworld.module.LuminaModule
 import org.bukkit.entity.Player
+import org.bukkit.event.HandlerList
 
 class CoordDirectionViewerModule(plugin: LuminaCore) : LuminaModule(plugin, "CoordDirectionViewer") {
+    private var listener: CoordDirectionViewerListener? = null
 
     override fun onEnable() {
-        plugin.server.pluginManager.registerEvents(CoordDirectionViewerListener(plugin, this), plugin)
+        listener = CoordDirectionViewerListener(plugin, this)
+        plugin.server.pluginManager.registerEvents(listener!!, plugin)
     }
 
-    override fun onDisable() {}
+    override fun onDisable() {
+        listener?.let { HandlerList.unregisterAll(it) }
+        listener = null
+    }
 
     fun showCoordinatesAndDirection(player: Player) {
         val loc = player.location
@@ -36,7 +42,7 @@ class CoordDirectionViewerModule(plugin: LuminaCore) : LuminaModule(plugin, "Coo
         }
         val directionString = config?.getString(directionKey, defaultDir) ?: defaultDir
 
-        val msgTemplate = config?.getString("messages.info", "%prefix% &eLocation: &aX=%x%, Y=%y%, Z=%z% &7| &eDirection: &a%direction%") ?: ""
+        val msgTemplate = config?.getString("messages.info", "%prefix% §eLocation: §aX=%x%, Y=%y%, Z=%z% §7| §eDirection: §a%direction%") ?: ""
         val finalMsg = msgTemplate
             .replace("%x%", x.toString())
             .replace("%y%", y.toString())

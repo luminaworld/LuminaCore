@@ -226,13 +226,15 @@ class SneakTriggerListener(private val plugin: LuminaCore) : Listener {
     private fun getShortcutSettings(moduleName: String): Pair<Int, Double> {
         val manager = plugin.moduleManager ?: return Pair(10, 2.5)
         val module = manager.getModule(moduleName)
-        
-        val req = module?.config?.getInt("settings.required-sneaks")
-        val interval = module?.config?.getDouble("settings.reset-interval")
-        
+
         val defaultReq = plugin.config.getInt("shortcut.required-sneaks", 10)
         val defaultInterval = plugin.config.getDouble("shortcut.reset-interval", 2.5)
-        
+
+        // ใช้ takeIf { it > 0 } เพราะ YamlConfiguration.getInt() คืน 0 เมื่อ key ไม่พบ
+        // ซึ่งทำให้ req ?: defaultReq ได้ค่า 0 แทน defaultReq
+        val req = module?.config?.getInt("settings.required-sneaks", 0)?.takeIf { it > 0 }
+        val interval = module?.config?.getDouble("settings.reset-interval", 0.0)?.takeIf { it > 0.0 }
+
         return Pair(req ?: defaultReq, interval ?: defaultInterval)
     }
 

@@ -1,36 +1,37 @@
-# -------------------------------------------------------------
-# Glowing Twerk - Module Configuration
-# -------------------------------------------------------------
-
-# Enable or disable this module
+# =========================================================================
+# GlowingTwerk (ระบบย่อตัวเพื่อเร่งโตพืช - Twerk)
+# คำอธิบาย: ระบบสุดล้ำที่ช่วยให้ผู้เล่นสามารถเร่งการเจริญเติบโตของพืช Saplings เห็ด และเนเธอร์วาร์ต
+# ในรัศมีรอบตัวผู้เล่นได้โดยการกดย่อตัว (Twerk) ถี่ๆ
+# ระบบจะสแกนพืชรอบๆ และมีโอกาสเร่งการเจริญเติบโตพร้อมเอฟเฟกต์แสงและเสียงอย่างตระการตา
+# =========================================================================
 settings:
   enabled: true
   
-  # Cooldown between uses (seconds - supports decimals e.g., 1.5, 2.5)
+  # คูลดาวน์การใช้งานระหว่างเร่งโตพืชแต่ละครั้ง (วินาที - รองรับทศนิยม เช่น 1.5, 2.5)
   cooldown: 5.0
   
-  # Chance for crops to grow (percentage 0.0 - 100.0)
+  # โอกาสสำเร็จในการเร่งโตพืช (เปอร์เซ็นต์ตั้งแต่ 0.0 - 100.0)
   growth-chance: 50.0
   
-  # Enable particle effects
+  # เปิด/ปิดเอฟเฟกต์อนุภาค (Particle)
   particle-enabled: true
   
-  # Amount of particles to show per grew crop
+  # จำนวนอนุภาคที่จะสปอนรอบบล็อกพืชที่โตสำเร็จ
   particle-amount: 10
   
-  # Enable sound effects
+  # เปิด/ปิดเสียงเอฟเฟกต์
   sound-enabled: true
   
-  # Enable chat messages
+  # เปิด/ปิดการส่งข้อความยืนยันความก้าวหน้าทางแชท
   chat-messages-enabled: true
   
-  # Max radius allowed for players (based on permission level)
+  # รัศมีสูงสุดในการเร่งโตพืชรอบตัวผู้เล่น (บล็อก)
   max-radius: 32
   
-  # Particle type to display (Single particle type as requested)
+  # ชนิดของอนุภาคที่จะแสดงเมื่อพืชโต (ต้องพิมพ์ชื่อตาม Bukkit Particle Enum)
   particle: "HAPPY_VILLAGER"
   
-  # Allowed worlds (empty list = all worlds)
+  # รายชื่อโลกที่อนุญาตให้ใช้งานระบบนี้ (เว้นว่าง [] เพื่อเปิดใช้ในทุกโลก)
   allowed-worlds:
     - "world"
     - "world_nether"

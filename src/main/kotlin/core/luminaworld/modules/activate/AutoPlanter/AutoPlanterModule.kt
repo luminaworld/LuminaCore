@@ -5,22 +5,31 @@ import core.luminaworld.module.LuminaModule
 import org.bukkit.Material
 import org.bukkit.block.Block
 import org.bukkit.entity.Player
+import org.bukkit.event.HandlerList
 
 class AutoPlanterModule(plugin: LuminaCore) : LuminaModule(plugin, "AutoPlanter") {
+    private var listener: AutoPlanterListener? = null
 
     override fun onEnable() {
-        plugin.server.pluginManager.registerEvents(AutoPlanterListener(plugin, this), plugin)
+        listener = AutoPlanterListener(plugin, this)
+        plugin.server.pluginManager.registerEvents(listener!!, plugin)
     }
 
-    override fun onDisable() {}
+    override fun onDisable() {
+        listener?.let { HandlerList.unregisterAll(it) }
+        listener = null
+    }
 
     fun runPlanting(player: Player) {
+        val requireSneak = config?.getBoolean("settings.require-sneak", false) ?: false
+        if (requireSneak && !player.isSneaking) return
+
         val item = player.inventory.itemInMainHand
         val seedMaterial = item.type
         val cropBlockMaterial = getCropBlockForSeed(seedMaterial)
-        
+
         if (cropBlockMaterial == null) {
-            val msg = config?.getString("messages.no-seeds", "%prefix% &cYou do not have enough seeds in your hand.") ?: ""
+            val msg = config?.getString("messages.no-seeds", "%prefix% §cYou do not have enough seeds in your hand.") ?: ""
             sendNotification(player, msg)
             return
         }
@@ -33,7 +42,7 @@ class AutoPlanterModule(plugin: LuminaCore) : LuminaModule(plugin, "AutoPlanter"
         val pZ = playerLoc.blockZ
 
         var plantCount = 0
-        val itemsToReduce = ArrayList<Block>()
+        val farmlandAboveBlocks = ArrayList<Block>()
 
         // สแกนบล็อกรอบตัวผู้เล่นเพื่อหา Farmland
         for (x in -radius..radius) {
@@ -43,30 +52,36 @@ class AutoPlanterModule(plugin: LuminaCore) : LuminaModule(plugin, "AutoPlanter"
                     if (block.type == Material.FARMLAND) {
                         val above = block.getRelative(0, 1, 0)
                         if (above.type == Material.AIR) {
-                            itemsToReduce.add(above)
+                            farmlandAboveBlocks.add(above)
                         }
                     }
                 }
             }
         }
 
-        if (itemsToReduce.isEmpty()) {
-            val msg = config?.getString("messages.planted", "%prefix% &aSuccessfully planted %amount% crops!") ?: ""
+        if (farmlandAboveBlocks.isEmpty()) {
+            val msg = config?.getString("messages.planted", "%prefix% §aSuccessfully planted %amount% crops!") ?: ""
             sendNotification(player, msg.replace("%amount%", "0"))
             return
         }
 
-        // เริ่มลงมือปลูกพืช
-        for (aboveBlock in itemsToReduce) {
-            val currentItem = player.inventory.itemInMainHand
+        // เริ่มลงมือปลูกพืช (แก้บัค: อัปเดต ItemStack ผ่าน inventory จริง)
+        val inv = player.inventory
+        for (aboveBlock in farmlandAboveBlocks) {
+            val currentItem = inv.itemInMainHand
             if (currentItem.type != seedMaterial || currentItem.amount <= 0) break
 
             aboveBlock.type = cropBlockMaterial
-            currentItem.amount = currentItem.amount - 1
+
+            // ลดจำนวนเมล็ดอย่างถูกต้องผ่าน inventory
+            val updatedItem = currentItem.clone()
+            updatedItem.amount = updatedItem.amount - 1
+            inv.setItemInMainHand(updatedItem)
+
             plantCount++
         }
 
-        val msg = config?.getString("messages.planted", "%prefix% &aSuccessfully planted %amount% crops!") ?: ""
+        val msg = config?.getString("messages.planted", "%prefix% §aSuccessfully planted %amount% crops!") ?: ""
         sendNotification(player, msg.replace("%amount%", plantCount.toString()))
     }
 

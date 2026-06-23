@@ -9,14 +9,15 @@ import org.bukkit.event.EventPriority
 import org.bukkit.event.Listener
 import org.bukkit.event.block.BlockBreakEvent
 import java.util.ArrayDeque
+import java.util.Collections
 
 class TreeCapitatorListener(
     private val plugin: LuminaCore,
     private val module: TreeCapitatorModule
 ) : Listener {
 
-    // เก็บรายการบล็อกที่ระบบกำลังทำลายเพื่อหลีกเลี่ยง Loop ซ้อนทับ
-    private val processingBlocks = HashSet<Block>()
+    // เก็บรายการบล็อกที่ระบบกำลังทำลายเพื่อหลีกเลี่ยง Loop ซ้อนทับ (Thread-safe)
+    private val processingBlocks = Collections.synchronizedSet(HashSet<Block>())
 
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
     fun onBlockBreak(event: BlockBreakEvent) {
@@ -102,7 +103,7 @@ class TreeCapitatorListener(
             val saplingType = getSaplingForLog(logType)
             if (saplingType != null) {
                 // รอ 1 tick เพื่อให้บล็อกไม้เดิมสลายตัวเรียบร้อยก่อน
-                plugin.server.globalRegionScheduler.runDelayed(plugin, { _ ->
+                plugin.server.regionScheduler.runDelayed(plugin, startBlock.location, { _ ->
                     startBlock.type = saplingType
                 }, 1L)
             }

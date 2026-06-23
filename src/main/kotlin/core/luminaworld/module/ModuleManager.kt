@@ -52,7 +52,12 @@ class ModuleManager(private val plugin: LuminaCore) {
                                 
                                 val constructor = clazz.getConstructor(LuminaCore::class.java)
                                 val module = constructor.newInstance(plugin) as LuminaModule
-                                modulesList.add(module)
+                                // ตรวจสอบ Duplicate Module Name ก่อน add
+                                if (modulesList.none { it.name.equals(module.name, ignoreCase = true) }) {
+                                    modulesList.add(module)
+                                } else {
+                                    plugin.logger.warning("[LuminaCore] Duplicate module name detected: '${module.name}' from class $className — skipped.")
+                                }
                             }
                         } catch (e: Exception) {
                             plugin.logger.severe("[LuminaCore] Failed to load module class: $className - ${e.message}")

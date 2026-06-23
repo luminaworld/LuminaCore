@@ -1,15 +1,17 @@
-# -------------------------------------------------------------
-# Unknown Command Detector - Module Configuration
-# -------------------------------------------------------------
-
-# Module Settings
+# =========================================================================
+# UnknownCommand (ระบบตรวจจับคำสั่งต้องสงสัยและคำสั่งที่ไม่มีจริง)
+# คำอธิบาย: ระบบตรวจสอบความปลอดภัยที่จะคอยดักจับการพิมพ์คำสั่งที่ไม่มีอยู่จริงบนเซิร์ฟเวอร์
+# (Unknown Command) หรือการรันคำสั่งสำคัญที่เป็นความลับ/อันตรายที่ระบุไว้ใน monitored-commands
+# (เช่น /op, /gamemode, /stop, /plugman) เพื่อแจ้งเตือนการโจมตีหรือการลองรันคำสั่งแฮก
+# ของผู้เล่นที่ไม่มีสิทธิ์ ส่งตรงไปยังระบบ Discord Webhook ทันที
+# =========================================================================
 settings:
   enabled: true
   
-  # Cooldown in seconds between sending notifications per player
+  # คูลดาวน์ระหว่างส่งรายงานการแจ้งเตือนต่อผู้เล่น 1 คน (วินาที)
   cooldown: 3
 
-# Message notification format to use. Options: Embed1, Embed2, normal
+# รูปแบบของข้อความรายงานที่จะใช้บน Discord. ตัวเลือก: Embed1 (รายละเอียดเต็ม), Embed2 (ย่อส่วน), normal (ข้อความดิบ)
 messages: "Embed1"
 
 # Highly customizable Discord Webhook Embed 1

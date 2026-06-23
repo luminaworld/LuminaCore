@@ -2,11 +2,18 @@ package core.luminaworld.modules.features.NetherSponge
 
 import core.luminaworld.LuminaCore
 import core.luminaworld.module.LuminaModule
+import org.bukkit.event.HandlerList
 
 class NetherSpongeModule(plugin: LuminaCore) : LuminaModule(plugin, "NetherSponge") {
+    private var listener: NetherSpongeListener? = null
+
     override fun onEnable() {
-        plugin.server.pluginManager.registerEvents(NetherSpongeListener(plugin, this), plugin)
+        listener = NetherSpongeListener(plugin, this)
+        plugin.server.pluginManager.registerEvents(listener!!, plugin)
     }
 
-    override fun onDisable() {}
+    override fun onDisable() {
+        listener?.let { HandlerList.unregisterAll(it) }
+        listener = null
+    }
 }

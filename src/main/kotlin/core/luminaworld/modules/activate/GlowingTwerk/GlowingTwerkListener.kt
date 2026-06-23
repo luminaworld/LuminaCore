@@ -80,7 +80,7 @@ class GlowingTwerkListener(private val module: GlowingTwerkModule) : Listener {
 
         // 4. คำนวณโอกาส
         val growthChance = module.config?.getDouble("settings.growth-chance", 50.0) ?: 50.0
-        if (Math.random() * 100.0 > growthChance) {
+        if (kotlin.random.Random.nextDouble() * 100.0 > growthChance) {
             return
         }
 

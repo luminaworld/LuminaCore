@@ -7,14 +7,20 @@ import org.bukkit.Material
 import org.bukkit.Particle
 import org.bukkit.block.Block
 import org.bukkit.entity.Player
+import org.bukkit.event.HandlerList
 
 class SpawnCheckerModule(plugin: LuminaCore) : LuminaModule(plugin, "SpawnChecker") {
+    private var listener: SpawnCheckerListener? = null
 
     override fun onEnable() {
-        plugin.server.pluginManager.registerEvents(SpawnCheckerListener(plugin, this), plugin)
+        listener = SpawnCheckerListener(plugin, this)
+        plugin.server.pluginManager.registerEvents(listener!!, plugin)
     }
 
-    override fun onDisable() {}
+    override fun onDisable() {
+        listener?.let { HandlerList.unregisterAll(it) }
+        listener = null
+    }
 
     fun checkSpawnPoints(player: Player) {
         val radius = config?.getInt("settings.radius", 8) ?: 8
@@ -24,7 +30,7 @@ class SpawnCheckerModule(plugin: LuminaCore) : LuminaModule(plugin, "SpawnChecke
         val pY = playerLoc.blockY
         val pZ = playerLoc.blockZ
 
-        val checkingMsg = config?.getString("messages.checking", "%prefix% &eScanning spawnable locations...") ?: ""
+        val checkingMsg = config?.getString("messages.checking", "%prefix% §eScanning spawnable locations...") ?: ""
         sendNotification(player, checkingMsg)
 
         val spawnableLocations = ArrayList<Location>()
@@ -42,23 +48,21 @@ class SpawnCheckerModule(plugin: LuminaCore) : LuminaModule(plugin, "SpawnChecke
         }
 
         if (spawnableLocations.isEmpty()) {
-            val notFoundMsg = config?.getString("messages.not-found", "%prefix% &cNo spawnable locations found around you.") ?: ""
+            val notFoundMsg = config?.getString("messages.not-found", "%prefix% §cNo spawnable locations found around you.") ?: ""
             sendNotification(player, notFoundMsg)
             return
         }
 
-        val foundMsg = config?.getString("messages.found", "%prefix% &aFound %amount% spawnable locations! Displaying particles.") ?: ""
+        val foundMsg = config?.getString("messages.found", "%prefix% §aFound %amount% spawnable locations! Displaying particles.") ?: ""
         sendNotification(player, foundMsg.replace("%amount%", spawnableLocations.size.toString()))
 
         // สปอนอนุภาค Flame ทุกวินาทีเป็นเวลา 5 วินาที
         for (i in 0..4) {
-            plugin.server.globalRegionScheduler.runDelayed(plugin, { _ ->
-                if (player.isOnline) {
-                    for (loc in spawnableLocations) {
-                        player.spawnParticle(Particle.FLAME, loc, 1, 0.0, 0.0, 0.0, 0.0)
-                    }
+            player.scheduler.runDelayed(plugin, { _ ->
+                for (loc in spawnableLocations) {
+                    player.spawnParticle(Particle.FLAME, loc, 1, 0.0, 0.0, 0.0, 0.0)
                 }
-            }, i * 20L)
+            }, null, i * 20L)
         }
     }
 

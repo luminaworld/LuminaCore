@@ -4,6 +4,7 @@ import core.luminaworld.LuminaCore
 import core.luminaworld.module.LuminaModule
 import org.bukkit.Location
 import org.bukkit.entity.Player
+import org.bukkit.event.HandlerList
 import java.util.UUID
 import java.util.concurrent.ConcurrentHashMap
 import kotlin.math.abs
@@ -12,15 +13,20 @@ class DistanceMeasurerModule(plugin: LuminaCore) : LuminaModule(plugin, "Distanc
 
     private val activePlayers = ConcurrentHashMap.newKeySet<UUID>()
     private val playerPoints = ConcurrentHashMap<UUID, Location>()
+    private var listener: DistanceMeasurerListener? = null
 
     override fun onEnable() {
-        plugin.server.pluginManager.registerEvents(DistanceMeasurerListener(plugin, this), plugin)
+        listener = DistanceMeasurerListener(plugin, this)
+        plugin.server.pluginManager.registerEvents(listener!!, plugin)
     }
 
     override fun onDisable() {
+        listener?.let { HandlerList.unregisterAll(it) }
+        listener = null
         activePlayers.clear()
         playerPoints.clear()
     }
+
 
     fun isMeasureModeEnabled(player: Player): Boolean {
         return activePlayers.contains(player.uniqueId)
@@ -79,11 +85,9 @@ class DistanceMeasurerModule(plugin: LuminaCore) : LuminaModule(plugin, "Distanc
                 .replace("%manhattan%", manhattan.toString())
             
             // ใช้ Scheduler หน่วงเวลาแสดงข้อความผลลัพธ์เล็กน้อยเพื่อให้เรียงลำดับการมองเห็นได้ดี
-            plugin.server.globalRegionScheduler.runDelayed(plugin, { _ ->
-                if (player.isOnline) {
-                    sendNotification(player, resultMsg)
-                }
-            }, 10L)
+            player.scheduler.runDelayed(plugin, { _ ->
+                sendNotification(player, resultMsg)
+            }, null, 10L)
 
             playerPoints.remove(uuid)
         }

@@ -68,10 +68,14 @@ class PathConverterListener(private val plugin: LuminaCore, private val module: 
                 if (meta is Damageable) {
                     meta.damage = meta.damage + durabilityCost
                     if (meta.damage >= item.type.maxDurability) {
-                        item.amount = 0 // พลั่วพังเสียหาย
+                        // พลั่วพังเสียหาย - ตั้ง amount = 0 และอัปเดตใน inventory
+                        item.amount = 0
+                        player.inventory.setItemInMainHand(item)
                         player.playSound(player.location, Sound.ENTITY_ITEM_BREAK, 1.0f, 1.0f)
                     } else {
+                        // อัปเดต meta กลับลง inventory จริงๆ
                         item.itemMeta = meta
+                        player.inventory.setItemInMainHand(item)
                     }
                 }
             }

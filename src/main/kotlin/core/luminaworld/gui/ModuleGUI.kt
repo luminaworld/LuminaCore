@@ -17,7 +17,8 @@ class ModuleGUI(private val plugin: LuminaCore) : InventoryHolder, Listener {
     private var inv: Inventory? = null
 
     override fun getInventory(): Inventory {
-        return inv ?: Bukkit.createInventory(this, 9, "LuminaCore Modules")
+        // คืน inv ที่เปิดอยู่ หรือ fallback ขนาดเล็กสุด (54 ช่อง) เพื่อ InventoryHolder check
+        return inv ?: Bukkit.createInventory(this, 54, "LuminaCore Modules")
     }
 
     /**

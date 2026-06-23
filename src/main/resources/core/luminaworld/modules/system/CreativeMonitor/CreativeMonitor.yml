@@ -1,23 +1,25 @@
-# -------------------------------------------------------------
-# Creative Monitor - Module Configuration
-# -------------------------------------------------------------
-
-# Module Settings
+# =========================================================================
+# CreativeMonitor (ระบบเฝ้าระวังและแจ้งเตือนผู้เล่นโหมดสร้างสรรค์ - Creative)
+# คำอธิบาย: ระบบความปลอดภัยสำหรับตรวจสอบผู้เล่นที่อยู่ในโหมดสร้างสรรค์ (Creative Mode)
+# โดยระบบจะตรวจหาการดึงไอเทมออกมาใช้งาน หรือการโยนไอเทมดรอปจากโหมดสร้างสรรค์
+# และทำการรายงานแจ้งเตือนไปที่ Discord Webhook (สามารถกำหนดช่องแยกเฉพาะได้ในไฟล์นี้)
+# เพื่อป้องกันการทุจริต การปั๊มไอเทม หรือการสปอนสิ่งของแจกจ่ายให้ผู้เล่นอื่นโดยมิชอบ
+# =========================================================================
 settings:
   enabled: true
   
-  # Cooldown in seconds between sending notifications per player
+  # คูลดาวน์ระหว่างส่งรายงานการแจ้งเตือนต่อผู้เล่น 1 คน (วินาที)
   cooldown: 3
 
-  # Enable/disable specific detections
+  # เปิด/ปิด การตรวจจับเฉพาะแบบ
   track-item-obtain: true
   track-item-drop: true
 
-  # Dedicated Discord Webhook URL for Creative Monitor
-  # (If empty, it falls back to shared webhook URL in config.yml)
+  # ลิงก์ Discord Webhook เฉพาะของระบบเฝ้าระวัง Creative
+  # (หากปล่อยว่างไว้ จะกลับไปใช้ Webhook URL หลักที่ระบุใน config.yml)
   discord-webhook-url: ""
 
-# Message notification format. Options: Embed1, Embed2, normal
+# รูปแบบของข้อความรายงานการแจ้งเตือน ตัวเลือก: Embed1 (รายละเอียดเต็ม), Embed2 (ย่อส่วน), normal (ข้อความดิบ)
 messages: "Embed1"
 
 # Creative Obtain Notification

@@ -1,18 +1,20 @@
-# -------------------------------------------------------------
-# Block Notifier - Module Configuration
-# -------------------------------------------------------------
-
-# Module Settings
+# =========================================================================
+# BlockNotifier (ระบบตรวจสอบและแจ้งเตือนการทำลายบล็อกมีค่าผ่าน Discord)
+# คำอธิบาย: ระบบความปลอดภัยสำหรับผู้ดูแลเซิร์ฟเวอร์
+# เมื่อผู้เล่นขุดทำลายบล็อกที่ระบุไว้ใน tracked-blocks (เช่น แร่เพชร, ทอง, Ancient Debris)
+# ระบบจะส่งรายงานการแจ้งเตือนพร้อมข้อมูลอย่างละเอียด (ชื่อผู้เล่น, พิกัด, โลก, เวลา)
+# ไปยังช่อง Discord Webhook ที่กำหนดไว้ทันที สามารถปรับแต่งฟอร์แมต Embed ได้ 3 รูปแบบ
+# =========================================================================
 settings:
   enabled: true
   
-  # Cooldown in seconds between sending notifications per player
+  # คูลดาวน์ระหว่างการส่งแจ้งเตือนต่อผู้เล่น 1 คน (วินาที)
   cooldown: 5
 
-# Message notification format to use. Options: Embed1, Embed2, normal
+# รูปแบบการแจ้งเตือนที่จะใช้บน Discord. ตัวเลือก: Embed1 (รายละเอียดเต็ม), Embed2 (ย่อส่วน), normal (ข้อความดิบ)
 messages: "Embed1"
 
-# Highly customizable Discord Webhook Embed 1
+# รูปแบบกล่องข้อความยืดหยุ่นสูง Discord Webhook Embed 1
 Embed1:
   content: ""
   setTitle: "%prefix% Block Break Detected"

@@ -6,6 +6,7 @@ import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 import org.bukkit.event.player.PlayerDropItemEvent
+import org.bukkit.event.player.PlayerQuitEvent
 import org.bukkit.inventory.ItemStack
 import io.papermc.paper.threadedregions.scheduler.ScheduledTask
 import core.luminaworld.LuminaCore
@@ -83,6 +84,23 @@ class ConfirmDropListener(private val plugin: LuminaCore, private val module: Co
         if (taskRef != null) {
             pendingDrops[uuid] = PendingDrop(stack.clone(), taskRef, now)
         }
+    }
+
+    @EventHandler
+    fun onPlayerQuit(event: PlayerQuitEvent) {
+        val uuid = event.player.uniqueId
+        pendingDrops[uuid]?.task?.cancel()
+        pendingDrops.remove(uuid)
+    }
+
+    /**
+     * เคลียร์ task ทั้งหมดที่ค้างอยู่ เรียกตอน onDisable
+     */
+    fun cleanup() {
+        for ((_, pending) in pendingDrops) {
+            pending.task.cancel()
+        }
+        pendingDrops.clear()
     }
 
     private fun shouldProtect(stack: ItemStack): Boolean {

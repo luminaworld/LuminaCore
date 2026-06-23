@@ -3,6 +3,11 @@ settings:
   enabled: true
   use-permission: true
   permission: "luminacore.feature.farmlandconverter"
+  # รูปแบบการแจ้งเตือนข้อความ (message-style)
+  # เลือกได้ 3 รูปแบบ:
+  # - CHAT      : แสดงข้อความทางช่องพูดคุยปกติ
+  # - ACTIONBAR : แสดงข้อความเหนือแถบทางลัดปุ่มไอเทม
+  # - NONE      : ปิดการแจ้งเตือนทั้งหมดอย่างสมบูรณ์แบบ (จะไม่แสดงข้อความแจ้งเตือนเลย)
   message-style: "ACTIONBAR"
 
   to-material: "DIRT" # บล็อกดินปลายทางที่จะได้รับหลังจากแปลง (เช่น DIRT หรือ COARSE_DIRT)

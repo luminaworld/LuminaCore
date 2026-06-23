@@ -77,6 +77,8 @@ abstract class LuminaModule(val plugin: LuminaCore, val name: String) {
      */
     fun sendNotification(player: org.bukkit.entity.Player, msg: String) {
         val style = config?.getString("settings.message-style", "CHAT") ?: "CHAT"
+        if (style.equals("NONE", ignoreCase = true)) return
+        
         val prefix = plugin.config.getString("settings.prefix", "[LuminaCore]") ?: "[LuminaCore]"
         val formattedMsg = msg.replace("%prefix%", prefix)
         val component = parseToComponent(formattedMsg)

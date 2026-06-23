@@ -3,7 +3,12 @@ settings:
   enabled: true
   use-permission: true
   permission: "luminacore.feature.colorsign"
-  message-style: "ACTIONBAR" # รูปแบบข้อความแจ้งเตือน: CHAT หรือ ACTIONBAR
+  # รูปแบบการแจ้งเตือนข้อความ (message-style)
+  # เลือกได้ 3 รูปแบบ:
+  # - CHAT      : แสดงข้อความทางช่องพูดคุยปกติ
+  # - ACTIONBAR : แสดงข้อความเหนือแถบทางลัดปุ่มไอเทม
+  # - NONE      : ปิดการแจ้งเตือนทั้งหมดอย่างสมบูรณ์แบบ (จะไม่แสดงข้อความแจ้งเตือนเลย)
+  message-style: "CHAT"
   
   allow-hex: true # เปิด/ปิด การใช้รหัสสีแบบ Hex เช่น &#FF5555
   allow-minimessage: true # เปิด/ปิด การใช้สัญลักษณ์สีแบบ MiniMessage เช่น <gradient:red:blue>

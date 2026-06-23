@@ -2,6 +2,7 @@ package core.luminaworld.listener
 
 import core.luminaworld.LuminaCore
 import org.bukkit.Material
+import org.bukkit.Sound
 import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
@@ -13,115 +14,174 @@ import java.util.concurrent.ConcurrentHashMap
 
 class SneakTriggerListener(private val plugin: LuminaCore) : Listener {
 
-    private val sneakHistory = ConcurrentHashMap<UUID, MutableList<Long>>()
-    
+    // คลาสเก็บข้อมูลเซสชันความคืบหน้าการย่อตัวของผู้เล่น
+    class SneakSession(
+        val material: Material,
+        var count: Int,
+        var lastTime: Long
+    )
+
+    private val playerSessions = ConcurrentHashMap<UUID, SneakSession>()
+
     @EventHandler
     fun onPlayerSneak(event: PlayerToggleSneakEvent) {
         val player = event.player
         
-        // สนใจเฉพาะตอน "เริ่มกดย่อตัว" เท่านั้น (ซึ่งรองรับ Geyser และปุ่ม Ctrl)
+        // สนใจเฉพาะตอน "เริ่มกดย่อตัว" เท่านั้น (ซึ่งรองรับ Bedrock Geyser และการสลับปุ่มย่อใน Java)
         if (!event.isSneaking) return
         
         val uuid = player.uniqueId
+        val item = player.inventory.itemInMainHand
+        val material = item.type
+        
+        // ค้นหาโมดูลและชื่อระบบตามไอเทมในมือหลัก
+        val moduleInfo = getModuleForHand(material) ?: return
+        val moduleName = moduleInfo.first
+        val moduleDisplayName = moduleInfo.second
+        
+        val manager = plugin.moduleManager ?: return
+        val module = manager.getModule(moduleName)
+        
+        // ตรวจสอบว่าโมดูลนั้นๆ ถูกเปิดใช้งานและทำงานอยู่หรือไม่
+        if (module == null || !module.isEnabled) return
+        
+        // ตรวจสอบสิทธิ์ Permission ก่อนเริ่มเก็บสะสมความก้าวหน้า
+        if (!module.checkPermission(player)) return
+
         val now = System.currentTimeMillis()
         
-        val history = sneakHistory.computeIfAbsent(uuid) { ArrayList() }
-        history.add(now)
+        // ดึงการตั้งค่า required-sneaks และ reset-interval (วินาที)
+        val settings = getShortcutSettings(moduleName)
+        val requiredSneaks = settings.first
+        val resetInterval = settings.second
+        val resetIntervalMs = (resetInterval * 1000).toLong()
+
+        val session = playerSessions[uuid]
         
-        // ล้างข้อมูลประวัติที่เก่ากว่า 3.5 วินาที
-        history.removeIf { now - it > 3500 }
-        
-        // เมื่อกดย่อตัวครบ 10 ครั้ง
-        if (history.size >= 10) {
-            history.clear()
-            handleSneakTrigger(player)
+        if (session == null || session.material != material || (now - session.lastTime) > resetIntervalMs) {
+            // เริ่มเซสชันการย่อตัวใหม่ (กรณีย่อครั้งแรก เปลี่ยนไอเทม หรือเว้นช่วงนานเกินกำหนด)
+            val newSession = SneakSession(material, 1, now)
+            playerSessions[uuid] = newSession
+            showProgressBar(player, 1, requiredSneaks, moduleDisplayName)
+            playTickSound(player, 1, requiredSneaks)
+        } else {
+            // ย่อตัวสะสมต่อเนื่องในเวลาที่กำหนด
+            session.count += 1
+            session.lastTime = now
+            val currentCount = session.count
+            
+            showProgressBar(player, currentCount, requiredSneaks, moduleDisplayName)
+            
+            if (currentCount >= requiredSneaks) {
+                // ครบกำหนด -> ล้างเซสชันและสั่งเริ่มทำงาน
+                playerSessions.remove(uuid)
+                triggerModule(player, moduleName)
+                playSuccessSound(player)
+            } else {
+                playTickSound(player, currentCount, requiredSneaks)
+            }
         }
     }
-    
-    private fun handleSneakTrigger(player: Player) {
-        val item = player.inventory.itemInMainHand
-        val type = item.type
+
+    private fun triggerModule(player: Player, moduleName: String) {
         val manager = plugin.moduleManager ?: return
         
-        // 1. ถือ ขวาน -> TreeCapitator
-        if (type.name.endsWith("_AXE")) {
-            val module = manager.getModule("TreeCapitator")
-            if (module != null && module.isEnabled) {
-                if (module.checkPermission(player)) {
-                    val treeCap = module as? core.luminaworld.modules.TreeCapitator.TreeCapitatorModule
-                    treeCap?.toggleMode(player)
-                }
+        when (moduleName) {
+            "TreeCapitator" -> {
+                val treeCap = manager.getModule("TreeCapitator") as? core.luminaworld.modules.TreeCapitator.TreeCapitatorModule
+                treeCap?.toggleMode(player)
             }
-        }
-        
-        // 2. ถือ เมล็ดพืช -> AutoPlanter
-        else if (isSeedItem(type)) {
-            val module = manager.getModule("AutoPlanter")
-            if (module != null && module.isEnabled) {
-                if (module.checkPermission(player)) {
-                    val planter = module as? core.luminaworld.modules.AutoPlanter.AutoPlanterModule
-                    planter?.runPlanting(player)
-                }
+            "AutoPlanter" -> {
+                val planter = manager.getModule("AutoPlanter") as? core.luminaworld.modules.AutoPlanter.AutoPlanterModule
+                planter?.runPlanting(player)
             }
-        }
-        
-        // 3. ถือ คบเพลิง -> SpawnChecker
-        else if (type == Material.TORCH || type == Material.SOUL_TORCH || type == Material.REDSTONE_TORCH) {
-            val module = manager.getModule("SpawnChecker")
-            if (module != null && module.isEnabled) {
-                if (module.checkPermission(player)) {
-                    val checker = module as? core.luminaworld.modules.SpawnChecker.SpawnCheckerModule
-                    checker?.checkSpawnPoints(player)
-                }
+            "SpawnChecker" -> {
+                val checker = manager.getModule("SpawnChecker") as? core.luminaworld.modules.SpawnChecker.SpawnCheckerModule
+                checker?.checkSpawnPoints(player)
             }
-        }
-        
-        // 4. ถือ นาฬิกา -> TimeWeatherViewer
-        else if (type == Material.CLOCK) {
-            val module = manager.getModule("TimeWeatherViewer")
-            if (module != null && module.isEnabled) {
-                if (module.checkPermission(player)) {
-                    val viewer = module as? core.luminaworld.modules.TimeWeatherViewer.TimeWeatherViewerModule
-                    viewer?.showTimeAndWeather(player)
-                }
+            "TimeWeatherViewer" -> {
+                val viewer = manager.getModule("TimeWeatherViewer") as? core.luminaworld.modules.TimeWeatherViewer.TimeWeatherViewerModule
+                viewer?.showTimeAndWeather(player)
             }
-        }
-        
-        // 5. ถือ เข็มทิศ (กดย่อ 10 ครั้ง) -> CoordDirectionViewer
-        else if (type == Material.COMPASS) {
-            val module = manager.getModule("CoordDirectionViewer")
-            if (module != null && module.isEnabled) {
-                if (module.checkPermission(player)) {
-                    val viewer = module as? core.luminaworld.modules.CoordDirectionViewer.CoordDirectionViewerModule
-                    viewer?.showCoordinatesAndDirection(player)
-                }
+            "CoordDirectionViewer" -> {
+                val viewer = manager.getModule("CoordDirectionViewer") as? core.luminaworld.modules.CoordDirectionViewer.CoordDirectionViewerModule
+                viewer?.showCoordinatesAndDirection(player)
             }
-        }
-        
-        // 6. ถือ Obsidian -> NetherCalculator
-        else if (type == Material.OBSIDIAN) {
-            val module = manager.getModule("NetherCalculator")
-            if (module != null && module.isEnabled) {
-                if (module.checkPermission(player)) {
-                    val calc = module as? core.luminaworld.modules.NetherCalculator.NetherCalculatorModule
-                    calc?.calculateCoordinates(player)
-                }
+            "NetherCalculator" -> {
+                val calc = manager.getModule("NetherCalculator") as? core.luminaworld.modules.NetherCalculator.NetherCalculatorModule
+                calc?.calculateCoordinates(player)
             }
-        }
-        
-        // 8. ถือ ที่ขุด -> VeinMiner
-        else if (type.name.endsWith("_PICKAXE")) {
-            val module = manager.getModule("VeinMiner")
-            if (module != null && module.isEnabled) {
-                if (module.checkPermission(player)) {
-                    val miner = module as? core.luminaworld.modules.VeinMiner.VeinMinerModule
-                    miner?.toggleMode(player)
-                }
+            "VeinMiner" -> {
+                val miner = manager.getModule("VeinMiner") as? core.luminaworld.modules.VeinMiner.VeinMinerModule
+                miner?.toggleMode(player)
             }
         }
     }
-    
-    // ดักฟังปุ่มลัด Shift + คลิกขวา สำหรับ DistanceMeasurer
+
+    private fun showProgressBar(player: Player, count: Int, total: Int, systemName: String) {
+        // สร้างหลอดความก้าวหน้า เช่น [ ||||...... ]
+        val sb = StringBuilder()
+        sb.append("§e[ ")
+        
+        for (i in 1..total) {
+            if (i <= count) {
+                sb.append("§a|") // ส่วนที่ก้าวหน้าแล้ว
+            } else {
+                sb.append("§7|") // ส่วนที่เหลือ
+            }
+        }
+        
+        sb.append("§e ] ")
+        sb.append("§b$count/$total ")
+        
+        val needed = total - count
+        if (needed > 0) {
+            sb.append("§7(ย่ออีก $needed ครั้งเพื่อใช้ $systemName)")
+        } else {
+            sb.append("§a(เปิดทำงานสำเร็จ!)")
+        }
+        
+        player.sendActionBar(sb.toString())
+    }
+
+    private fun playTickSound(player: Player, count: Int, total: Int) {
+        // คำนวณระดับเสียง (Pitch) ให้สูงขึ้นตามความก้าวหน้า (จาก 0.5 ถึง 2.0)
+        val pitch = 0.5f + (count.toFloat() / total.toFloat()) * 1.5f
+        player.playSound(player.location, Sound.BLOCK_NOTE_BLOCK_PLING, 0.5f, pitch)
+    }
+
+    private fun playSuccessSound(player: Player) {
+        player.playSound(player.location, Sound.ENTITY_PLAYER_LEVELUP, 0.8f, 1.0f)
+    }
+
+    private fun getShortcutSettings(moduleName: String): Pair<Int, Double> {
+        val manager = plugin.moduleManager ?: return Pair(10, 2.5)
+        val module = manager.getModule(moduleName)
+        
+        val req = module?.config?.getInt("settings.required-sneaks")
+        val interval = module?.config?.getDouble("settings.reset-interval")
+        
+        val defaultReq = plugin.config.getInt("shortcut.required-sneaks", 10)
+        val defaultInterval = plugin.config.getDouble("shortcut.reset-interval", 2.5)
+        
+        return Pair(req ?: defaultReq, interval ?: defaultInterval)
+    }
+
+    private fun getModuleForHand(material: Material): Triple<String, String, String>? {
+        val name = material.name
+        return when {
+            name.endsWith("_AXE") -> Triple("TreeCapitator", "ระบบตัดไม้หมดต้น", "ขวาน")
+            isSeedItem(material) -> Triple("AutoPlanter", "ระบบปลูกพืชรอบตัว", "เมล็ดพืช")
+            material == Material.TORCH || material == Material.SOUL_TORCH || material == Material.REDSTONE_TORCH -> 
+                Triple("SpawnChecker", "ระบบเช็คจุดเกิดมอนสเตอร์", "คบเพลิง")
+            material == Material.CLOCK -> Triple("TimeWeatherViewer", "ระบบแสดงเวลาและอากาศ", "นาฬิกา")
+            material == Material.COMPASS -> Triple("CoordDirectionViewer", "ระบบแสดงพิกัดและทิศทาง", "เข็มทิศ")
+            material == Material.OBSIDIAN -> Triple("NetherCalculator", "ระบบคำนวณพิกัด Nether/Overworld", " Obsidian")
+            name.endsWith("_PICKAXE") -> Triple("VeinMiner", "ระบบขุดแร่รอบตัว", "ที่ขุดแร่")
+            else -> null
+        }
+    }
+
     @EventHandler
     fun onPlayerInteract(event: PlayerInteractEvent) {
         val player = event.player

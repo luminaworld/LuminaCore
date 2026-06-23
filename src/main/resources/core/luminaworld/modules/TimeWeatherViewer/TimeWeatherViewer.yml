@@ -3,6 +3,8 @@ settings:
   message-style: "ACTIONBAR"
   use-permission: false
   permission: "luminacore.module.timeweatherviewer"
+  required-sneaks: 10
+  reset-interval: 2.5
 
 messages:
   info: "%prefix% &eTime: &a%time% &7| &eWeather: &a%weather%"

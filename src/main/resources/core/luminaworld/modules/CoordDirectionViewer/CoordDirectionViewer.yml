@@ -3,6 +3,8 @@ settings:
   message-style: "ACTIONBAR"
   use-permission: false
   permission: "luminacore.module.coorddirectionviewer"
+  required-sneaks: 10
+  reset-interval: 2.5
 
 messages:
   info: "%prefix% &eLocation: &aX=%x%, Y=%y%, Z=%z% &7| &eDirection: &a%direction%"

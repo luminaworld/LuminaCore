@@ -3,6 +3,8 @@ settings:
   message-style: "ACTIONBAR"
   use-permission: false
   permission: "luminacore.module.distancemeasurer"
+  required-sneaks: 1
+  reset-interval: 2.5
 
 messages:
   mode-enabled: "%prefix% &aMeasure Mode Enabled! Right-click blocks to set points."

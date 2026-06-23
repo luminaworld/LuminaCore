@@ -25,4 +25,7 @@ messages:
   gui-click-to-toggle: "&7Click to toggle status"
   gui-status-enabled: "&aStatus: Enabled"
   gui-status-disabled: "&cStatus: Disabled"
-
+# Default Sneak Shortcut Configuration
+shortcut:
+  required-sneaks: 10
+  reset-interval: 2.5

@@ -3,6 +3,8 @@ settings:
   message-style: "ACTIONBAR"
   use-permission: false
   permission: "luminacore.module.nethercalculator"
+  required-sneaks: 10
+  reset-interval: 2.5
 
 messages:
   overworld-to-nether: "%prefix% &eNether Equivalent: &aX=%x%, Z=%z%"

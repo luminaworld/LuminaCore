@@ -3,6 +3,8 @@ settings:
   message-style: "ACTIONBAR"
   use-permission: false
   permission: "luminacore.module.treecapitator"
+  required-sneaks: 10
+  reset-interval: 2.5
   max-blocks: 128
   break-leaves: true
   replant-sapling: true

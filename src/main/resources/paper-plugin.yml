@@ -6,6 +6,10 @@ folia-supported: true
 description: Luminaris Custom Plugin
 author: Loma0531
 
+libraries:
+  - org.jetbrains.kotlin:kotlin-stdlib:2.3.0
+  - org.jetbrains.kotlin:kotlin-reflect:2.3.0
+
 commands:
   luminacore:
     description: LuminaCore Management Command

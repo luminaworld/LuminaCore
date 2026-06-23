@@ -7,6 +7,50 @@ settings:
   reset-interval: 2.5
   radius: 8
 
+  # การตั้งค่าหลอดความก้าวหน้า (Progress Bar)
+  # Placeholders ที่สามารถใช้งานใน format:
+  # - %completed%: ขีดความก้าวหน้าที่ย่อสำเร็จแล้ว (สร้างจาก color-completed และ char-completed)
+  # - %remaining%: ขีดความก้าวหน้าที่เหลืออยู่ (สร้างจาก color-remaining และ char-remaining)
+  # - %count%: จำนวนครั้งที่กดย่อสำเร็จในปัจจุบัน
+  # - %total%: จำนวนครั้งทั้งหมดที่ต้องการ
+  # - %needed%: จำนวนครั้งที่ยังต้องกดเพิ่มเพื่อเปิดใช้งาน
+  # - %system%: ชื่อภาษาไทยของระบบย่อย (แสดง "ระบบเช็คจุดเกิดมอนสเตอร์")
+  # - %prefix%: คำนำหน้าของปลั๊กอิน (จาก config.yml หลัก)
+  # - %color_bracket%: รหัสสีของวงเล็บครอบหลอด
+  # - %color_number%: รหัสสีของตัวเลขระบุความก้าวหน้า
+  # - %color_text%: รหัสสีของคำอธิบาย
+  progress-bar:
+    enabled: true
+    char-completed: "|"
+    char-remaining: "|"
+    color-completed: "&a"
+    color-remaining: "&7"
+    color-bracket: "&e"
+    color-number: "&b"
+    color-text: "&7"
+    format: "%color_bracket%[ %completed%%remaining% %color_bracket%] %color_number%%count%/%total% %color_text%(ย่ออีก %needed% ครั้งเพื่อใช้ %system%)"
+
+  # การตั้งค่าระบบเสียง (Audio Settings)
+  # - tick-sound: ชื่อเสียงระหว่างกดย่อสะสม (เช่น BLOCK_NOTE_BLOCK_PLING, BLOCK_NOTE_BLOCK_BIT ฯลฯ)
+  # - tick-volume: ความดังของเสียงสะสม (0.0 - 1.0)
+  # - tick-pitch-start: คีย์ระดับเสียงเริ่มแรก (0.5 - 2.0)
+  # - tick-pitch-end: คีย์ระดับเสียงสูงสุดเมื่อเต็ม (0.5 - 2.0)
+  # - success-sound: ชื่อเสียงตอนปลดล็อกสำเร็จ (เช่น ENTITY_PLAYER_LEVELUP, BLOCK_BEACON_ACTIVATE)
+  # - success-volume: ความดังของเสียงสำเร็จ (0.0 - 1.0)
+  # - success-pitch: คีย์ระดับเสียงสำเร็จ (0.5 - 2.0)
+  audio:
+    enabled: true
+    tick-sound: "BLOCK_NOTE_BLOCK_PLING"
+    tick-volume: 0.5
+    tick-pitch-start: 0.5
+    tick-pitch-end: 2.0
+    success-sound: "ENTITY_PLAYER_LEVELUP"
+    success-volume: 0.8
+    success-pitch: 1.0
+
+# Placeholders ที่สามารถใช้งานในข้อความ:
+# - %prefix%: คำนำหน้าของปลั๊กอิน (จาก config.yml หลัก)
+# - %amount%: จำนวนพิกัดที่พบบล็อกความมืดที่มอนสเตอร์มีโอกาสสปอนได้
 messages:
   checking: "%prefix% &eScanning spawnable locations..."
   found: "%prefix% &aFound %amount% spawnable locations! Displaying particles."

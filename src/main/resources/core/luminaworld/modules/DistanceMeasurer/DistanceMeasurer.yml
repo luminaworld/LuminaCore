@@ -6,6 +6,41 @@ settings:
   required-sneaks: 1
   reset-interval: 2.5
 
+  # การตั้งค่าหลอดความก้าวหน้า (Progress Bar)
+  # (หมายเหตุ: DistanceMeasurer ใช้งานทางลัด Shift + คลิกขวา จึงไม่ได้แสดงหลอดสะสมย่อตัว แต่ใส่โครงสร้างไว้เพื่อความสอดคล้อง)
+  progress-bar:
+    enabled: false
+    char-completed: "|"
+    char-remaining: "|"
+    color-completed: "&a"
+    color-remaining: "&7"
+    color-bracket: "&e"
+    color-number: "&b"
+    color-text: "&7"
+    format: "%color_bracket%[ %completed%%remaining% %color_bracket%] %color_number%%count%/%total% %color_text%(ย่ออีก %needed% ครั้งเพื่อใช้ %system%)"
+
+  # การตั้งค่าระบบเสียง (Audio Settings)
+  # - tick-sound: ชื่อเสียงคลิกจุดสะสม (ไม่ได้ประมวลผลผ่าน tick-sound ในโมดูลนี้)
+  # - success-sound: ชื่อเสียงเมื่อสลับเปิด/ปิดโหมดวัดระยะทางสำเร็จ
+  # - success-volume: ความดังเสียงสลับโหมด
+  # - success-pitch: คีย์ระดับเสียงสลับโหมด
+  audio:
+    enabled: true
+    tick-sound: "BLOCK_NOTE_BLOCK_PLING"
+    tick-volume: 0.5
+    tick-pitch-start: 1.0
+    tick-pitch-end: 1.0
+    success-sound: "ENTITY_PLAYER_LEVELUP"
+    success-volume: 0.8
+    success-pitch: 1.0
+
+# Placeholders ที่สามารถใช้งานในข้อความ:
+# - %prefix%: คำนำหน้าของปลั๊กอิน (จาก config.yml หลัก)
+# - %x%: พิกัดแกน X ของจุดที่คลิกเลือก
+# - %y%: พิกัดแกน Y ของจุดที่คลิกเลือก
+# - %z%: พิกัดแกน Z ของจุดที่คลิกเลือก
+# - %dist%: ระยะทางตรงในแบบเส้นทแยงมุม 3 มิติ (Euclidean Distance มีทศนิยม 2 ตำแหน่ง)
+# - %manhattan%: ระยะทางรวมผลต่างพิกัดตามแนวเดินบล็อก (Manhattan Distance)
 messages:
   mode-enabled: "%prefix% &aMeasure Mode Enabled! Right-click blocks to set points."
   mode-disabled: "%prefix% &cMeasure Mode Disabled!"

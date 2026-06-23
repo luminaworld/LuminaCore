@@ -1,0 +1,10 @@
+settings:
+  enabled: true
+  message-style: "ACTIONBAR"
+  use-permission: false
+  permission: "luminacore.module.nethercalculator"
+
+messages:
+  overworld-to-nether: "%prefix% &eNether Equivalent: &aX=%x%, Z=%z%"
+  nether-to-overworld: "%prefix% &eOverworld Equivalent: &aX=%x%, Z=%z%"
+  invalid-world: "%prefix% &cYou can only use this in Overworld or Nether."

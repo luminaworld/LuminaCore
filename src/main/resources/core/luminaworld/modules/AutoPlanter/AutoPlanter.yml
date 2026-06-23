@@ -1,0 +1,10 @@
+settings:
+  enabled: true
+  message-style: "ACTIONBAR"
+  use-permission: false
+  permission: "luminacore.module.autoplanter"
+  radius: 5
+
+messages:
+  planted: "%prefix% &aSuccessfully planted %amount% crops!"
+  no-seeds: "%prefix% &cYou do not have enough seeds in your hand."

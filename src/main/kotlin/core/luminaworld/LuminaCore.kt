@@ -37,6 +37,9 @@ class LuminaCore : JavaPlugin() {
             }
         }
 
+        // ลงทะเบียน Listener ส่วนกลางในการดักฟังปุ่มลัดการกดย่อตัว
+        server.pluginManager.registerEvents(core.luminaworld.listener.SneakTriggerListener(this), this)
+
         logger.info("[LuminaCore] Plugin enabled successfully.")
     }
 

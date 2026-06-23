@@ -1,0 +1,11 @@
+settings:
+  enabled: true
+  message-style: "ACTIONBAR"
+  use-permission: false
+  permission: "luminacore.module.spawnchecker"
+  radius: 8
+
+messages:
+  checking: "%prefix% &eScanning spawnable locations..."
+  found: "%prefix% &aFound %amount% spawnable locations! Displaying particles."
+  not-found: "%prefix% &cNo spawnable locations found around you."

@@ -1,0 +1,12 @@
+settings:
+  enabled: true
+  message-style: "ACTIONBAR"
+  use-permission: false
+  permission: "luminacore.module.distancemeasurer"
+
+messages:
+  mode-enabled: "%prefix% &aMeasure Mode Enabled! Right-click blocks to set points."
+  mode-disabled: "%prefix% &cMeasure Mode Disabled!"
+  point-1: "%prefix% &aPoint 1 set at: &eX=%x%, Y=%y%, Z=%z%"
+  point-2: "%prefix% &aPoint 2 set at: &eX=%x%, Y=%y%, Z=%z%"
+  result: "%prefix% &bDistance: &e%dist% blocks &7| &bManhattan: &e%manhattan% blocks"

@@ -1,0 +1,12 @@
+settings:
+  enabled: true
+  message-style: "ACTIONBAR"
+  use-permission: false
+  permission: "luminacore.module.treecapitator"
+  max-blocks: 128
+  break-leaves: true
+  replant-sapling: true
+
+messages:
+  mode-enabled: "%prefix% &aTree Capitator mode enabled!"
+  mode-disabled: "%prefix% &cTree Capitator mode disabled!"

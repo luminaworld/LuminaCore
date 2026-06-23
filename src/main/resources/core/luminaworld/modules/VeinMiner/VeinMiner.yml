@@ -1,0 +1,10 @@
+settings:
+  enabled: true
+  message-style: "ACTIONBAR"
+  use-permission: false
+  permission: "luminacore.module.veinminer"
+  max-blocks: 64
+
+messages:
+  mode-enabled: "%prefix% &aVein Miner mode enabled!"
+  mode-disabled: "%prefix% &cVein Miner mode disabled!"

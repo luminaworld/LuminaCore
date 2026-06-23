@@ -70,4 +70,36 @@ abstract class LuminaModule(val plugin: LuminaCore, val name: String) {
             }
         }
     }
+
+    /**
+     * ส่งข้อความแจ้งเตือนหาผู้เล่นตามสไตล์ที่กำหนดใน Config ย่อย (CHAT หรือ ACTIONBAR)
+     */
+    fun sendNotification(player: org.bukkit.entity.Player, msg: String) {
+        val style = config?.getString("settings.message-style", "CHAT") ?: "CHAT"
+        val prefix = plugin.config.getString("settings.prefix", "[LuminaCore]") ?: "[LuminaCore]"
+        val formattedMsg = msg.replace("%prefix%", prefix).replace("&", "§")
+        
+        if (style.equals("ACTIONBAR", ignoreCase = true)) {
+            player.sendActionBar(formattedMsg)
+        } else {
+            player.sendMessage(formattedMsg)
+        }
+    }
+
+    /**
+     * ตรวจสอบว่าผู้เล่นมีสิทธิ์ในการเข้าถึงระบบย่อยนี้หรือไม่
+     */
+    fun checkPermission(player: org.bukkit.entity.Player): Boolean {
+        val usePermission = config?.getBoolean("settings.use-permission", false) ?: false
+        if (!usePermission) return true
+        
+        val permissionNode = config?.getString("settings.permission", "luminacore.module.${name.lowercase()}") 
+            ?: "luminacore.module.${name.lowercase()}"
+            
+        if (player.hasPermission(permissionNode) || player.isOp) return true
+        
+        val noPermMsg = plugin.getMsg("no-permission", "%prefix% &cYou do not have permission to execute this.")
+        player.sendMessage(noPermMsg)
+        return false
+    }
 }

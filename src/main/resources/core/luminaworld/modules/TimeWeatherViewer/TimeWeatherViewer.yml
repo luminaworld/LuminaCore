@@ -1,0 +1,11 @@
+settings:
+  enabled: true
+  message-style: "ACTIONBAR"
+  use-permission: false
+  permission: "luminacore.module.timeweatherviewer"
+
+messages:
+  info: "%prefix% &eTime: &a%time% &7| &eWeather: &a%weather%"
+  weather-clear: "Clear"
+  weather-rain: "Rain"
+  weather-thunder: "Thunder"

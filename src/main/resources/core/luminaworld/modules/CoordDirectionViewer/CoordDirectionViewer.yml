@@ -1,0 +1,12 @@
+settings:
+  enabled: true
+  message-style: "ACTIONBAR"
+  use-permission: false
+  permission: "luminacore.module.coorddirectionviewer"
+
+messages:
+  info: "%prefix% &eLocation: &aX=%x%, Y=%y%, Z=%z% &7| &eDirection: &a%direction%"
+  dir-north: "North"
+  dir-east: "East"
+  dir-south: "South"
+  dir-west: "West"

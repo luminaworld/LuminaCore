@@ -1,0 +1,18 @@
+name: LuminaCore
+version: 1.0.0
+main: core.luminaworld.LuminaCore
+api-version: "1.20"
+folia-supported: true
+description: Luminaris Custom Plugin
+author: Loma0531
+
+commands:
+  luminacore:
+    description: LuminaCore Management Command
+    aliases:
+      - luminaris
+      - luminaworld
+      - llw
+      - lc
+    permission: luminacore.admin
+    usage: /<command> [reload]

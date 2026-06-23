@@ -1,0 +1,28 @@
+# -------------------------------------------------------------
+# LuminaCore Config - Shared Configuration
+# -------------------------------------------------------------
+
+# Shared Discord Webhook Configuration
+webhook:
+  url: "https://discord.com/api/webhooks/YOUR_WEBHOOK_URL"
+  username: "LuminaCore Notifier"
+  avatar-url: "https://cdn.discordapp.com/attachments/123456789/avatar.png"
+
+# General Settings
+settings:
+  timezone: "Asia/Bangkok"
+  time-format: "dd/MM/yyyy HH:mm:ss"
+  prefix: "[LuminaCore]"
+
+# Customizable messages for core system (No emojis)
+messages:
+  no-permission: "%prefix% You do not have permission to execute this command."
+  only-players: "%prefix% Only players can execute this command."
+  plugin-reloaded: "%prefix% Plugin configuration and modules have been reloaded."
+  gui-title: "LuminaCore Modules"
+  gui-module-enabled: "%prefix% Module %module% has been enabled."
+  gui-module-disabled: "%prefix% Module %module% has been disabled."
+  gui-click-to-toggle: "&7Click to toggle status"
+  gui-status-enabled: "&aStatus: Enabled"
+  gui-status-disabled: "&cStatus: Disabled"
+

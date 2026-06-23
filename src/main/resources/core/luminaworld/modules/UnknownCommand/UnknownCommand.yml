@@ -1,0 +1,97 @@
+# -------------------------------------------------------------
+# Unknown Command Detector - Module Configuration
+# -------------------------------------------------------------
+
+# Module Settings
+settings:
+  enabled: true
+  
+  # Cooldown in seconds between sending notifications per player
+  cooldown: 3
+
+# Message notification format to use. Options: Embed1, Embed2, normal
+messages: "Embed1"
+
+# Highly customizable Discord Webhook Embed 1
+Embed1:
+  content: ""
+  setTitle: "%prefix% Command Incident Detected"
+  setDescription: "A suspicious command execution attempt was caught."
+  setColor: 15158332  # Red
+  setThumbnail: "%player_avatar%"
+  setTimestamp: true
+  setFooter: "LuminaCore Command Detector"
+  fields:
+    field1:
+      name: "Player"
+      value: "%player_name%"
+      inline: false
+    field2:
+      name: "Command Entered"
+      value: "`%command%`"
+      inline: true
+    field3:
+      name: "Incident Type"
+      value: "%detector_type%"
+      inline: true
+    field4:
+      name: "Server"
+      value: "%server_name%"
+      inline: true
+    field5:
+      name: "Time"
+      value: "%time%"
+      inline: false
+
+# Highly customizable Discord Webhook Embed 2
+Embed2:
+  setTitle: "%prefix% %player_name% typed suspicious command"
+  setColor: 16776960  # Yellow
+  setThumbnail: "%player_avatar%"
+  setTimestamp: true
+  fields:
+    field1:
+      name: "Command"
+      value: "`%command%`"
+      inline: true
+    field2:
+      name: "Type"
+      value: "%detector_type%"
+      inline: true
+    field3:
+      name: "Time"
+      value: "%time%"
+      inline: true
+
+# Normal text format (Plain Discord Message)
+normal:
+  content: "%prefix% Player %player_name% typed suspicious command: %command% (%detector_type%) at %time%"
+
+# Commands that should NOT trigger Unknown Command alerts if they are not registered in Spigot
+ignored-commands:
+  - "/help"
+  - "/?"
+  - "/list"
+  - "/who"
+  - "/spawn"
+  - "/home"
+  - "/back"
+  - "/tpa"
+  - "/tpaccept"
+  - "/tpdeny"
+  - "/msg"
+  - "/tell"
+  - "/whisper"
+  - "/r"
+  - "/reply"
+
+# Commands to monitor. Any attempt to use these commands (even if registered) will trigger an alert
+monitored-commands:
+  - "/op"
+  - "/deop"
+  - "/gamemode"
+  - "/gm"
+  - "/stop"
+  - "/reload"
+  - "/rl"
+  - "/plugman"

@@ -1,0 +1,75 @@
+# -------------------------------------------------------------
+# Glowing Twerk - Module Configuration
+# -------------------------------------------------------------
+
+# Enable or disable this module
+settings:
+  enabled: true
+  
+  # Cooldown between uses (seconds - supports decimals e.g., 1.5, 2.5)
+  cooldown: 5.0
+  
+  # Chance for crops to grow (percentage 0.0 - 100.0)
+  growth-chance: 50.0
+  
+  # Enable particle effects
+  particle-enabled: true
+  
+  # Amount of particles to show per grew crop
+  particle-amount: 10
+  
+  # Enable sound effects
+  sound-enabled: true
+  
+  # Enable chat messages
+  chat-messages-enabled: true
+  
+  # Max radius allowed for players (based on permission level)
+  max-radius: 32
+  
+  # Particle type to display (Single particle type as requested)
+  particle: "HAPPY_VILLAGER"
+  
+  # Allowed worlds (empty list = all worlds)
+  allowed-worlds:
+    - "world"
+    - "world_nether"
+    - "world_the_end"
+
+# Customizable messages (No emojis)
+messages:
+  success: "%prefix% You grew {count} plants using Luminaris power!"
+  cooldown: "%prefix% Please wait before using Luminaris power again!"
+  no-permission: "%prefix% You do not have permission to use Glowing Twerk!"
+  world-disabled: "%prefix% Glowing Twerk is not allowed in this world!"
+
+# List of growable block types (Must match Bukkit Material names)
+growable-blocks:
+  - "WHEAT"
+  - "CARROTS"
+  - "POTATOES"
+  - "BEETROOTS"
+  - "NETHER_WART"
+  - "COCOA"
+  - "OAK_SAPLING"
+  - "BIRCH_SAPLING"
+  - "SPRUCE_SAPLING"
+  - "JUNGLE_SAPLING"
+  - "ACACIA_SAPLING"
+  - "DARK_OAK_SAPLING"
+  - "CHERRY_SAPLING"
+  - "MANGROVE_PROPAGULE"
+  - "BAMBOO"
+  - "BAMBOO_SAPLING"
+  - "SUGAR_CANE"
+  - "CACTUS"
+  - "KELP"
+  - "KELP_PLANT"
+  - "CHORUS_FLOWER"
+  - "SWEET_BERRY_BUSH"
+  - "MELON_STEM"
+  - "PUMPKIN_STEM"
+  - "BROWN_MUSHROOM"
+  - "RED_MUSHROOM"
+  - "CRIMSON_FUNGUS"
+  - "WARPED_FUNGUS"

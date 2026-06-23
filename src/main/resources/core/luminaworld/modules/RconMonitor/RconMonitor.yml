@@ -1,0 +1,54 @@
+# -------------------------------------------------------------
+# RCON Monitor - Module Configuration
+# -------------------------------------------------------------
+
+# Module Settings
+settings:
+  enabled: true
+  
+  # Send webhook when RCON login detected
+  notify-login: true
+  
+  # Send webhook when command is executed via RCON
+  notify-command: true
+  
+  # Dedicated Discord Webhook URL for Rcon monitoring
+  # (If empty, it falls back to shared webhook URL in config.yml)
+  discord-webhook-url: ""
+  
+  # Warning message printed to Console (Customizable)
+  console-warning: "[LuminaCore] RCON Login detected from IP: %ip%"
+
+# When someone logs into RCON
+LoginEmbed:
+  setTitle: "RCON Login Detected"
+  setDescription: "A new RCON connection has been established to the server."
+  setColor: 15158332  # Red (decimal color code)
+  setTimestamp: true
+  setFooter: "LuminaCore RCON Monitor"
+  fields:
+    field1:
+      name: "IP Address"
+      value: "%ip%"
+      inline: false
+    field2:
+      name: "Time"
+      value: "%time%"
+      inline: false
+
+# When a command is run via RCON
+CommandEmbed:
+  setTitle: "RCON Command Executed"
+  setDescription: "A command was executed via RCON."
+  setColor: 15158332  # Red
+  setTimestamp: true
+  setFooter: "LuminaCore RCON Monitor"
+  fields:
+    field1:
+      name: "Command Executed"
+      value: "```%command%```"
+      inline: false
+    field2:
+      name: "Time"
+      value: "%time%"
+      inline: false

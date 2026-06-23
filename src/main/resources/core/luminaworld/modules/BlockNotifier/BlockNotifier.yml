@@ -1,0 +1,92 @@
+# -------------------------------------------------------------
+# Block Notifier - Module Configuration
+# -------------------------------------------------------------
+
+# Module Settings
+settings:
+  enabled: true
+  
+  # Cooldown in seconds between sending notifications per player
+  cooldown: 5
+
+# Message notification format to use. Options: Embed1, Embed2, normal
+messages: "Embed1"
+
+# Highly customizable Discord Webhook Embed 1
+Embed1:
+  content: ""
+  setTitle: "%prefix% Block Break Detected"
+  setDescription: "A tracked block has been mined."
+  setColor: 15844367  # Gold (decimal color code)
+  setThumbnail: "%player_avatar%"
+  setTimestamp: true
+  setFooter: "LuminaCore Block Notifier"
+  fields:
+    field1:
+      name: "Player"
+      value: "%player_name%"
+      inline: false
+    field2:
+      name: "Block Type"
+      value: "%block_type%"
+      inline: true
+    field3:
+      name: "World"
+      value: "%world_name%"
+      inline: true
+    field4:
+      name: "Coordinates"
+      value: "X: %block_x% Y: %block_y% Z: %block_z%"
+      inline: true
+    field5:
+      name: "Time"
+      value: "%time%"
+      inline: false
+    field6:
+      name: "Teleport Command"
+      value: "```/tp %block_x% %block_y% %block_z%```"
+      inline: false
+
+# Highly customizable Discord Webhook Embed 2
+Embed2:
+  setTitle: "%prefix% %player_name% mined %block_type%"
+  setColor: 3447003  # Blue
+  setThumbnail: "%player_avatar%"
+  setTimestamp: true
+  fields:
+    field1:
+      name: "Location"
+      value: "%block_x%, %block_y%, %block_z%"
+      inline: true
+    field2:
+      name: "World"
+      value: "%world_name%"
+      inline: true
+    field3:
+      name: "Time"
+      value: "%time%"
+      inline: true
+
+# Normal text format (Sends as plain message to Discord)
+normal:
+  content: "%prefix% Player %player_name% mined %block_type% at %block_x%, %block_y%, %block_z% in world %world_name% at %time%"
+
+# List of block types to track (Must match Bukkit Material names)
+tracked-blocks:
+  - "DIAMOND_ORE"
+  - "EMERALD_ORE"
+  - "ANCIENT_DEBRIS"
+  - "GOLD_ORE"
+  - "DEEPSLATE_DIAMOND_ORE"
+  - "DEEPSLATE_EMERALD_ORE"
+  - "DEEPSLATE_GOLD_ORE"
+  - "IRON_ORE"
+  - "DEEPSLATE_IRON_ORE"
+  - "COAL_ORE"
+  - "DEEPSLATE_COAL_ORE"
+  - "COPPER_ORE"
+  - "DEEPSLATE_COPPER_ORE"
+  - "LAPIS_ORE"
+  - "DEEPSLATE_LAPIS_ORE"
+  - "REDSTONE_ORE"
+  - "DEEPSLATE_REDSTONE_ORE"

@@ -1,0 +1,47 @@
+# การตั้งค่า ConcreteConverter (แปลงผงคอนกรีตเป็นคอนกรีตแข็งเมื่อจมน้ำ)
+settings:
+  enabled: true
+  use-permission: true
+  permission: "luminacore.feature.concreteconverter"
+  
+  convert-delay-seconds: 10 # ระยะเวลาจมน้ำก่อนกลายร่าง (วินาที)
+  only-in-water-source: false # ต้องเป็นน้ำนิ่ง (Water Source) เท่านั้นหรือไม่ (false = รวมน้ำไหลด้วย)
+
+  progress-bar:
+    enabled: true
+    range: 5.0 # ระยะรัศมีบล็อกที่ผู้เล่นจะได้เห็นแถบความคืบหน้าบน ActionBar
+    char-completed: "|"
+    char-remaining: "|"
+    color-completed: "&a"
+    color-remaining: "&8"
+    color-bracket: "&7"
+    color-number: "&e"
+    color-text: "&f"
+    format: "%color_bracket%[ %completed%%remaining% %color_bracket%] %color_number%%count%/%total% วินาที %color_text%(ผงคอนกรีตกำลังแข็งตัว...)"
+
+  audio:
+    enabled: true
+    tick-sound: "BLOCK_BREWING_STAND_BREW" # เสียงฟองระหว่างรอ
+    tick-volume: 0.4
+    tick-pitch-start: 0.5 # Pitch เริ่มต้น
+    tick-pitch-end: 1.5   # Pitch สิ้นสุดตอนแปลงร่างสำเร็จ (ไล่เสียงขึ้น)
+    
+    success-sound: "BLOCK_LAVA_EXTINGUISH" # เสียงเมื่อแปลงร่างสำเร็จ
+    success-volume: 0.8
+    success-pitch: 1.2
+
+  particles:
+    type: "SPLASH" # เอฟเฟกต์ตอนแปลงสำเร็จ
+    count: 15
+    speed: 0.1
+
+# รายการตัวแปร (Placeholders) ที่ใช้ในหลอดพลังงาน:
+# %completed% - สัญลักษณ์เกจพลังส่วนที่สำเร็จแล้ว
+# %remaining% - สัญลักษณ์เกจพลังส่วนที่เหลือ
+# %count% - วินาทีที่ดำเนินไปแล้ว
+# %total% - วินาทีเป้าหมาย
+# %needed% - วินาทีที่ยังต้องการเพิ่ม
+# %prefix% - คำนำหน้าปลั๊กอิน
+# %color_bracket% - สีของวงเล็บครอบ
+# %color_number% - สีของตัวเลข
+# %color_text% - สีของข้อความอธิบาย

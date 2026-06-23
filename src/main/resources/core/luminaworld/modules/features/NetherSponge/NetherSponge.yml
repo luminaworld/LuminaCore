@@ -1,0 +1,24 @@
+# การตั้งค่า NetherSponge (ฟองน้ำเปียกตกลงนรกแล้วระเหยเป็นฟองน้ำธรรมดาทันที)
+settings:
+  enabled: true
+  use-permission: true
+  permission: "luminacore.feature.nethersponge"
+  message-style: "ACTIONBAR"
+
+  particles:
+    enabled: true
+    type: "SMOKE" # เอฟเฟกต์ไอน้ำเดือด
+    count: 8
+    speed: 0.05
+
+  audio:
+    enabled: true
+    sound: "BLOCK_LAVA_EXTINGUISH" # เสียงไอน้ำโดนแผดเผา
+    volume: 0.8
+    pitch: 1.2
+
+messages:
+  dried: "%prefix% &eฟองน้ำเปียกโดนความร้อนจากนรกแผดเผาจนระเหยเป็นฟองน้ำธรรมดาทันที!"
+
+# รายการตัวแปร (Placeholders) ที่ใช้ได้:
+# %prefix% - คำนำหน้าปลั๊กอิน

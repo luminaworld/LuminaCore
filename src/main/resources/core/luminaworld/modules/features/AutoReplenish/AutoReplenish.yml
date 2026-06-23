@@ -1,0 +1,24 @@
+# การตั้งค่า AutoReplenish (เติมบล็อกและอุปกรณ์ในมือหลักอัตโนมัติเมื่อหมด)
+settings:
+  enabled: true
+  use-permission: true
+  permission: "luminacore.feature.autoreplenish"
+  message-style: "ACTIONBAR"
+
+  check-blocks: true       # เติมบล็อกที่วางจนหมดอัตโนมัติ
+  check-projectiles: true  # เติมไอเทมปาที่ขว้างจนหมด (Snowball, Egg, Ender Pearl, ขวด EXP, ยาปา)
+  check-buckets: true      # เติมถังน้ำ/ถังลาวา/ถังนม เมื่อใช้งานเท/วางเสร็จสิ้น
+  check-broken-tools: true # เติมอุปกรณ์ชนิดเดียวกันเมื่อชิ้นเดิมพังคามือ (ที่ขุด, ดาบ, ขวาน, พลั่ว, จอบ)
+
+  audio:
+    enabled: true
+    sound: "ITEM_ARMOR_EQUIP_GENERIC" # เสียงแสดงการสลับเติมไอเทม
+    volume: 0.6
+    pitch: 1.2
+
+messages:
+  replenished: "%prefix% &aเติม %item% ในมือให้อัตโนมัติแล้ว!"
+
+# รายการตัวแปร (Placeholders) ที่ใช้ได้:
+# %item% - ชื่อของไอเทมที่ได้รับการเติมทดแทน
+# %prefix% - คำนำหน้าปลั๊กอิน

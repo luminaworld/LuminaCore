@@ -1,0 +1,27 @@
+# การตั้งค่า PathConverter (ใช้พลั่วคลิกขวาที่ทางเดินดิน Dirt Path เพื่อแปลงกลับเป็นดินธรรมดา)
+settings:
+  enabled: true
+  use-permission: true
+  permission: "luminacore.feature.pathconverter"
+  message-style: "ACTIONBAR"
+
+  to-material: "DIRT" # บล็อกที่จะได้รับหลังจากแปลง (เช่น DIRT หรือ COARSE_DIRT)
+  durability-cost: 1 # ค่าความทนทานพลั่วที่เสียไป (คิดร่วมกับระดับของ Unbreaking)
+
+  particles:
+    enabled: true
+    type: "BLOCK" # เอฟเฟกต์ดินกระเซ็น
+    count: 12
+    speed: 0.05
+
+  audio:
+    enabled: true
+    sound: "BLOCK_GRAVEL_BREAK" # เสียงขูดดิน
+    volume: 0.8
+    pitch: 1.0
+
+messages:
+  converted: "%prefix% &aแปลงบล็อกทางเดินดินกลับเป็นบล็อกดินเรียบร้อยแล้ว!"
+
+# รายการตัวแปร (Placeholders) ที่ใช้ได้:
+# %prefix% - คำนำหน้าปลั๊กอิน

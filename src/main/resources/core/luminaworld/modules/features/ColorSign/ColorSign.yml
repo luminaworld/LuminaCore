@@ -1,0 +1,22 @@
+# การตั้งค่า ColorSign (ระบบเขียนป้ายตัวอักษรสี)
+settings:
+  enabled: true
+  use-permission: true
+  permission: "luminacore.feature.colorsign"
+  message-style: "ACTIONBAR" # รูปแบบข้อความแจ้งเตือน: CHAT หรือ ACTIONBAR
+  
+  allow-hex: true # เปิด/ปิด การใช้รหัสสีแบบ Hex เช่น &#FF5555
+  allow-minimessage: true # เปิด/ปิด การใช้สัญลักษณ์สีแบบ MiniMessage เช่น <gradient:red:blue>
+  allow-legacy: true # เปิด/ปิด การใช้รหัสสีแบบดั้งเดิม เช่น &a, &l
+
+  audio:
+    enabled: true
+    sound: "ENTITY_ITEM_FRAME_ADD_ITEM"
+    volume: 1.0
+    pitch: 1.2
+
+messages:
+  formatted: "%prefix% &aจัดรูปแบบตัวอักษรป้ายสำเร็จแล้ว!"
+
+# รายการตัวแปร (Placeholders) ที่ใช้ได้:
+# %prefix% - ข้อความนำหน้าปลั๊กอิน (ตั้งค่าใน config.yml)

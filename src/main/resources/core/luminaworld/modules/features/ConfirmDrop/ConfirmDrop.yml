@@ -1,0 +1,50 @@
+# การตั้งค่า ConfirmDrop (กั้นป้องกันการโยนไอเทมมีค่าทิ้งโดยไม่ได้ตั้งใจ)
+settings:
+  enabled: true
+  use-permission: true
+  permission: "luminacore.feature.confirmdrop"
+
+  confirm-delay-seconds: 3.0 # เวลาจำกัดในการกดยืนยันการทิ้งซ้ำ (วินาที)
+  protect-enchanted-only: true # ป้องกันเฉพาะไอเทมที่ตีบวก/มีมนต์สะกด (ยกเว้น Elytra ที่ป้องกันตลอดเวลา)
+
+  # รายชื่อประเภทวัสดุที่ต้องการป้องกันเป็นพิเศษ แม้จะไม่ได้ตีบวกก็ตาม
+  protect-materials:
+    - "ELYTRA"
+    - "NETHERITE_SWORD"
+    - "NETHERITE_PICKAXE"
+    - "NETHERITE_AXE"
+    - "NETHERITE_SHOVEL"
+    - "NETHERITE_HOE"
+    - "DIAMOND_SWORD"
+    - "DIAMOND_PICKAXE"
+
+  progress-bar:
+    enabled: true
+    char-completed: "|"
+    char-remaining: "|"
+    color-completed: "&c" # สีหลอดพลังเวลาส่วนที่ยังเหลือ (แสดงการแจ้งเตือน)
+    color-remaining: "&7" # สีหลอดพลังส่วนที่ลดหายไปแล้ว
+    color-bracket: "&e"
+    color-number: "&b"
+    color-text: "&7"
+    format: "%color_bracket%[ %completed%%remaining% %color_bracket%] %color_number%%time% วินาที %color_text%(กดย้ำทิ้งไอเทม %item% อีกครั้งเพื่อยืนยัน)"
+
+  audio:
+    enabled: true
+    
+    # เสียงเตือนเมื่อกดทิ้งครั้งแรก
+    warning-sound: "BLOCK_NOTE_BLOCK_BASS"
+    warning-volume: 0.8
+    warning-pitch: 0.5
+    
+    # เสียงเมื่อกดยืนยันการทิ้งสำเร็จ
+    success-sound: "ENTITY_EXPERIENCE_ORB_PICKUP"
+    success-volume: 0.6
+    success-pitch: 1.2
+
+# รายการตัวแปร (Placeholders) ที่ใช้ได้:
+# %completed% - หลอดเวลาส่วนที่เหลือ
+# %remaining% - หลอดเวลาส่วนที่หักล้างไป
+# %time% - วินาทีที่เหลือจุดทศนิยมหนึ่งตำแหน่ง
+# %item% - ชื่อของไอเทมที่จะทิ้ง
+# %prefix% - คำนำหน้าปลั๊กอิน

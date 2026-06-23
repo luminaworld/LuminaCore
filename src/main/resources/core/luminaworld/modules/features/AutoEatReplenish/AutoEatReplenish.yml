@@ -1,0 +1,43 @@
+# การตั้งค่า AutoEatReplenish (ระบบดึงอาหารสลับมาใส่ในมือเมื่อกินชิ้นสุดท้ายหมด)
+settings:
+  enabled: true
+  use-permission: true
+  permission: "luminacore.feature.autoeatreplenish"
+  message-style: "ACTIONBAR"
+
+  # ลำดับความสำคัญการค้นหาอาหารสำรอง (หากชนิดเดิมหมด จะค้นตามลำดับนี้ก่อน)
+  fallback-priority:
+    - "COOKED_BEEF"
+    - "COOKED_PORKCHOP"
+    - "GOLDEN_CARROT"
+    - "BAKED_POTATO"
+    - "BREAD"
+    - "COOKED_CHICKEN"
+    - "COOKED_MUTTON"
+    - "COOKED_RABBIT"
+    - "COOKED_COD"
+    - "COOKED_SALMON"
+    - "APPLE"
+
+  # การจัดการอาหารที่ไม่ปลอดภัย (อาหารที่อาจทำให้ติดสถานะผิดปกติ)
+  allow-unsafe-food: false # เปิด/ปิด การอนุญาตให้เติมอาหารที่เป็นอันตราย (หากเป็น false จะเลือกเฉพาะอาหารปลอดภัย)
+  unsafe-food-blacklist:
+    - "ROTTEN_FLESH"      # เนื้อเน่า (ทำให้หิวโซ)
+    - "SPIDER_EYE"        # ตาสไปเดอร์ (ทำให้ติดพิษ)
+    - "PUFFERFISH"        # ปลาปักเป้า (ทำให้ติดพิษ คลื่นไส้ หิวโซ)
+    - "POISONOUS_POTATO"  # มันฝรั่งพิษ (ทำให้ติดพิษ)
+    - "CHICKEN"           # ไก่ดิบ (มีโอกาสหิวโซ)
+    - "CHORUS_FRUIT"      # ผลไม้คอรัส (เทเลพอร์ตสุ่ม)
+
+  audio:
+    enabled: true
+    sound: "ENTITY_ITEM_PICKUP"
+    volume: 0.5
+    pitch: 1.0
+
+messages:
+  replenished: "%prefix% &eเติมอาหารในมือด้วย %item% อัตโนมัติ!"
+
+# รายการตัวแปร (Placeholders) ที่ใช้ได้:
+# %item% - ชื่อไอเทมอาหารที่ถูกดึงเข้ามาในมือหลัก
+# %prefix% - คำนำหน้าปลั๊กอิน

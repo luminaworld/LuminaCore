@@ -1,0 +1,27 @@
+# การตั้งค่า FarmlandConverter (ใช้จอบคลิกขวาที่ดินเพาะปลูก Farmland เพื่อแปลงกลับเป็นดินธรรมดา)
+settings:
+  enabled: true
+  use-permission: true
+  permission: "luminacore.feature.farmlandconverter"
+  message-style: "ACTIONBAR"
+
+  to-material: "DIRT" # บล็อกดินปลายทางที่จะได้รับหลังจากแปลง (เช่น DIRT หรือ COARSE_DIRT)
+  durability-cost: 1 # ค่าความทนทานจอบที่สูญเสียไปต่อครั้ง (คิดผลของยศ Unbreaking)
+
+  particles:
+    enabled: true
+    type: "BLOCK" # เอฟเฟกต์ดินฝุ่นกระจาย
+    count: 12
+    speed: 0.05
+
+  audio:
+    enabled: true
+    sound: "BLOCK_GRAVEL_BREAK" # เสียงดึงหน้าดิน
+    volume: 0.8
+    pitch: 0.9
+
+messages:
+  converted: "%prefix% &aแปลงดินเพาะปลูกกลับเป็นบล็อกดินเรียบร้อยแล้ว!"
+
+# รายการตัวแปร (Placeholders) ที่ใช้ได้:
+# %prefix% - คำนำหน้าปลั๊กอิน

@@ -87,31 +87,31 @@ class SneakTriggerListener(private val plugin: LuminaCore) : Listener {
         
         when (moduleName) {
             "TreeCapitator" -> {
-                val treeCap = manager.getModule("TreeCapitator") as? core.luminaworld.modules.TreeCapitator.TreeCapitatorModule
+                val treeCap = manager.getModule("TreeCapitator") as? core.luminaworld.modules.activate.TreeCapitator.TreeCapitatorModule
                 treeCap?.toggleMode(player)
             }
             "AutoPlanter" -> {
-                val planter = manager.getModule("AutoPlanter") as? core.luminaworld.modules.AutoPlanter.AutoPlanterModule
+                val planter = manager.getModule("AutoPlanter") as? core.luminaworld.modules.activate.AutoPlanter.AutoPlanterModule
                 planter?.runPlanting(player)
             }
             "SpawnChecker" -> {
-                val checker = manager.getModule("SpawnChecker") as? core.luminaworld.modules.SpawnChecker.SpawnCheckerModule
+                val checker = manager.getModule("SpawnChecker") as? core.luminaworld.modules.activate.SpawnChecker.SpawnCheckerModule
                 checker?.checkSpawnPoints(player)
             }
             "TimeWeatherViewer" -> {
-                val viewer = manager.getModule("TimeWeatherViewer") as? core.luminaworld.modules.TimeWeatherViewer.TimeWeatherViewerModule
+                val viewer = manager.getModule("TimeWeatherViewer") as? core.luminaworld.modules.activate.TimeWeatherViewer.TimeWeatherViewerModule
                 viewer?.showTimeAndWeather(player)
             }
             "CoordDirectionViewer" -> {
-                val viewer = manager.getModule("CoordDirectionViewer") as? core.luminaworld.modules.CoordDirectionViewer.CoordDirectionViewerModule
+                val viewer = manager.getModule("CoordDirectionViewer") as? core.luminaworld.modules.activate.CoordDirectionViewer.CoordDirectionViewerModule
                 viewer?.showCoordinatesAndDirection(player)
             }
             "NetherCalculator" -> {
-                val calc = manager.getModule("NetherCalculator") as? core.luminaworld.modules.NetherCalculator.NetherCalculatorModule
+                val calc = manager.getModule("NetherCalculator") as? core.luminaworld.modules.activate.NetherCalculator.NetherCalculatorModule
                 calc?.calculateCoordinates(player)
             }
             "VeinMiner" -> {
-                val miner = manager.getModule("VeinMiner") as? core.luminaworld.modules.VeinMiner.VeinMinerModule
+                val miner = manager.getModule("VeinMiner") as? core.luminaworld.modules.activate.VeinMiner.VeinMinerModule
                 miner?.toggleMode(player)
             }
         }
@@ -264,7 +264,7 @@ class SneakTriggerListener(private val plugin: LuminaCore) : Listener {
                 val module = manager.getModule("DistanceMeasurer")
                 if (module != null && module.isEnabled) {
                     if (module.checkPermission(player)) {
-                        val measurer = module as? core.luminaworld.modules.DistanceMeasurer.DistanceMeasurerModule
+                        val measurer = module as? core.luminaworld.modules.activate.DistanceMeasurer.DistanceMeasurerModule
                         measurer?.toggleMeasureMode(player)
                     }
                 }

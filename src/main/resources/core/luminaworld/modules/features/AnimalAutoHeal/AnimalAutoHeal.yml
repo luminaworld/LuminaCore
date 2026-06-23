@@ -1,0 +1,29 @@
+# การตั้งค่า AnimalAutoHeal (ระบบฟื้นฟูเลือดสัตว์เลี้ยงและสัตว์ฟาร์มอัตโนมัติ)
+settings:
+  enabled: true
+  use-permission: true
+  permission: "luminacore.feature.animalautoheal"
+
+  heal-interval-seconds: 2.0 # วิ่งตรวจสอบและฮีลทุกๆ กี่วินาที
+  heal-amount: 1.0 # ฮีลจำนวนเท่าไหร่ (1.0 HP = ครึ่งหัวใจ)
+  combat-cooldown-seconds: 10.0 # ต้องห้ามโดนความเสียหายล่าสุดภายในกี่วินาที จึงจะได้รับการฮีล
+  activation-range: 16.0 # สัตว์เลี้ยงต้องอยู่ในรัศมีระยะกี่บลอกจากผู้เล่นระบบจึงทำงาน
+
+  # รายชื่อประเภทสัตว์ที่เปิดระบบ (ทิ้งไว้เป็นลิสต์ว่าง [] หากต้องการให้ฮีลสัตว์ทุกประเภท)
+  # ตัวอย่างประเภทสัตว์: COW, SHEEP, PIG, CHICKEN, WOLF, CAT, HORSE, PARROT, LLAMA
+  allowed-entities: []
+
+  particles:
+    type: "HEART" # เอฟเฟกต์ที่สปอน (HEART)
+    count: 3
+    speed: 0.02
+
+  audio:
+    enabled: true
+    sound: "ENTITY_EXPERIENCE_ORB_PICKUP" # เสียงตอนได้รับการฮีล
+    volume: 0.5
+    pitch-start: 0.5 # ระดับเสียงเริ่มต่ำสุด (เมื่อเลือดเหลือน้อย)
+    pitch-end: 1.5   # ระดับเสียงสุดยอดสูงสุด (เมื่อเลือดกำลังเต็ม)
+
+# รายการตัวแปร (Placeholders) และรายละเอียด:
+# %prefix% - คำนำหน้าปลั๊กอิน

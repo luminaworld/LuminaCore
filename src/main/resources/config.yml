@@ -1,31 +1,32 @@
 # -------------------------------------------------------------
-# LuminaCore Config - Shared Configuration
+# LuminaCore Config - การตั้งค่าส่วนกลาง
 # -------------------------------------------------------------
 
-# Shared Discord Webhook Configuration
+# การตั้งค่าทั่วไปของระบบ
+settings:
+  prefix: "[LuminaCore]"
+  timezone: "Asia/Bangkok"
+  time-format: "dd/MM/yyyy HH:mm:ss"
+
+# การตั้งค่าคีย์ลัดการกดย่อตัวเริ่มต้น
+shortcut:
+  required-sneaks: 10
+  reset-interval: 2.5
+
+# การตั้งค่าแชร์ Discord Webhook สำหรับแจ้งเตือนระบบ
 webhook:
   url: "https://discord.com/api/webhooks/YOUR_WEBHOOK_URL"
   username: "LuminaCore Notifier"
   avatar-url: "https://cdn.discordapp.com/attachments/123456789/avatar.png"
 
-# General Settings
-settings:
-  timezone: "Asia/Bangkok"
-  time-format: "dd/MM/yyyy HH:mm:ss"
-  prefix: "[LuminaCore]"
-
-# Customizable messages for core system (No emojis)
+# ข้อความแจ้งเตือนต่างๆ ของระบบหลัก (หลีกเลี่ยงการใช้อิโมจิ)
 messages:
-  no-permission: "%prefix% You do not have permission to execute this command."
-  only-players: "%prefix% Only players can execute this command."
-  plugin-reloaded: "%prefix% Plugin configuration and modules have been reloaded."
-  gui-title: "LuminaCore Modules"
-  gui-module-enabled: "%prefix% Module %module% has been enabled."
-  gui-module-disabled: "%prefix% Module %module% has been disabled."
-  gui-click-to-toggle: "&7Click to toggle status"
-  gui-status-enabled: "&aStatus: Enabled"
-  gui-status-disabled: "&cStatus: Disabled"
-# Default Sneak Shortcut Configuration
-shortcut:
-  required-sneaks: 10
-  reset-interval: 2.5
+  no-permission: "%prefix% คุณไม่มีสิทธิ์ในการใช้งานคำสั่งนี้"
+  only-players: "%prefix% คำสั่งนี้ใช้งานได้เฉพาะผู้เล่นเท่านั้น"
+  plugin-reloaded: "%prefix% รีโหลดคอนฟิกและโมดูลของปลั๊กอินเรียบร้อยแล้ว"
+  gui-title: "โมดูล LuminaCore"
+  gui-module-enabled: "%prefix% เปิดใช้งานโมดูล %module% เรียบร้อยแล้ว"
+  gui-module-disabled: "%prefix% ปิดใช้งานโมดูล %module% เรียบร้อยแล้ว"
+  gui-click-to-toggle: "&7คลิกเพื่อเปิด/ปิดสถานะโมดูล"
+  gui-status-enabled: "&aสถานะ: เปิดใช้งาน"
+  gui-status-disabled: "&cสถานะ: ปิดใช้งาน"

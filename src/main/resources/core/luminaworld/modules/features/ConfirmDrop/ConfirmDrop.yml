@@ -9,22 +9,12 @@
 # 4. หากหมดเวลาหลอดนับถอยหลัง แถบแจ้งเตือนจะหายไปและระบบจะรีเซ็ตความปลอดภัยตามเดิม
 # =========================================================================
 settings:
+  # การตั้งค่าพื้นฐานโมดูล
   enabled: true
-  use-permission: true
+  use-permission: false
   permission: "luminacore.feature.confirmdrop"
   
-  # รูปแบบการแจ้งเตือนข้อความแจ้งผลลัพธ์ (message-style)
-  # เลือกได้ 3 รูปแบบ:
-  # - CHAT      : แสดงข้อความทางช่องพูดคุยปกติ
-  # - ACTIONBAR : แสดงข้อความลอยเด่นเหนือช่องทางลัดปุ่มไอเทม
-  # - NONE      : ปิดการแสดงข้อความแจ้งผลลัพธ์ทั้งหมดอย่างสมบูรณ์แบบ (จะไม่ขึ้นข้อความแจ้งเตือนเลย)
-  # รูปแบบการแจ้งเตือนข้อความ (message-style)
-  # เลือกได้ 3 รูปแบบ:
-  # - CHAT      : แสดงข้อความทางช่องพูดคุยปกติ
-  # - ACTIONBAR : แสดงข้อความเหนือแถบทางลัดปุ่มไอเทม
-  # - NONE      : ปิดการแจ้งเตือนทั้งหมดอย่างสมบูรณ์แบบ (จะไม่แสดงข้อความแจ้งเตือนเลย)
-  message-style: "ACTIONBAR"
-
+  # การตั้งค่าฟีเจอร์ป้องกันโยนไอเทมทิ้ง
   confirm-delay-seconds: 3.0 # เวลาจำกัดในการกดยืนยันการทิ้งซ้ำ (วินาที)
   protect-enchanted-only: true # ป้องกันเฉพาะไอเทมที่ตีบวก/มีมนต์สะกด (ยกเว้น Elytra ที่ป้องกันตลอดเวลา)
 
@@ -39,6 +29,7 @@ settings:
     - "DIAMOND_SWORD"
     - "DIAMOND_PICKAXE"
 
+  # แถบความคืบหน้าการทิ้งไอเทม (Progress Bar)
   progress-bar:
     enabled: true
     char-completed: "|"
@@ -48,8 +39,9 @@ settings:
     color-bracket: "&e"
     color-number: "&b"
     color-text: "&7"
-    format: "%color_bracket%[ %completed%%remaining% %color_bracket%] %color_number%%time% วินาที %color_text%(กดย้ำทิ้งไอเทม %item% อีกครั้งเพื่อยืนยัน)"
+    format: "%color_text%(กดย้ำทิ้งไอเทม %item% อีกครั้งเพื่อยืนยัน) %color_number%%time% วินาที %color_bracket%[ %completed%%remaining% %color_bracket%]"
 
+  # การตั้งค่าเสียงแจ้งเตือน
   audio:
     enabled: true
     
@@ -62,6 +54,13 @@ settings:
     success-sound: "ENTITY_EXPERIENCE_ORB_PICKUP"
     success-volume: 0.6
     success-pitch: 1.2
+
+  # รูปแบบการแจ้งเตือนข้อความแจ้งผลลัพธ์ (message-style)
+  # เลือกได้ 3 รูปแบบ:
+  # - CHAT      : แสดงข้อความทางช่องพูดคุยปกติ
+  # - ACTIONBAR : แสดงข้อความเหนือแถบทางลัดปุ่มไอเทม
+  # - NONE      : ปิดการแจ้งเตือนทั้งหมดอย่างสมบูรณ์แบบ (จะไม่แสดงข้อความแจ้งเตือนเลย)
+  message-style: "ACTIONBAR"
 
 # รายการตัวแปร (Placeholders) ที่ใช้ได้ใน format หลอดความคืบหน้า:
 # %completed% - หลอดเวลานับถอยหลังส่วนที่ยังเหลืออยู่

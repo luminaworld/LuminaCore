@@ -2,6 +2,7 @@ package core.luminaworld.module
 
 import core.luminaworld.LuminaCore
 import org.bukkit.configuration.file.YamlConfiguration
+import io.papermc.paper.threadedregions.scheduler.ScheduledTask
 import java.io.File
 import java.nio.file.Files
 
@@ -16,17 +17,23 @@ abstract class LuminaModule(val plugin: LuminaCore, val name: String) {
      */
     open fun loadConfig() {
         try {
+            val classPackage = javaClass.`package`.name.replace(".", "/")
+            val resourcePath = "$classPackage/$name.yml"
+
             if (!configFile.exists()) {
                 // ค้นหาไฟล์ตั้งค่าดีฟอลต์ในแพ็คเกจเดียวกับคลาสลูก
-                val inputStream = javaClass.getResourceAsStream("$name.yml")
+                val inputStream = javaClass.classLoader.getResourceAsStream(resourcePath)
                 if (inputStream != null) {
                     if (!plugin.dataFolder.exists()) {
                         plugin.dataFolder.mkdirs()
                     }
                     Files.copy(inputStream, configFile.toPath())
                 } else {
-                    plugin.logger.warning("Could not find default configuration resource for module: $name")
+                    plugin.logger.warning("Could not find default configuration resource for module: $name at $resourcePath")
                 }
+            } else {
+                // ตรวจสอบและผสานคีย์ใหม่ๆ จาก JAR ลงในไฟล์ในเซิร์ฟเวอร์
+                plugin.updateConfig(configFile, resourcePath)
             }
 
             if (configFile.exists()) {
@@ -84,9 +91,48 @@ abstract class LuminaModule(val plugin: LuminaCore, val name: String) {
         val component = parseToComponent(formattedMsg)
         
         if (style.equals("ACTIONBAR", ignoreCase = true)) {
-            player.sendActionBar(component)
+            val durationSec = config?.getDouble("settings.actionbar-duration", 0.0) ?: 0.0
+            if (durationSec > 0.0) {
+                sendPersistentActionBar(player, component, durationSec)
+            } else {
+                player.sendActionBar(component)
+            }
         } else {
             player.sendMessage(component)
+        }
+    }
+
+    /**
+     * ส่งข้อความ ActionBar คงอยู่ชั่วคราวตามระยะเวลาที่กำหนด (ปลอดภัยสำหรับ Folia)
+     */
+    private fun sendPersistentActionBar(player: org.bukkit.entity.Player, component: net.kyori.adventure.text.Component, durationSec: Double) {
+        val uuid = player.uniqueId
+        
+        // ยกเลิก Task การส่ง ActionBar เดิมที่กำลังทำงานอยู่
+        plugin.activeActionBarTasks[uuid]?.cancel()
+        
+        player.sendActionBar(component)
+        
+        val maxRuns = (durationSec / 1.0).toInt()
+        if (maxRuns <= 1) return
+        
+        var runCount = 1
+        val intervalTicks = 20L // 1 วินาที
+        
+        val task = player.scheduler.runAtFixedRate(plugin, { scheduledTask ->
+            if (!player.isOnline || runCount >= maxRuns) {
+                scheduledTask.cancel()
+                plugin.activeActionBarTasks.remove(uuid)
+                return@runAtFixedRate
+            }
+            player.sendActionBar(component)
+            runCount++
+        }, {
+            plugin.activeActionBarTasks.remove(uuid)
+        }, intervalTicks, intervalTicks)
+        
+        if (task != null) {
+            plugin.activeActionBarTasks[uuid] = task
         }
     }
 

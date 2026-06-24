@@ -56,13 +56,31 @@ class SpawnCheckerModule(plugin: LuminaCore) : LuminaModule(plugin, "SpawnChecke
         val foundMsg = config?.getString("messages.found", "%prefix% §aFound %amount% spawnable locations! Displaying particles.") ?: ""
         sendNotification(player, foundMsg.replace("%amount%", spawnableLocations.size.toString()))
 
-        // สปอนอนุภาค Flame ทุกวินาทีเป็นเวลา 5 วินาที
+        // ดึงประเภทพาร์ทิเคิลและจำนวนจากคอนฟิก
+        val particleName = config?.getString("settings.particles.type", "FLAME") ?: "FLAME"
+        val particleCount = config?.getInt("settings.particles.count", 1) ?: 1
+        val particleType = try {
+            Particle.valueOf(particleName.uppercase())
+        } catch (e: Exception) {
+            Particle.FLAME
+        }
+
+        // สปอนอนุภาค ทุกวินาทีเป็นเวลา 5 วินาที
         for (i in 0..4) {
-            player.scheduler.runDelayed(plugin, { _ ->
-                for (loc in spawnableLocations) {
-                    player.spawnParticle(Particle.FLAME, loc, 1, 0.0, 0.0, 0.0, 0.0)
-                }
-            }, null, i * 20L)
+            val delay = i * 20L
+            if (delay == 0L) {
+                player.scheduler.run(plugin, { _ ->
+                    for (loc in spawnableLocations) {
+                        player.spawnParticle(particleType, loc, particleCount, 0.0, 0.0, 0.0, 0.0)
+                    }
+                }, null)
+            } else {
+                player.scheduler.runDelayed(plugin, { _ ->
+                    for (loc in spawnableLocations) {
+                        player.spawnParticle(particleType, loc, particleCount, 0.0, 0.0, 0.0, 0.0)
+                    }
+                }, null, delay)
+            }
         }
     }
 

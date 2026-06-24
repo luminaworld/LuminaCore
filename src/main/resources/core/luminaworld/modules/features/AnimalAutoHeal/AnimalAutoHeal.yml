@@ -5,10 +5,12 @@
 # พร้อมทริกเกอร์อนุภาคหัวใจและเสียงเอฟเฟกต์ที่เปลี่ยนระดับเสียงตามปริมาณเลือดปัจจุบัน
 # =========================================================================
 settings:
+  # การตั้งค่าพื้นฐานโมดูล
   enabled: true
-  use-permission: true
+  use-permission: false
   permission: "luminacore.feature.animalautoheal"
 
+  # การตั้งค่าฟีเจอร์ฟื้นฟูเลือด
   heal-interval-seconds: 2.0 # วิ่งตรวจสอบและฮีลทุกๆ กี่วินาที
   heal-amount: 1.0 # ฮีลจำนวนเท่าไหร่ (1.0 HP = ครึ่งหัวใจ)
   combat-cooldown-seconds: 10.0 # ต้องห้ามโดนความเสียหายล่าสุดภายในกี่วินาที จึงจะได้รับการฮีล
@@ -18,11 +20,13 @@ settings:
   # ตัวอย่างประเภทสัตว์: COW, SHEEP, PIG, CHICKEN, WOLF, CAT, HORSE, PARROT, LLAMA
   allowed-entities: []
 
+  # เอฟเฟกต์อนุภาค (Particles)
   particles:
     type: "HEART" # เอฟเฟกต์ที่สปอน (HEART)
     count: 3
     speed: 0.02
 
+  # การตั้งค่าเสียงเวลาทำงาน
   audio:
     enabled: true
     sound: "ENTITY_EXPERIENCE_ORB_PICKUP" # เสียงตอนได้รับการฮีล

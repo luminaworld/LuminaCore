@@ -6,6 +6,7 @@
 # เพื่อป้องกันการทุจริต การปั๊มไอเทม หรือการสปอนสิ่งของแจกจ่ายให้ผู้เล่นอื่นโดยมิชอบ
 # =========================================================================
 settings:
+  # การตั้งค่าพื้นฐานโมดูล
   enabled: true
   
   # คูลดาวน์ระหว่างส่งรายงานการแจ้งเตือนต่อผู้เล่น 1 คน (วินาที)
@@ -22,52 +23,53 @@ settings:
 # รูปแบบของข้อความรายงานการแจ้งเตือน ตัวเลือก: Embed1 (รายละเอียดเต็ม), Embed2 (ย่อส่วน), normal (ข้อความดิบ)
 messages: "Embed1"
 
-# Creative Obtain Notification
+# รายละเอียด Discord Webhook ตอนเสกไอเทมจาก Creative (Obtain)
 ObtainEmbed:
   content: ""
-  setTitle: "%prefix% Creative Item Obtained"
-  setDescription: "A player in creative mode spawned an item."
-  setColor: 3447003  # Blue (decimal color code)
+  setTitle: "%prefix% ตรวจพบการดึงไอเทมจากโหมด Creative"
+  setDescription: "มีผู้เล่นในโหมดสร้างสรรค์ทำการเลือก/ดึงไอเทมออกจากช่องสร้างสรรค์"
+  setColor: 3447003  # สีน้ำเงิน
   setThumbnail: "%player_avatar%"
   setTimestamp: true
-  setFooter: "LuminaCore Creative Monitor"
+  setFooter: "ระบบเฝ้าระวังโหมดสร้างสรรค์ LuminaCore"
   fields:
     field1:
-      name: "Player"
+      name: "ผู้เล่น"
       value: "%player_name%"
       inline: true
     field2:
-      name: "Item Obtained"
-      value: "%item_type% (x%item_amount%)"
+      name: "ไอเทมที่ได้รับ"
+      value: "%item_type% (จำนวน x%item_amount%)"
       inline: true
     field3:
-      name: "Location"
+      name: "พิกัดผู้เล่น"
       value: "X: %player_x% Y: %player_y% Z: %player_z%"
       inline: true
 
-# Creative Drop Notification
+# รายละเอียด Discord Webhook ตอนโยนไอเทมทิ้งจาก Creative (Drop)
 DropEmbed:
   content: ""
-  setTitle: "%prefix% Creative Item Dropped"
-  setDescription: "A player in creative mode dropped an item."
-  setColor: 15158332  # Red
+  setTitle: "%prefix% ตรวจพบการโยนไอเทมในโหมด Creative"
+  setDescription: "มีผู้เล่นในโหมดสร้างสรรค์ทำการโยน/ทิ้งไอเทมลงสู่พื้นโลก"
+  setColor: 15158332  # สีแดง
   setThumbnail: "%player_avatar%"
   setTimestamp: true
-  setFooter: "LuminaCore Creative Monitor"
+  setFooter: "ระบบเฝ้าระวังโหมดสร้างสรรค์ LuminaCore"
   fields:
     field1:
-      name: "Player"
+      name: "ผู้เล่น"
       value: "%player_name%"
       inline: true
     field2:
-      name: "Item Dropped"
-      value: "%item_type% (x%item_amount%)"
+      name: "ไอเทมที่โยน"
+      value: "%item_type% (จำนวน x%item_amount%)"
       inline: true
     field3:
-      name: "Location"
+      name: "พิกัดที่โยน"
       value: "X: %block_x% Y: %block_y% Z: %block_z%"
       inline: true
 
+# รูปแบบข้อความแบบปกติ (Plain Discord Message)
 normal:
-  obtain: "%prefix% Player %player_name% spawned %item_type% (x%item_amount%) in Creative Mode at %time%"
-  drop: "%prefix% Player %player_name% dropped %item_type% (x%item_amount%) in Creative Mode at %block_x%, %block_y%, %block_z% in world %world_name% at %time%"
+  obtain: "%prefix% ผู้เล่น %player_name% ได้หยิบ/เสกไอเทม %item_type% (จำนวน x%item_amount%) จากโหมด Creative ที่เวลา %time%"
+  drop: "%prefix% ผู้เล่น %player_name% ได้โยนไอเทม %item_type% (จำนวน x%item_amount%) จากโหมด Creative ที่พิกัด X=%block_x%, Y=%block_y%, Z=%block_z% ในโลก %world_name% เวลา %time%"

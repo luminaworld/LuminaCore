@@ -6,9 +6,25 @@
 # พร้อมทั้งแสดงเอฟเฟกต์กลุ่มควันสีเทาและเสียงฟู่ระเหยของไอน้ำอย่างสมจริง
 # =========================================================================
 settings:
+  # การตั้งค่าพื้นฐานโมดูล
   enabled: true
-  use-permission: true
+  use-permission: false
   permission: "luminacore.feature.nethersponge"
+
+  # เอฟเฟกต์อนุภาค (Particles)
+  particles:
+    enabled: true
+    type: "SMOKE" # เอฟเฟกต์ไอน้ำเดือด
+    count: 8
+    speed: 0.05
+
+  # การตั้งค่าเสียงเวลาทำงาน
+  audio:
+    enabled: true
+    sound: "BLOCK_LAVA_EXTINGUISH" # เสียงไอน้ำโดนแผดเผา
+    volume: 0.8
+    pitch: 1.2
+
   # รูปแบบการแจ้งเตือนข้อความ (message-style)
   # เลือกได้ 3 รูปแบบ:
   # - CHAT      : แสดงข้อความทางช่องพูดคุยปกติ
@@ -16,20 +32,9 @@ settings:
   # - NONE      : ปิดการแจ้งเตือนทั้งหมดอย่างสมบูรณ์แบบ (จะไม่แสดงข้อความแจ้งเตือนเลย)
   message-style: "ACTIONBAR"
 
-  particles:
-    enabled: true
-    type: "SMOKE" # เอฟเฟกต์ไอน้ำเดือด
-    count: 8
-    speed: 0.05
-
-  audio:
-    enabled: true
-    sound: "BLOCK_LAVA_EXTINGUISH" # เสียงไอน้ำโดนแผดเผา
-    volume: 0.8
-    pitch: 1.2
-
+# ข้อความแจ้งเตือนต่างๆ (หลีกเลี่ยงการใช้อิโมจิ)
 messages:
   dried: "%prefix% &eฟองน้ำเปียกโดนความร้อนจากนรกแผดเผาจนระเหยเป็นฟองน้ำธรรมดาทันที!"
 
 # รายการตัวแปร (Placeholders) ที่ใช้ได้:
-# %prefix% - คำนำหน้าปลั๊กอิน
+# %prefix% - คำนำหน้าปลั๊กอิน (จาก config.yml หลัก)

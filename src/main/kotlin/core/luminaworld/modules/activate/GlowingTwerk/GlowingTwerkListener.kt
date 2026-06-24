@@ -91,9 +91,12 @@ class GlowingTwerkListener(private val module: GlowingTwerkModule) : Listener {
         val pz = playerLoc.blockZ
 
         val soundEnabled = module.config?.getBoolean("settings.sound-enabled", true) ?: true
-        val particleEnabled = module.config?.getBoolean("settings.particle-enabled", true) ?: true
-        val particleAmount = module.config?.getInt("settings.particle-amount", 10) ?: 10
-        val particleName = module.config?.getString("settings.particle", "HAPPY_VILLAGER") ?: "HAPPY_VILLAGER"
+        val particleEnabled = module.config?.getBoolean("settings.particles.enabled") 
+            ?: module.config?.getBoolean("settings.particle-enabled", true) ?: true
+        val particleAmount = module.config?.getInt("settings.particles.count")
+            ?: module.config?.getInt("settings.particle-amount", 10) ?: 10
+        val particleName = module.config?.getString("settings.particles.type")
+            ?: module.config?.getString("settings.particle", "HAPPY_VILLAGER") ?: "HAPPY_VILLAGER"
 
         val particleType = try {
             Particle.valueOf(particleName.uppercase())

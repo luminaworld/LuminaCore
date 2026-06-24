@@ -1,15 +1,21 @@
+# =========================================================================
+# VeinMiner (ระบบขุดแร่รอบตัว)
+# คำอธิบาย: ระบบสำหรับขุดบล็อกแร่ชนิดเดียวกันรอบข้างเป็นกลุ่มด้วยการทำลายบล็อกเดียว
+# วิธีการใช้งาน: ถือที่ขุด (Pickaxe) ในมือหลักแล้วกดย่อตัวสะสมครบจำนวนเพื่อสลับโหมดเปิด/ปิดใช้งาน
+# =========================================================================
 settings:
+  # การตั้งค่าพื้นฐานโมดูล
   enabled: true
-  # รูปแบบการแจ้งเตือนข้อความ (message-style)
-  # เลือกได้ 3 รูปแบบ:
-  # - CHAT      : แสดงข้อความทางช่องพูดคุยปกติ
-  # - ACTIONBAR : แสดงข้อความเหนือแถบทางลัดปุ่มไอเทม
-  # - NONE      : ปิดการแจ้งเตือนทั้งหมดอย่างสมบูรณ์แบบ (จะไม่แสดงข้อความแจ้งเตือนเลย)
-  message-style: "ACTIONBAR"
+  system-name: "ระบบขุดแร่รอบตัว"
   use-permission: false
   permission: "luminacore.module.veinminer"
+
+  # การตั้งค่าตัวย่อเพื่อกระตุ้นโหมดทำงาน
   required-sneaks: 10
   reset-interval: 2.5
+  cooldown: 3.0
+
+  # การตั้งค่าฟีเจอร์การขุดแร่
   max-blocks: 64
   # ตั้งค่าว่าผู้เล่นจำเป็นต้องกดย่อตัว (Sneak) ขณะกำลังขุดแร่ด้วยหรือไม่เพื่อใช้งานระบบขุดแร่รอบตัว
   # - true  : ต้องกดย่อตัวค้างไว้ขณะขุดแร่ ความสามารถจึงจะทำงาน
@@ -37,7 +43,7 @@ settings:
     color-bracket: "&e"
     color-number: "&b"
     color-text: "&7"
-    format: "%color_bracket%[ %completed%%remaining% %color_bracket%] %color_number%%count%/%total% %color_text%(ย่ออีก %needed% ครั้งเพื่อใช้ %system%)"
+    format: "%color_text%(ย่ออีก %needed% ครั้งเพื่อใช้ %system%) %color_number%%count%/%total% %color_bracket%[ %completed%%remaining% %color_bracket%]"
 
   # การตั้งค่าระบบเสียง (Audio Settings)
   # - tick-sound: ชื่อเสียงระหว่างกดย่อสะสม (เช่น BLOCK_NOTE_BLOCK_PLING, BLOCK_NOTE_BLOCK_BIT ฯลฯ)
@@ -49,6 +55,8 @@ settings:
   # - success-pitch: คีย์ระดับเสียงสำเร็จ (0.5 - 2.0)
   audio:
     enabled: true
+    tick-enabled: true
+    success-enabled: true
     tick-sound: "BLOCK_NOTE_BLOCK_PLING"
     tick-volume: 0.5
     tick-pitch-start: 0.5
@@ -57,8 +65,16 @@ settings:
     success-volume: 0.8
     success-pitch: 1.0
 
+  # รูปแบบการแจ้งเตือนข้อความ (message-style)
+  # เลือกได้ 3 รูปแบบ:
+  # - CHAT      : แสดงข้อความทางช่องพูดคุยปกติ
+  # - ACTIONBAR : แสดงข้อความเหนือแถบทางลัดปุ่มไอเทม
+  # - NONE      : ปิดการแจ้งเตือนทั้งหมดอย่างสมบูรณ์แบบ (จะไม่แสดงข้อความแจ้งเตือนเลย)
+  message-style: "ACTIONBAR"
+  actionbar-duration: 4.0
+
 # Placeholders ที่สามารถใช้งานในข้อความ:
 # - %prefix%: คำนำหน้าของปลั๊กอิน (จาก config.yml หลัก)
 messages:
-  mode-enabled: "%prefix% &aVein Miner mode enabled!"
-  mode-disabled: "%prefix% &cVein Miner mode disabled!"
+  mode-enabled: "%prefix% &aเปิดใช้งานระบบขุดแร่รอบตัวเรียบร้อยแล้ว!"
+  mode-disabled: "%prefix% &cปิดใช้งานระบบขุดแร่รอบตัวแล้ว!"

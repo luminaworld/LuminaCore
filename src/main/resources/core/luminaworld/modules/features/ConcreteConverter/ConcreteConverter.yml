@@ -6,13 +6,16 @@
 # พร้อมแสดงเอฟเฟกต์ฟองอากาศ เสียงน้ำเดือด และหลอดความคืบหน้าแบบเรียลไทม์บน ActionBar ของผู้เล่นใกล้เคียง
 # =========================================================================
 settings:
+  # การตั้งค่าพื้นฐานโมดูล
   enabled: true
-  use-permission: true
+  use-permission: false
   permission: "luminacore.feature.concreteconverter"
   
+  # การตั้งค่าฟีเจอร์แปลงบล็อก
   convert-delay-seconds: 10 # ระยะเวลาจมน้ำก่อนกลายร่าง (วินาที)
   only-in-water-source: false # ต้องเป็นน้ำนิ่ง (Water Source) เท่านั้นหรือไม่ (false = รวมน้ำไหลด้วย)
 
+  # แถบความคืบหน้า (Progress Bar)
   progress-bar:
     enabled: true
     range: 5.0 # ระยะรัศมีบล็อกที่ผู้เล่นจะได้เห็นแถบความคืบหน้าบน ActionBar
@@ -23,8 +26,15 @@ settings:
     color-bracket: "&7"
     color-number: "&e"
     color-text: "&f"
-    format: "%color_bracket%[ %completed%%remaining% %color_bracket%] %color_number%%count%/%total% วินาที %color_text%(ผงคอนกรีตกำลังแข็งตัว...)"
+    format: "%color_text%(ผงคอนกรีตกำลังแข็งตัว...) %color_number%%count%/%total% วินาที %color_bracket%[ %completed%%remaining% %color_bracket%]"
 
+  # เอฟเฟกต์อนุภาค (Particles)
+  particles:
+    type: "SPLASH" # เอฟเฟกต์ตอนแปลงสำเร็จ
+    count: 15
+    speed: 0.1
+
+  # การตั้งค่าเสียงเวลาทำงาน
   audio:
     enabled: true
     tick-sound: "BLOCK_BREWING_STAND_BREW" # เสียงฟองระหว่างรอ
@@ -36,18 +46,13 @@ settings:
     success-volume: 0.8
     success-pitch: 1.2
 
-  particles:
-    type: "SPLASH" # เอฟเฟกต์ตอนแปลงสำเร็จ
-    count: 15
-    speed: 0.1
-
 # รายการตัวแปร (Placeholders) ที่ใช้ในหลอดพลังงาน:
 # %completed% - สัญลักษณ์เกจพลังส่วนที่สำเร็จแล้ว
 # %remaining% - สัญลักษณ์เกจพลังส่วนที่เหลือ
 # %count% - วินาทีที่ดำเนินไปแล้ว
 # %total% - วินาทีเป้าหมาย
 # %needed% - วินาทีที่ยังต้องการเพิ่ม
-# %prefix% - คำนำหน้าปลั๊กอิน
+# %prefix% - คำนำหน้าปลั๊กอิน (จาก config.yml หลัก)
 # %color_bracket% - สีของวงเล็บครอบ
 # %color_number% - สีของตัวเลข
 # %color_text% - สีของข้อความอธิบาย

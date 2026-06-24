@@ -5,31 +5,13 @@
 # ระบบจะสแกนพืชรอบๆ และมีโอกาสเร่งการเจริญเติบโตพร้อมเอฟเฟกต์แสงและเสียงอย่างตระการตา
 # =========================================================================
 settings:
+  # การตั้งค่าพื้นฐานโมดูล
   enabled: true
-  
-  # คูลดาวน์การใช้งานระหว่างเร่งโตพืชแต่ละครั้ง (วินาที - รองรับทศนิยม เช่น 1.5, 2.5)
-  cooldown: 5.0
-  
-  # โอกาสสำเร็จในการเร่งโตพืช (เปอร์เซ็นต์ตั้งแต่ 0.0 - 100.0)
-  growth-chance: 50.0
-  
-  # เปิด/ปิดเอฟเฟกต์อนุภาค (Particle)
-  particle-enabled: true
-  
-  # จำนวนอนุภาคที่จะสปอนรอบบล็อกพืชที่โตสำเร็จ
-  particle-amount: 10
-  
-  # เปิด/ปิดเสียงเอฟเฟกต์
-  sound-enabled: true
-  
-  # เปิด/ปิดการส่งข้อความยืนยันความก้าวหน้าทางแชท
-  chat-messages-enabled: true
-  
-  # รัศมีสูงสุดในการเร่งโตพืชรอบตัวผู้เล่น (บล็อก)
-  max-radius: 32
-  
-  # ชนิดของอนุภาคที่จะแสดงเมื่อพืชโต (ต้องพิมพ์ชื่อตาม Bukkit Particle Enum)
-  particle: "HAPPY_VILLAGER"
+
+  # การตั้งค่าฟีเจอร์เร่งโตพืช
+  cooldown: 5.0 # คูลดาวน์การใช้งานระหว่างเร่งโตพืชแต่ละครั้ง (วินาที - รองรับทศนิยม เช่น 1.5, 2.5)
+  growth-chance: 50.0 # โอกาสสำเร็จในการเร่งโตพืช (เปอร์เซ็นต์ตั้งแต่ 0.0 - 100.0)
+  max-radius: 32 # รัศมีสูงสุดในการเร่งโตพืชรอบตัวผู้เล่น (บล็อก)
   
   # รายชื่อโลกที่อนุญาตให้ใช้งานระบบนี้ (เว้นว่าง [] เพื่อเปิดใช้ในทุกโลก)
   allowed-worlds:
@@ -37,14 +19,27 @@ settings:
     - "world_nether"
     - "world_the_end"
 
-# Customizable messages (No emojis)
-messages:
-  success: "%prefix% You grew {count} plants using Luminaris power!"
-  cooldown: "%prefix% Please wait before using Luminaris power again!"
-  no-permission: "%prefix% You do not have permission to use Glowing Twerk!"
-  world-disabled: "%prefix% Glowing Twerk is not allowed in this world!"
+  # เอฟเฟกต์อนุภาค (Particles)
+  particles:
+    enabled: true
+    type: "HAPPY_VILLAGER" # ชนิดของอนุภาคที่จะแสดงเมื่อพืชโต (ต้องพิมพ์ชื่อตาม Bukkit Particle Enum)
+    count: 10 # จำนวนอนุภาคที่จะสปอนรอบบล็อกพืชที่โตสำเร็จ
 
-# List of growable block types (Must match Bukkit Material names)
+  # การตั้งค่าเสียงและการแสดงผล
+  sound-enabled: true # เปิด/ปิดเสียงเอฟเฟกต์
+  chat-messages-enabled: true # เปิด/ปิดการส่งข้อความยืนยันความก้าวหน้าทางแชท
+
+  # ระยะเวลาการแสดงข้อความกรณีแสดงผลบน ActionBar (วินาที)
+  actionbar-duration: 4.0
+
+# ข้อความแจ้งเตือนต่างๆ (หลีกเลี่ยงการใช้อิโมจิ)
+messages:
+  success: "%prefix% &aคุณได้ช่วยเร่งพืชรอบตัวให้เติบโตสำเร็จจำนวน {count} ต้น!"
+  cooldown: "%prefix% &cโปรดรอก่อนใช้พลังเร่งโตพืชอีกครั้ง!"
+  no-permission: "%prefix% &cคุณไม่มีสิทธิ์ในการใช้งานระบบเร่งโตพืช!"
+  world-disabled: "%prefix% &cระบบเร่งโตพืชไม่ได้รับอนุญาตให้ใช้ในโลกนี้!"
+
+# รายชื่อชนิดของบล็อกพืชที่เร่งโตได้ (ต้องตรงตามชื่อ Bukkit Material)
 growable-blocks:
   - "WHEAT"
   - "CARROTS"

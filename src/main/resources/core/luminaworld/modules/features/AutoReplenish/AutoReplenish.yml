@@ -5,9 +5,24 @@
 # เมื่อไอเทมชิ้นสุดท้ายถูกวาง/ใช้งาน หรือเมื่ออุปกรณ์ที่ถืออยู่พังคามือ
 # =========================================================================
 settings:
+  # การตั้งค่าพื้นฐานโมดูล
   enabled: true
-  use-permission: true
+  use-permission: false
   permission: "luminacore.feature.autoreplenish"
+
+  # สวิตช์เปิด/ปิดการตรวจสอบประเภทการเติม
+  check-blocks: true       # เติมบล็อกที่วางจนหมดอัตโนมัติ
+  check-projectiles: true  # เติมไอเทมปาที่ขว้างจนหมด (Snowball, Egg, Ender Pearl, ขวด EXP, ยาปา)
+  check-buckets: true      # เติมถังน้ำ/ถังลาวา/ถังนม เมื่อใช้งานเท/วางเสร็จสิ้น
+  check-broken-tools: true # เติมอุปกรณ์ชนิดเดียวกันเมื่อชิ้นเดิมพังคามือ (ที่ขุด, ดาบ, ขวาน, พลั่ว, จอบ)
+
+  # การตั้งค่าเสียงเวลาทำงาน
+  audio:
+    enabled: true
+    sound: "ITEM_ARMOR_EQUIP_GENERIC" # เสียงแสดงการสลับเติมไอเทม
+    volume: 0.6
+    pitch: 1.2
+
   # รูปแบบการแจ้งเตือนข้อความ (message-style)
   # เลือกได้ 3 รูปแบบ:
   # - CHAT      : แสดงข้อความทางช่องพูดคุยปกติ
@@ -15,20 +30,10 @@ settings:
   # - NONE      : ปิดการแจ้งเตือนทั้งหมดอย่างสมบูรณ์แบบ (จะไม่แสดงข้อความแจ้งเตือนเลย)
   message-style: "ACTIONBAR"
 
-  check-blocks: true       # เติมบล็อกที่วางจนหมดอัตโนมัติ
-  check-projectiles: true  # เติมไอเทมปาที่ขว้างจนหมด (Snowball, Egg, Ender Pearl, ขวด EXP, ยาปา)
-  check-buckets: true      # เติมถังน้ำ/ถังลาวา/ถังนม เมื่อใช้งานเท/วางเสร็จสิ้น
-  check-broken-tools: true # เติมอุปกรณ์ชนิดเดียวกันเมื่อชิ้นเดิมพังคามือ (ที่ขุด, ดาบ, ขวาน, พลั่ว, จอบ)
-
-  audio:
-    enabled: true
-    sound: "ITEM_ARMOR_EQUIP_GENERIC" # เสียงแสดงการสลับเติมไอเทม
-    volume: 0.6
-    pitch: 1.2
-
+# ข้อความแจ้งเตือนต่างๆ (หลีกเลี่ยงการใช้อิโมจิ)
 messages:
-  replenished: "%prefix% &aเติม %item% ในมือให้อัตโนมัติแล้ว!"
+  replenished: "%prefix% &aเติม %item% ในมือให้โดยอัตโนมัติแล้ว!"
 
 # รายการตัวแปร (Placeholders) ที่ใช้ได้:
 # %item% - ชื่อของไอเทมที่ได้รับการเติมทดแทน
-# %prefix% - คำนำหน้าปลั๊กอิน
+# %prefix% - คำนำหน้าปลั๊กอิน (จาก config.yml หลัก)

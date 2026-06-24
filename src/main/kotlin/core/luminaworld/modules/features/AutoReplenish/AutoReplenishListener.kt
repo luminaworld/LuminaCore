@@ -8,7 +8,6 @@ import org.bukkit.event.Listener
 import org.bukkit.event.block.BlockPlaceEvent
 import org.bukkit.event.player.PlayerInteractEvent
 import org.bukkit.event.player.PlayerBucketEmptyEvent
-import org.bukkit.event.player.PlayerBucketFillEvent
 import org.bukkit.event.player.PlayerItemBreakEvent
 import org.bukkit.event.player.PlayerItemConsumeEvent
 import org.bukkit.inventory.EquipmentSlot
@@ -50,6 +49,7 @@ class AutoReplenishListener(private val plugin: LuminaCore, private val module: 
 
     @EventHandler
     fun onBucketEmpty(event: PlayerBucketEmptyEvent) {
+        if (event.isCancelled) return
         if (!module.isEnabled) return
         val player = event.player
         if (!module.checkPermission(player)) return
@@ -57,21 +57,8 @@ class AutoReplenishListener(private val plugin: LuminaCore, private val module: 
         val config = module.config ?: return
         if (!config.getBoolean("settings.check-buckets", true)) return
 
-        val item = event.itemStack ?: return
-        scheduleReplenishCheck(player, event.hand, item.type)
-    }
-
-    @EventHandler
-    fun onBucketFill(event: PlayerBucketFillEvent) {
-        if (!module.isEnabled) return
-        val player = event.player
-        if (!module.checkPermission(player)) return
-
-        val config = module.config ?: return
-        if (!config.getBoolean("settings.check-buckets", true)) return
-
-        val item = event.itemStack ?: return
-        scheduleReplenishCheck(player, event.hand, item.type)
+        // ส่งประเภทของถังของเหลวก่อนเท เช่น WATER_BUCKET
+        scheduleReplenishCheck(player, event.hand, event.bucket)
     }
 
     @EventHandler
@@ -118,7 +105,7 @@ class AutoReplenishListener(private val plugin: LuminaCore, private val module: 
             val currentItem = if (hand == EquipmentSlot.HAND) inventory.itemInMainHand else inventory.itemInOffHand
 
             val isNowEmpty = currentItem.type == Material.AIR
-            val isBucketReplenish = isBucket(previousMaterial) && currentItem.type == Material.BUCKET
+            val isBucketReplenish = isBucket(previousMaterial) && (currentItem.type == Material.BUCKET || currentItem.type == previousMaterial)
 
             if (isNowEmpty || isBucketReplenish) {
                 val targetSlot = findReplenishItem(player, previousMaterial, hand)
@@ -134,7 +121,11 @@ class AutoReplenishListener(private val plugin: LuminaCore, private val module: 
                         inventory.setItem(targetSlot, null)
                     } else if (isBucketReplenish) {
                         // สลับเปลี่ยนถังเปล่าในมือด้วยถังบรรจุน้ำ/ลาวาชิ้นถัดไป
-                        val emptyBucket = currentItem.clone()
+                        val emptyBucket = if (currentItem.type == Material.BUCKET) {
+                            currentItem.clone()
+                        } else {
+                            org.bukkit.inventory.ItemStack(Material.BUCKET)
+                        }
                         if (hand == EquipmentSlot.HAND) {
                             inventory.setItemInMainHand(replacement)
                         } else {
@@ -142,6 +133,9 @@ class AutoReplenishListener(private val plugin: LuminaCore, private val module: 
                         }
                         inventory.setItem(targetSlot, emptyBucket)
                     }
+
+                    // ซิงค์กระเป๋าเก็บของของผู้เล่นกับเซิร์ฟเวอร์
+                    player.updateInventory()
 
                     // เล่นเสียงตอนเติมของ
                     playReplenishSound(player)
@@ -173,7 +167,7 @@ class AutoReplenishListener(private val plugin: LuminaCore, private val module: 
     private fun isBucket(material: Material): Boolean {
         return material == Material.WATER_BUCKET || material == Material.LAVA_BUCKET ||
                material == Material.MILK_BUCKET || material == Material.POWDER_SNOW_BUCKET ||
-               material.name.endsWith("_BUCKET")
+               (material.name.endsWith("_BUCKET") && material != Material.BUCKET)
      }
 
     private fun playReplenishSound(player: Player) {

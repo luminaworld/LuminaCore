@@ -6,74 +6,13 @@
 # ไปยังช่อง Discord Webhook ที่กำหนดไว้ทันที สามารถปรับแต่งฟอร์แมต Embed ได้ 3 รูปแบบ
 # =========================================================================
 settings:
+  # การตั้งค่าพื้นฐานโมดูล
   enabled: true
   
   # คูลดาวน์ระหว่างการส่งแจ้งเตือนต่อผู้เล่น 1 คน (วินาที)
   cooldown: 5
 
-# รูปแบบการแจ้งเตือนที่จะใช้บน Discord. ตัวเลือก: Embed1 (รายละเอียดเต็ม), Embed2 (ย่อส่วน), normal (ข้อความดิบ)
-messages: "Embed1"
-
-# รูปแบบกล่องข้อความยืดหยุ่นสูง Discord Webhook Embed 1
-Embed1:
-  content: ""
-  setTitle: "%prefix% Block Break Detected"
-  setDescription: "A tracked block has been mined."
-  setColor: 15844367  # Gold (decimal color code)
-  setThumbnail: "%player_avatar%"
-  setTimestamp: true
-  setFooter: "LuminaCore Block Notifier"
-  fields:
-    field1:
-      name: "Player"
-      value: "%player_name%"
-      inline: false
-    field2:
-      name: "Block Type"
-      value: "%block_type%"
-      inline: true
-    field3:
-      name: "World"
-      value: "%world_name%"
-      inline: true
-    field4:
-      name: "Coordinates"
-      value: "X: %block_x% Y: %block_y% Z: %block_z%"
-      inline: true
-    field5:
-      name: "Time"
-      value: "%time%"
-      inline: false
-    field6:
-      name: "Teleport Command"
-      value: "```/tp %block_x% %block_y% %block_z%```"
-      inline: false
-
-# Highly customizable Discord Webhook Embed 2
-Embed2:
-  setTitle: "%prefix% %player_name% mined %block_type%"
-  setColor: 3447003  # Blue
-  setThumbnail: "%player_avatar%"
-  setTimestamp: true
-  fields:
-    field1:
-      name: "Location"
-      value: "%block_x%, %block_y%, %block_z%"
-      inline: true
-    field2:
-      name: "World"
-      value: "%world_name%"
-      inline: true
-    field3:
-      name: "Time"
-      value: "%time%"
-      inline: true
-
-# Normal text format (Sends as plain message to Discord)
-normal:
-  content: "%prefix% Player %player_name% mined %block_type% at %block_x%, %block_y%, %block_z% in world %world_name% at %time%"
-
-# List of block types to track (Must match Bukkit Material names)
+# รายชื่อประเภทบล็อกที่ต้องการตรวจสอบการทำลาย (ต้องระบุตามชื่อ Bukkit Material)
 tracked-blocks:
   - "DIAMOND_ORE"
   - "EMERALD_ORE"
@@ -92,3 +31,65 @@ tracked-blocks:
   - "DEEPSLATE_LAPIS_ORE"
   - "REDSTONE_ORE"
   - "DEEPSLATE_REDSTONE_ORE"
+
+# รูปแบบการแจ้งเตือนที่จะใช้บน Discord. ตัวเลือก: Embed1 (รายละเอียดเต็ม), Embed2 (ย่อส่วน), normal (ข้อความดิบ)
+messages: "Embed1"
+
+# รายละเอียด Discord Webhook Embed 1 (โครงสร้างข้อความแบบเต็ม)
+Embed1:
+  content: ""
+  setTitle: "%prefix% ตรวจพบการขุดพบแร่สำคัญ"
+  setDescription: "มีผู้เล่นทำการขุดบล็อกที่ได้รับการจับตามองเป็นพิเศษในเซิร์ฟเวอร์"
+  setColor: 15844367  # สีทอง (รหัสฐานสิบ)
+  setThumbnail: "%player_avatar%"
+  setTimestamp: true
+  setFooter: "ระบบแจ้งเตือนบล็อก LuminaCore"
+  fields:
+    field1:
+      name: "ผู้เล่น"
+      value: "%player_name%"
+      inline: false
+    field2:
+      name: "ประเภทบล็อก"
+      value: "%block_type%"
+      inline: true
+    field3:
+      name: "โลก"
+      value: "%world_name%"
+      inline: true
+    field4:
+      name: "พิกัด"
+      value: "X: %block_x% Y: %block_y% Z: %block_z%"
+      inline: true
+    field5:
+      name: "เวลา"
+      value: "%time%"
+      inline: false
+    field6:
+      name: "คำสั่งเทเลพอร์ตสำหรับผู้ดูแล"
+      value: "```/tp %block_x% %block_y% %block_z%```"
+      inline: false
+
+# รายละเอียด Discord Webhook Embed 2 (โครงสร้างข้อความแบบย่อ)
+Embed2:
+  setTitle: "%prefix% %player_name% ขุดพบ %block_type%"
+  setColor: 3447003  # สีน้ำเงิน
+  setThumbnail: "%player_avatar%"
+  setTimestamp: true
+  fields:
+    field1:
+      name: "พิกัด"
+      value: "%block_x%, %block_y%, %block_z%"
+      inline: true
+    field2:
+      name: "โลก"
+      value: "%world_name%"
+      inline: true
+    field3:
+      name: "เวลา"
+      value: "%time%"
+      inline: true
+
+# รูปแบบข้อความแบบปกติ (Plain Discord Message)
+normal:
+  content: "%prefix% ผู้เล่น %player_name% ได้ขุดบล็อก %block_type% ที่พิกัด %block_x%, %block_y%, %block_z% ในโลก %world_name% เวลา %time%"

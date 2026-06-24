@@ -6,51 +6,50 @@
 # เพื่อป้องกันการแฮกหรือควบคุมเซิร์ฟเวอร์โดยผู้ไม่หวังดี
 # =========================================================================
 settings:
+  # การตั้งค่าพื้นฐานโมดูล
   enabled: true
   
-  # ส่งรายงานไป Discord ทันทีเมื่อมีการล็อกอินเข้า RCON
-  notify-login: true
-  
-  # ส่งรายงานไป Discord ทันทีเมื่อมีการใช้คำสั่งผ่าน RCON
-  notify-command: true
+  # การตั้งค่าฟีเจอร์ RCON Monitor
+  notify-login: true # ส่งรายงานไป Discord ทันทีเมื่อมีการล็อกอินเข้า RCON
+  notify-command: true # ส่งรายงานไป Discord ทันทีเมื่อมีการใช้คำสั่งผ่าน RCON
   
   # ลิงก์ Discord Webhook เฉพาะสำหรับการเฝ้าระวัง RCON
   # (หากปล่อยว่างไว้ จะกลับไปใช้ Webhook URL หลักที่ระบุใน config.yml)
   discord-webhook-url: ""
   
   # ข้อความเตือนที่แสดงบนหน้าจอคอนโซลเซิร์ฟเวอร์
-  console-warning: "[LuminaCore] RCON Login detected from IP: %ip%"
+  console-warning: "[LuminaCore] ตรวจพบการเข้าสู่ระบบ RCON จาก IP: %ip%"
 
-# When someone logs into RCON
+# เมื่อมีคนเข้าสู่ระบบ RCON (Login)
 LoginEmbed:
-  setTitle: "RCON Login Detected"
-  setDescription: "A new RCON connection has been established to the server."
-  setColor: 15158332  # Red (decimal color code)
+  setTitle: "ตรวจพบการเข้าสู่ระบบ RCON"
+  setDescription: "มีการเชื่อมต่อ RCON (Remote Console) เข้ามายังเซิร์ฟเวอร์จากภายนอก"
+  setColor: 15158332  # สีแดง
   setTimestamp: true
-  setFooter: "LuminaCore RCON Monitor"
+  setFooter: "ระบบเฝ้าระวัง RCON LuminaCore"
   fields:
     field1:
-      name: "IP Address"
+      name: "ที่อยู่ IP"
       value: "%ip%"
       inline: false
     field2:
-      name: "Time"
+      name: "เวลา"
       value: "%time%"
       inline: false
 
-# When a command is run via RCON
+# เมื่อมีการสั่งการคำสั่งผ่าน RCON (Command Run)
 CommandEmbed:
-  setTitle: "RCON Command Executed"
-  setDescription: "A command was executed via RCON."
-  setColor: 15158332  # Red
+  setTitle: "มีการใช้งานคำสั่งผ่าน RCON"
+  setDescription: "มีการป้อนคำสั่งเข้ามาทำงานในระบบผ่านการเชื่อมต่อ RCON"
+  setColor: 15158332  # สีแดง
   setTimestamp: true
-  setFooter: "LuminaCore RCON Monitor"
+  setFooter: "ระบบเฝ้าระวัง RCON LuminaCore"
   fields:
     field1:
-      name: "Command Executed"
+      name: "คำสั่งที่ทำงาน"
       value: "```%command%```"
       inline: false
     field2:
-      name: "Time"
+      name: "เวลา"
       value: "%time%"
       inline: false

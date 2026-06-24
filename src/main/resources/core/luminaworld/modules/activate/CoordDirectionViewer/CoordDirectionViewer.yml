@@ -1,21 +1,20 @@
 # =========================================================================
 # CoordDirectionViewer (ระบบแสดงพิกัดและทิศทาง)
 # คำอธิบาย: ระบบที่ช่วยให้ผู้เล่นสามารถตรวจสอบพิกัดปัจจุบัน (X, Y, Z) และทิศทางที่กำลังหันหน้าไป
-# (North, East, South, West) ได้ทันทีทาง ActionBar/Chat โดยการกดย่อตัว (Sneak)
+# (เหนือ, ตะวันออก, ใต้, ตะวันตก) ได้ทันทีทาง ActionBar/Chat โดยการกดย่อตัว (Sneak)
 # สะสมจนครบจำนวนครั้งที่กำหนดขณะถือเข็มทิศในมือ
 # =========================================================================
 settings:
+  # การตั้งค่าพื้นฐานโมดูล
   enabled: true
-  # รูปแบบการแจ้งเตือนข้อความ (message-style)
-  # เลือกได้ 3 รูปแบบ:
-  # - CHAT      : แสดงข้อความทางช่องพูดคุยปกติ
-  # - ACTIONBAR : แสดงข้อความเหนือแถบทางลัดปุ่มไอเทม
-  # - NONE      : ปิดการแจ้งเตือนทั้งหมดอย่างสมบูรณ์แบบ (จะไม่แสดงข้อความแจ้งเตือนเลย)
-  message-style: "ACTIONBAR"
+  system-name: "ระบบแสดงพิกัดและทิศทาง"
   use-permission: false
   permission: "luminacore.module.coorddirectionviewer"
+
+  # การตั้งค่าตัวย่อเพื่อกระตุ้นโหมดทำงาน
   required-sneaks: 10
   reset-interval: 2.5
+  cooldown: 3.0
 
   # การตั้งค่าหลอดความก้าวหน้า (Progress Bar)
   # Placeholders ที่สามารถใช้งานใน format:
@@ -38,7 +37,7 @@ settings:
     color-bracket: "&e"
     color-number: "&b"
     color-text: "&7"
-    format: "%color_bracket%[ %completed%%remaining% %color_bracket%] %color_number%%count%/%total% %color_text%(ย่ออีก %needed% ครั้งเพื่อใช้ %system%)"
+    format: "%color_text%(ย่ออีก %needed% ครั้งเพื่อใช้ %system%) %color_number%%count%/%total% %color_bracket%[ %completed%%remaining% %color_bracket%]"
 
   # การตั้งค่าระบบเสียง (Audio Settings)
   # - tick-sound: ชื่อเสียงระหว่างกดย่อสะสม (เช่น BLOCK_NOTE_BLOCK_PLING, BLOCK_NOTE_BLOCK_BIT ฯลฯ)
@@ -50,6 +49,8 @@ settings:
   # - success-pitch: คีย์ระดับเสียงสำเร็จ (0.5 - 2.0)
   audio:
     enabled: true
+    tick-enabled: true
+    success-enabled: true
     tick-sound: "BLOCK_NOTE_BLOCK_PLING"
     tick-volume: 0.5
     tick-pitch-start: 0.5
@@ -58,6 +59,14 @@ settings:
     success-volume: 0.8
     success-pitch: 1.0
 
+  # รูปแบบการแจ้งเตือนข้อความ (message-style)
+  # เลือกได้ 3 รูปแบบ:
+  # - CHAT      : แสดงข้อความทางช่องพูดคุยปกติ
+  # - ACTIONBAR : แสดงข้อความเหนือแถบทางลัดปุ่มไอเทม
+  # - NONE      : ปิดการแจ้งเตือนทั้งหมดอย่างสมบูรณ์แบบ (จะไม่แสดงข้อความแจ้งเตือนเลย)
+  message-style: "ACTIONBAR"
+  actionbar-duration: 4.0
+
 # Placeholders ที่สามารถใช้งานในข้อความ:
 # - %prefix%: คำนำหน้าของปลั๊กอิน (จาก config.yml หลัก)
 # - %x%: พิกัดแกน X
@@ -65,8 +74,8 @@ settings:
 # - %z%: พิกัดแกน Z
 # - %direction%: ทิศทางหลักที่หันหน้าไป (North / East / South / West แปลภาษาไทยตามหัวข้อด้านล่าง)
 messages:
-  info: "%prefix% &eLocation: &aX=%x%, Y=%y%, Z=%z% &7| &eDirection: &a%direction%"
-  dir-north: "North"
-  dir-east: "East"
-  dir-south: "South"
-  dir-west: "West"
+  info: "%prefix% &eพิกัดปัจจุบัน: &aX=%x%, Y=%y%, Z=%z% &7| &eทิศทาง: &a%direction%"
+  dir-north: "ทิศเหนือ"
+  dir-east: "ทิศตะวันออก"
+  dir-south: "ทิศใต้"
+  dir-west: "ทิศตะวันตก"

@@ -6,9 +6,22 @@
 # และปริมาณพลังชีวิตปัจจุบันของสัตว์เลี้ยงตัวนั้นทันทีทาง ActionBar หรือ Chat
 # =========================================================================
 settings:
+  # การตั้งค่าพื้นฐานโมดูล
   enabled: true
-  use-permission: true
+  use-permission: false
   permission: "luminacore.feature.animalowner"
+
+  # รายชื่อประเภทสัตว์ที่อนุญาตให้ตรวจสอบ (ทิ้งไว้เป็นลิสต์ว่าง [] เพื่อตรวจสอบได้ทุกชนิดที่เชื่องได้)
+  # สัตว์ที่รองรับเชื่องได้: WOLF (สุนัข), CAT (แมว), PARROT (นกแก้ว), HORSE (ม้า), DONKEY (ลา), MULE (ล่อ), LLAMA (ยามา)
+  allowed-types: []
+
+  # การตั้งค่าเสียงเวลาทำงาน
+  audio:
+    enabled: true
+    sound: "ENTITY_EXPERIENCE_ORB_PICKUP"
+    volume: 0.6
+    pitch: 1.2
+
   # รูปแบบการแจ้งเตือนข้อความ (message-style)
   # เลือกได้ 3 รูปแบบ:
   # - CHAT      : แสดงข้อความทางช่องพูดคุยปกติ
@@ -16,23 +29,14 @@ settings:
   # - NONE      : ปิดการแจ้งเตือนทั้งหมดอย่างสมบูรณ์แบบ (จะไม่แสดงข้อความแจ้งเตือนเลย)
   message-style: "ACTIONBAR"
 
-  # รายชื่อประเภทสัตว์ที่อนุญาตให้ตรวจสอบ (ทิ้งไว้เป็นลิสต์ว่าง [] เพื่อตรวจสอบได้ทุกชนิดที่เชื่องได้)
-  # สัตว์ที่รองรับเชื่องได้: WOLF (สุนัข), CAT (แมว), PARROT (นกแก้ว), HORSE (ม้า), DONKEY (ลา), MULE (ล่อ), LLAMA (ยามา)
-  allowed-types: []
-
-  audio:
-    enabled: true
-    sound: "ENTITY_EXPERIENCE_ORB_PICKUP"
-    volume: 0.6
-    pitch: 1.2
-
+# ข้อความแจ้งเตือนต่างๆ (หลีกเลี่ยงการใช้อิโมจิ)
 messages:
-  has-owner: "%prefix% &e%pet_name% &fเป็นสัตว์เลี้ยงของ &a%owner% &7(&c%health%/%max_health% HP&7)"
-  no-owner: "%prefix% &7%pet_name% &cตัวนี้ยังไม่มีเจ้าของ (เป็นสัตว์ป่า)"
+  has-owner: "%prefix% &e%pet_name% &fเป็นสัตว์เลี้ยงของ &a%owner% &7(&c%health%/%max_health% พลังชีวิต&7)"
+  no-owner: "%prefix% &7%pet_name% &cตัวนี้ยังไม่มีเจ้าของ (ยังไม่ได้ถูกฝึกให้เชื่อง)"
 
 # รายการตัวแปร (Placeholders) ที่ใช้ได้:
 # %pet_name% - ชื่อเฉพาะของสัตว์เลี้ยง (หากตั้งชื่อป้ายไว้) หรือชื่อชนิดสายพันธุ์
 # %owner% - ชื่อตัวผู้เล่นที่เป็นเจ้าของ
 # %health% - เลือดปัจจุบันทศนิยม 1 ตำแหน่ง
 # %max_health% - เลือดสูงสุดทศนิยม 1 ตำแหน่ง
-# %prefix% - คำนำหน้าปลั๊กอิน
+# %prefix% - คำนำหน้าปลั๊กอิน (จาก config.yml หลัก)

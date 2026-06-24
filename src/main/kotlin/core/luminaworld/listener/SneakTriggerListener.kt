@@ -21,6 +21,7 @@ class SneakTriggerListener(private val plugin: LuminaCore) : Listener {
     )
 
     private val playerSessions = ConcurrentHashMap<UUID, SneakSession>()
+    private val triggerCooldowns = ConcurrentHashMap<UUID, ConcurrentHashMap<String, Long>>()
 
     @EventHandler
     fun onPlayerSneak(event: PlayerToggleSneakEvent) {
@@ -44,11 +45,20 @@ class SneakTriggerListener(private val plugin: LuminaCore) : Listener {
         // ตรวจสอบว่าโมดูลนั้นๆ ถูกเปิดใช้งานและทำงานอยู่หรือไม่
         if (module == null || !module.isEnabled) return
         
+        val now = System.currentTimeMillis()
+        
+        // ตรวจสอบคูลดาวน์จากการใช้ระบบครั้งล่าสุด (ป้องกันหลอดสะสมใหม่ทับพิกัดเดิมขณะรัวปุ่ม)
+        val lastTriggerTime = triggerCooldowns[uuid]?.get(moduleName) ?: 0L
+        val cooldownSec = module.config?.getDouble("settings.cooldown", 3.0) ?: 3.0
+        val cooldownMs = (cooldownSec * 1000).toLong()
+        
+        if (now - lastTriggerTime < cooldownMs) {
+            return
+        }
+
         // ตรวจสอบสิทธิ์ Permission ก่อนเริ่มเก็บสะสมความก้าวหน้า
         if (!module.checkPermission(player)) return
 
-        val now = System.currentTimeMillis()
-        
         // ดึงการตั้งค่า required-sneaks และ reset-interval (วินาที)
         val settings = getShortcutSettings(moduleName)
         val requiredSneaks = settings.first
@@ -75,6 +85,10 @@ class SneakTriggerListener(private val plugin: LuminaCore) : Listener {
                 // ครบกำหนด -> ล้างเซสชันและสั่งเริ่มทำงาน
                 playerSessions.remove(uuid)
                 triggerModule(player, moduleName)
+                
+                // บันทึกเวลาคูลดาวน์การทริกเกอร์ระบบสำเร็จ
+                triggerCooldowns.computeIfAbsent(uuid) { ConcurrentHashMap() }[moduleName] = now
+                
                 playSuccessSound(player, moduleName)
             } else {
                 playTickSound(player, currentCount, requiredSneaks, moduleName)
@@ -126,6 +140,10 @@ class SneakTriggerListener(private val plugin: LuminaCore) : Listener {
         val enabled = config?.getBoolean("settings.progress-bar.enabled", true) ?: true
         if (!enabled) return
 
+        // ดึงชื่อระบบย่อยจาก config หรือใช้ค่าเริ่มต้นจากโค้ด
+        val systemNameFromConfig = config?.getString("settings.system-name")
+        val finalSystemName = systemNameFromConfig ?: systemName
+
         // ดึงการตั้งค่าหลอดความก้าวหน้าอย่างละเอียด
         val charCompleted = config?.getString("settings.progress-bar.char-completed", "|") ?: "|"
         val charRemaining = config?.getString("settings.progress-bar.char-remaining", "|") ?: "|"
@@ -135,7 +153,7 @@ class SneakTriggerListener(private val plugin: LuminaCore) : Listener {
         val colorNumber = config?.getString("settings.progress-bar.color-number", "&b") ?: "&b"
         val colorText = config?.getString("settings.progress-bar.color-text", "&7") ?: "&7"
         
-        val defaultFormat = "%color_bracket%[ %completed%%remaining% %color_bracket%] %color_number%%count%/%total% %color_text%(ย่ออีก %needed% ครั้งเพื่อใช้ %system%)"
+        val defaultFormat = "%color_text%(ย่ออีก %needed% ครั้งเพื่อใช้ %system%) %color_number%%count%/%total% %color_bracket%[ %completed%%remaining% %color_bracket%]"
         val format = config?.getString("settings.progress-bar.format", defaultFormat) ?: defaultFormat
 
         // คำนวณ completed string
@@ -164,7 +182,7 @@ class SneakTriggerListener(private val plugin: LuminaCore) : Listener {
             .replace("%count%", count.toString())
             .replace("%total%", total.toString())
             .replace("%needed%", remainingCount.toString())
-            .replace("%system%", systemName)
+            .replace("%system%", finalSystemName)
             .replace("%prefix%", prefix)
             .replace("%color_bracket%", colorBracket)
             .replace("%color_number%", colorNumber)
@@ -182,6 +200,9 @@ class SneakTriggerListener(private val plugin: LuminaCore) : Listener {
         // ตรวจสอบสวิตช์เปิดปิดเสียง
         val enabled = config?.getBoolean("settings.audio.enabled", true) ?: true
         if (!enabled) return
+
+        val tickEnabled = config?.getBoolean("settings.audio.tick-enabled", true) ?: true
+        if (!tickEnabled) return
 
         // ดึงการกำหนดค่าเสียงและ Pitch
         val soundName = config?.getString("settings.audio.tick-sound", "BLOCK_NOTE_BLOCK_PLING") ?: "BLOCK_NOTE_BLOCK_PLING"
@@ -209,6 +230,9 @@ class SneakTriggerListener(private val plugin: LuminaCore) : Listener {
 
         val enabled = config?.getBoolean("settings.audio.enabled", true) ?: true
         if (!enabled) return
+
+        val successEnabled = config?.getBoolean("settings.audio.success-enabled", true) ?: true
+        if (!successEnabled) return
 
         val soundName = config?.getString("settings.audio.success-sound", "ENTITY_PLAYER_LEVELUP") ?: "ENTITY_PLAYER_LEVELUP"
         val volume = config?.getDouble("settings.audio.success-volume", 0.8) ?: 0.8

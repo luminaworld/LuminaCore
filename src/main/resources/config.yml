@@ -7,6 +7,10 @@ settings:
   prefix: "[LuminaCore]"
   timezone: "Asia/Bangkok"
   time-format: "dd/MM/yyyy HH:mm:ss"
+  
+  # คีย์ยืนยันสิทธิ์เครื่องแม่ข่าย (ได้รับจากระบบจัดการคีย์)
+  # ฟอร์แมตคีย์: LUM-XXXX-XXXX-XXXX
+  license-key: ""
 
 # การตั้งค่าคีย์ลัดการกดย่อตัวเริ่มต้น
 shortcut:

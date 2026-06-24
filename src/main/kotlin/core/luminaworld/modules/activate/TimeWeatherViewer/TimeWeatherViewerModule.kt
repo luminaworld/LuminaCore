@@ -3,14 +3,21 @@ package core.luminaworld.modules.activate.TimeWeatherViewer
 import core.luminaworld.LuminaCore
 import core.luminaworld.module.LuminaModule
 import org.bukkit.entity.Player
+import org.bukkit.event.HandlerList
 
 class TimeWeatherViewerModule(plugin: LuminaCore) : LuminaModule(plugin, "TimeWeatherViewer") {
 
+    private var listener: TimeWeatherViewerListener? = null
+
     override fun onEnable() {
-        plugin.server.pluginManager.registerEvents(TimeWeatherViewerListener(plugin, this), plugin)
+        listener = TimeWeatherViewerListener(plugin, this)
+        plugin.server.pluginManager.registerEvents(listener!!, plugin)
     }
 
-    override fun onDisable() {}
+    override fun onDisable() {
+        listener?.let { HandlerList.unregisterAll(it) }
+        listener = null
+    }
 
     fun showTimeAndWeather(player: Player) {
         val world = player.world

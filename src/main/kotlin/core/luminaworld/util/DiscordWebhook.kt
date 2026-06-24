@@ -1,7 +1,6 @@
 package core.luminaworld.util
 
 import core.luminaworld.LuminaCore
-import org.bukkit.Bukkit
 import org.bukkit.configuration.ConfigurationSection
 import java.net.URI
 import java.net.http.HttpClient
@@ -32,30 +31,25 @@ class DiscordWebhook(val url: String) {
 
         val jsonPayload = toJson()
 
-        // ใช้ AsyncScheduler ของ Folia เสมอ
-        Bukkit.getAsyncScheduler().runNow(plugin) { _ ->
-            try {
-                val request = HttpRequest.newBuilder()
-                    .uri(URI.create(url))
-                    .header("Content-Type", "application/json")
-                    .POST(HttpRequest.BodyPublishers.ofString(jsonPayload))
-                    .build()
+        // sendAsync ใช้ ForkJoinPool โดยตรง ไม่จำเป็นต้องห่อด้วย asyncScheduler
+        val request = HttpRequest.newBuilder()
+            .uri(URI.create(url))
+            .header("Content-Type", "application/json")
+            .POST(HttpRequest.BodyPublishers.ofString(jsonPayload))
+            .build()
 
-                httpClient.sendAsync(request, HttpResponse.BodyHandlers.ofString())
-                    .thenAccept { response ->
-                        if (response.statusCode() !in 200..299) {
-                            plugin.logger.warning("Failed to send Discord Webhook. Status: ${response.statusCode()} | Response: ${response.body()}")
-                        }
-                    }
-                    .exceptionally { ex ->
-                        plugin.logger.severe("Exception when sending Discord Webhook: ${ex.message}")
-                        null
-                    }
-            } catch (e: Exception) {
-                plugin.logger.severe("Error preparing HttpClient: ${e.message}")
+        httpClient.sendAsync(request, HttpResponse.BodyHandlers.ofString())
+            .thenAccept { response ->
+                if (response.statusCode() !in 200..299) {
+                    plugin.logger.warning("Failed to send Discord Webhook. Status: ${response.statusCode()} | Response: ${response.body()}")
+                }
             }
-        }
+            .exceptionally { ex ->
+                plugin.logger.severe("Exception when sending Discord Webhook: ${ex.message}")
+                null
+            }
     }
+
 
     /**
      * ทำการแปลงวัตถุ Webhook ไปเป็น JSON String ด้วย StringBuilder

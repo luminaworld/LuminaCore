@@ -38,13 +38,13 @@ settings:
   # - success-pitch: คีย์ระดับเสียงสลับโหมด
   audio:
     enabled: true
-    tick-enabled: true
+    tick-enabled: false
     success-enabled: true
     tick-sound: "BLOCK_NOTE_BLOCK_PLING"
     tick-volume: 0.5
     tick-pitch-start: 1.0
     tick-pitch-end: 1.0
-    success-sound: "ENTITY_PLAYER_LEVELUP"
+    success-sound: "minecraft:entity.ender_eye.death"
     success-volume: 0.8
     success-pitch: 1.0
 

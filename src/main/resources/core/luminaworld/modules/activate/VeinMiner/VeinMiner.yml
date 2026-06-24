@@ -55,13 +55,13 @@ settings:
   # - success-pitch: คีย์ระดับเสียงสำเร็จ (0.5 - 2.0)
   audio:
     enabled: true
-    tick-enabled: true
+    tick-enabled: false
     success-enabled: true
     tick-sound: "BLOCK_NOTE_BLOCK_PLING"
     tick-volume: 0.5
     tick-pitch-start: 0.5
     tick-pitch-end: 2.0
-    success-sound: "ENTITY_PLAYER_LEVELUP"
+    success-sound: "minecraft:entity.ender_eye.death"
     success-volume: 0.8
     success-pitch: 1.0
 

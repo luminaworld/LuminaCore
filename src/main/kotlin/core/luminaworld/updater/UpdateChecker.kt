@@ -35,41 +35,41 @@ object UpdateChecker {
                     .GET()
                     .build()
 
-                client.sendAsync(request, HttpResponse.BodyHandlers.ofString())
-                    .thenAccept { response ->
-                        if (response.statusCode() == 200) {
-                            try {
-                                val jsonObject = JsonParser.parseString(response.body()).asJsonObject
-                                val tagName = jsonObject.get("tag_name").asString // เช่น "v1.0.1" หรือ "1.0.1"
-                                
-                                val cleanLatest = tagName.replace(Regex("[^0-9.]"), "")
-                                val cleanCurrent = currentVersion.replace(Regex("[^0-9.]"), "")
-                                
-                                if (isNewerVersion(cleanCurrent, cleanLatest)) {
-                                    hasUpdate = true
-                                    latestVersion = tagName
-                                    
-                                    plugin.logger.warning("===================================================")
-                                    plugin.logger.warning(" [LuminaCore] ตรวจพบเวอร์ชันใหม่ล่าสุด!")
-                                    plugin.logger.warning(" - เวอร์ชันปัจจุบัน: v$currentVersion")
-                                    plugin.logger.warning(" - เวอร์ชันใหม่: v$cleanLatest")
-                                    plugin.logger.warning(" - ดาวน์โหลดได้ที่: $downloadUrl")
-                                    plugin.logger.warning("===================================================")
-                                } else {
-                                    plugin.logger.info("[LuminaCore] ปลั๊กอินเป็นเวอร์ชันล่าสุดแล้ว (v$currentVersion)")
-                                }
-                            } catch (e: Exception) {
-                                plugin.logger.warning("[LuminaCore] ไม่สามารถแปลงข้อมูลการอัปเดตได้: ${e.message}")
-                            }
+                // ใช้ send() แบบ blocking ภายใน async thread แทน sendAsync() ซ้อนกัน
+                val response = client.send(request, HttpResponse.BodyHandlers.ofString())
+                if (response.statusCode() == 200) {
+                    try {
+                        val jsonObject = JsonParser.parseString(response.body()).asJsonObject
+                        val tagName = jsonObject.get("tag_name").asString
+
+                        val cleanLatest = tagName.replace(Regex("[^0-9.]"), "")
+                        val cleanCurrent = currentVersion.replace(Regex("[^0-9.]"), "")
+
+                        if (isNewerVersion(cleanCurrent, cleanLatest)) {
+                            hasUpdate = true
+                            latestVersion = tagName
+
+                            plugin.logger.warning("===================================================")
+                            plugin.logger.warning(" [LuminaCore] A new version is available for update.")
+                            plugin.logger.warning(" - Current version: v$currentVersion")
+                            plugin.logger.warning(" - New version: v$cleanLatest")
+                            plugin.logger.warning(" - Download at: $downloadUrl")
+                            plugin.logger.warning("===================================================")
                         } else {
-                            plugin.logger.warning("[LuminaCore] การเช็คอัปเดตล้มเหลว รหัสสถานะ: ${response.statusCode()}")
+                            plugin.logger.info("[LuminaCore] The plugin is up to date (v$currentVersion)")
                         }
+                    } catch (e: Exception) {
+                        plugin.logger.warning("[LuminaCore] Failed to parse update data: ${e.message}")
                     }
+                } else {
+                    plugin.logger.warning("[LuminaCore] Failed to check for updates. Status code: ${response.statusCode()}")
+                }
             } catch (e: Exception) {
-                plugin.logger.warning("[LuminaCore] ไม่สามารถตรวจสอบการอัปเดตได้: ${e.message}")
+                plugin.logger.warning("[LuminaCore] Failed to check for updates: ${e.message}")
             }
         }
     }
+
 
     /**
      * เปรียบเทียบเวอร์ชันเพื่อดูว่าเวอร์ชันล่าสุดใหม่กว่าเวอร์ชันปัจจุบันหรือไม่

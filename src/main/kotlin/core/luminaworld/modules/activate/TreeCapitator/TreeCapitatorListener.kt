@@ -43,9 +43,9 @@ class TreeCapitatorListener(
     }
 
     private fun runTreeCapitator(player: Player, startBlock: Block, logType: Material) {
-        val maxBlocks = module.config?.getInt("settings.max-blocks", 128) ?: 128
-        val breakLeaves = module.config?.getBoolean("settings.break-leaves", true) ?: true
-        val replantSapling = module.config?.getBoolean("settings.replant-sapling", true) ?: true
+        val maxBlocks = module.maxBlocks
+        val breakLeaves = module.breakLeaves
+        val replantSapling = module.replantSapling
         val itemInHand = player.inventory.itemInMainHand
 
         // เช็คว่าจุดเริ่มต้นเป็นท่อนล่างสุดเพื่อเตรียมปลูกต้นอ่อนคืน

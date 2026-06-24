@@ -42,7 +42,7 @@ settings:
     tick-pitch-start: 0.5 # Pitch เริ่มต้น
     tick-pitch-end: 1.5   # Pitch สิ้นสุดตอนแปลงร่างสำเร็จ (ไล่เสียงขึ้น)
     
-    success-sound: "BLOCK_LAVA_EXTINGUISH" # เสียงเมื่อแปลงร่างสำเร็จ
+    success-sound: "minecraft:entity.ender_eye.death" # เสียงเมื่อแปลงร่างสำเร็จ
     success-volume: 0.8
     success-pitch: 1.2
 

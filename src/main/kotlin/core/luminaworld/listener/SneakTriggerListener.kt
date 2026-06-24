@@ -8,6 +8,7 @@ import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 import org.bukkit.event.player.PlayerToggleSneakEvent
 import org.bukkit.event.player.PlayerInteractEvent
+import org.bukkit.event.player.PlayerQuitEvent
 import org.bukkit.event.block.Action
 import java.util.UUID
 import java.util.concurrent.ConcurrentHashMap
@@ -310,6 +311,13 @@ class SneakTriggerListener(private val plugin: LuminaCore) : Listener {
         }
     }
     
+    @EventHandler
+    fun onPlayerQuit(event: PlayerQuitEvent) {
+        val uuid = event.player.uniqueId
+        playerSessions.remove(uuid)
+        triggerCooldowns.remove(uuid)
+    }
+
     private fun isSeedItem(material: Material): Boolean {
         val name = material.name
         return name.endsWith("_SEEDS") || name == "CARROT" || name == "POTATO" || 

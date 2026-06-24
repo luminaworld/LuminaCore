@@ -51,7 +51,7 @@ settings:
     warning-pitch: 0.5
     
     # เสียงเมื่อกดยืนยันการทิ้งสำเร็จ
-    success-sound: "ENTITY_EXPERIENCE_ORB_PICKUP"
+    success-sound: "minecraft:entity.ender_eye.death"
     success-volume: 0.6
     success-pitch: 1.2
 

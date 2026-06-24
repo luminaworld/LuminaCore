@@ -15,8 +15,28 @@ import java.time.format.DateTimeFormatter
 class BlockNotifierListener(private val module: BlockNotifierModule) : Listener {
     private val trackedBlocks = HashSet<Material>()
 
+    // Cache DateTimeFormatter เพื่อหลีกเลี่ยงการสร้างใหม่ทุก event
+    private var fullFormatter: DateTimeFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss").withZone(java.time.ZoneId.of("Asia/Bangkok"))
+    private var dateFormatter: DateTimeFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy").withZone(java.time.ZoneId.of("Asia/Bangkok"))
+    private var timeOnlyFormatter: DateTimeFormatter = DateTimeFormatter.ofPattern("HH:mm:ss").withZone(java.time.ZoneId.of("Asia/Bangkok"))
+
     init {
         cacheTrackedBlocks()
+        updateFormatters()
+    }
+
+    private fun updateFormatters() {
+        val plugin = module.plugin
+        val tz = plugin.config.getString("settings.timezone", "Asia/Bangkok") ?: "Asia/Bangkok"
+        val timePattern = plugin.config.getString("settings.time-format", "dd/MM/yyyy HH:mm:ss") ?: "dd/MM/yyyy HH:mm:ss"
+        try {
+            val zone = java.time.ZoneId.of(tz)
+            fullFormatter = DateTimeFormatter.ofPattern(timePattern).withZone(zone)
+            dateFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy").withZone(zone)
+            timeOnlyFormatter = DateTimeFormatter.ofPattern("HH:mm:ss").withZone(zone)
+        } catch (e: Exception) {
+            // ใช้ formatter เดิมถ้า parse timezone/pattern ไม่สำเร็จ
+        }
     }
 
     private fun cacheTrackedBlocks() {
@@ -103,19 +123,13 @@ class BlockNotifierListener(private val module: BlockNotifierModule) : Listener 
 
         val plugin = module.plugin
         val prefix = plugin.config.getString("settings.prefix", "[LuminaCore]") ?: "[LuminaCore]"
-        val tz = plugin.config.getString("settings.timezone", "Asia/Bangkok") ?: "Asia/Bangkok"
-        val timePattern = plugin.config.getString("settings.time-format", "dd/MM/yyyy HH:mm:ss") ?: "dd/MM/yyyy HH:mm:ss"
 
         var timeStr = ""
         var dateStr = ""
         var timeOnlyStr = ""
         try {
-            val formatter = DateTimeFormatter.ofPattern(timePattern).withZone(ZoneId.of(tz))
-            val dateFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy").withZone(ZoneId.of(tz))
-            val timeOnlyFormatter = DateTimeFormatter.ofPattern("HH:mm:ss").withZone(ZoneId.of(tz))
-
             val instant = java.time.Instant.ofEpochMilli(timeMs)
-            timeStr = formatter.format(instant)
+            timeStr = fullFormatter.format(instant)
             dateStr = dateFormatter.format(instant)
             timeOnlyStr = timeOnlyFormatter.format(instant)
         } catch (e: Exception) {

@@ -2,11 +2,14 @@ package core.luminaworld.module
 
 import core.luminaworld.LuminaCore
 import org.bukkit.configuration.file.YamlConfiguration
+import org.bukkit.event.EventHandler
+import org.bukkit.event.Listener
+import org.bukkit.event.player.PlayerQuitEvent
 import io.papermc.paper.threadedregions.scheduler.ScheduledTask
 import java.io.File
 import java.nio.file.Files
 
-abstract class LuminaModule(val plugin: LuminaCore, val name: String) {
+abstract class LuminaModule(val plugin: LuminaCore, val name: String) : Listener {
     var isEnabled: Boolean = false
     var config: YamlConfiguration? = null
         protected set
@@ -54,6 +57,15 @@ abstract class LuminaModule(val plugin: LuminaCore, val name: String) {
 
     abstract fun onEnable()
     abstract fun onDisable()
+
+    /**
+     * ล้าง ActionBar Task ของผู้เล่นที่ออกจากเซิร์ฟเวอร์เพื่อป้องกัน Memory Leak
+     */
+    @EventHandler
+    fun onPlayerQuit(event: PlayerQuitEvent) {
+        val uuid = event.player.uniqueId
+        plugin.activeActionBarTasks.remove(uuid)?.cancel()
+    }
 
     /**
      * รีโหลดการตั้งค่าของโมดูล
@@ -143,21 +155,12 @@ abstract class LuminaModule(val plugin: LuminaCore, val name: String) {
         var formatted = input
         
         // แปลง HEX สีแบบ &#xxxxxx -> <#xxxxxx>
-        val hexRegex = Regex("&#([A-Fa-f0-9]{6})")
-        formatted = hexRegex.replace(formatted) { matchResult ->
+        formatted = HEX_REGEX.replace(formatted) { matchResult ->
             "<#${matchResult.groupValues[1]}>"
         }
         
         // แปลงรหัสสีดั้งเดิม & ให้กลายเป็น MiniMessage tags
-        val legacyMap = mapOf(
-            "&0" to "<black>", "&1" to "<dark_blue>", "&2" to "<dark_green>", "&3" to "<dark_aqua>",
-            "&4" to "<dark_red>", "&5" to "<dark_purple>", "&6" to "<gold>", "&7" to "<gray>",
-            "&8" to "<dark_gray>", "&9" to "<blue>", "&a" to "<green>", "&b" to "<aqua>",
-            "&c" to "<red>", "&d" to "<light_purple>", "&e" to "<yellow>", "&f" to "<white>",
-            "&k" to "<obfuscated>", "&l" to "<bold>", "&m" to "<strikethrough>",
-            "&n" to "<underlined>", "&o" to "<italic>", "&r" to "<reset>"
-        )
-        for ((legacy, tag) in legacyMap) {
+        for ((legacy, tag) in LEGACY_COLOR_MAP) {
             formatted = formatted.replace(legacy, tag)
         }
         
@@ -166,6 +169,18 @@ abstract class LuminaModule(val plugin: LuminaCore, val name: String) {
         } catch (e: Exception) {
             net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer.legacyAmpersand().deserialize(input)
         }
+    }
+
+    companion object {
+        private val HEX_REGEX = Regex("&#([A-Fa-f0-9]{6})")
+        private val LEGACY_COLOR_MAP = mapOf(
+            "&0" to "<black>", "&1" to "<dark_blue>", "&2" to "<dark_green>", "&3" to "<dark_aqua>",
+            "&4" to "<dark_red>", "&5" to "<dark_purple>", "&6" to "<gold>", "&7" to "<gray>",
+            "&8" to "<dark_gray>", "&9" to "<blue>", "&a" to "<green>", "&b" to "<aqua>",
+            "&c" to "<red>", "&d" to "<light_purple>", "&e" to "<yellow>", "&f" to "<white>",
+            "&k" to "<obfuscated>", "&l" to "<bold>", "&m" to "<strikethrough>",
+            "&n" to "<underlined>", "&o" to "<italic>", "&r" to "<reset>"
+        )
     }
 
     /**

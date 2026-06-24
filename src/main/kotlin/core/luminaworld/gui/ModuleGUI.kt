@@ -112,9 +112,9 @@ class ModuleGUI(private val plugin: LuminaCore) : InventoryHolder, Listener {
                 plugin.logger.severe("Error switching status of module ${module.name}: ${e.message}")
             }
 
-            // เล่นเสียงและวาด GUI ใหม่
+            // เล่นเสียงและ update เฉพาะ slot ที่เปลี่ยน (ไม่ต้อง rebuild ทั้ง inventory)
             player.playSound(player.location, Sound.UI_BUTTON_CLICK, 1.0f, 1.0f)
-            openGUI(player)
+            event.inventory.setItem(slot, createModuleItem(module))
         }
     }
 }

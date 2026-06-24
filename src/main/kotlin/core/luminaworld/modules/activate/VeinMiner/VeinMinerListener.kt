@@ -27,7 +27,7 @@ class VeinMinerListener(
         if (!module.isEnabled) return
         if (!module.isModeEnabled(player)) return
         
-        val requireSneak = module.config?.getBoolean("settings.require-sneak", false) ?: false
+        val requireSneak = module.requireSneak
         if (requireSneak && !player.isSneaking) return
 
         if (!item.type.name.endsWith("_PICKAXE")) return
@@ -44,7 +44,7 @@ class VeinMinerListener(
     }
 
     private fun runVeinMiner(player: Player, startBlock: Block, oreType: Material) {
-        val maxBlocks = module.config?.getInt("settings.max-blocks", 64) ?: 64
+        val maxBlocks = module.maxBlocks
         val itemInHand = player.inventory.itemInMainHand
 
         val oreQueue = ArrayDeque<Block>()

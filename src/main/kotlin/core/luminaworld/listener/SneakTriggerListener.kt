@@ -40,6 +40,15 @@ class SneakTriggerListener(private val plugin: LuminaCore) : Listener {
         val moduleDisplayName = moduleInfo.second
         
         val manager = plugin.moduleManager ?: return
+
+        // ถ้าถือเข็มทิศและระบบวัดระยะทาง (DistanceMeasurer) กำลังใช้งานอยู่ ให้ปิดการทำงานของพิกัดทันที
+        if (material == Material.COMPASS) {
+            val distanceMeasurer = manager.getModule("DistanceMeasurer") as? core.luminaworld.modules.activate.DistanceMeasurer.DistanceMeasurerModule
+            if (distanceMeasurer != null && distanceMeasurer.isEnabled && distanceMeasurer.isMeasureModeEnabled(player)) {
+                return
+            }
+        }
+
         val module = manager.getModule(moduleName)
         
         // ตรวจสอบว่าโมดูลนั้นๆ ถูกเปิดใช้งานและทำงานอยู่หรือไม่
@@ -281,6 +290,9 @@ class SneakTriggerListener(private val plugin: LuminaCore) : Listener {
     fun onPlayerInteract(event: PlayerInteractEvent) {
         val player = event.player
         val action = event.action
+        
+        // สนใจเฉพาะการใช้มือหลักเท่านั้น ป้องกันปัญหากดใช้งานเบิ้ลจากมือหลักและมือรอง
+        if (event.hand != org.bukkit.inventory.EquipmentSlot.HAND) return
         
         if (action == Action.RIGHT_CLICK_AIR || action == Action.RIGHT_CLICK_BLOCK) {
             val item = player.inventory.itemInMainHand

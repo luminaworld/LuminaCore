@@ -130,7 +130,7 @@ class BlockNotifierListener(private val module: BlockNotifierModule) : Listener 
         return input
             .replace("%prefix%", prefix)
             .replace("%plugin_name%", "LuminaCore")
-            .replace("%plugin_version%", "1.0.0")
+            .replace("%plugin_version%", plugin.description.version)
             .replace("%player_name%", player.name)
             .replace("%player_display_name%", player.displayName)
             .replace("%player_uuid%", player.uniqueId.toString())

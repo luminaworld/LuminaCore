@@ -18,6 +18,9 @@ class DistanceMeasurerListener(
         val action = event.action
         val item = player.inventory.itemInMainHand
 
+        // สนใจเฉพาะมือหลัก เพื่อป้องกันการทำงานซ้ำซ้อนจากมือหลักและมือรองพร้อมกัน
+        if (event.hand != org.bukkit.inventory.EquipmentSlot.HAND) return
+
         // สนใจการคลิกขวาปกติที่บล็อกขณะเปิดโหมดวัดระยะทางและถือ Compass
         if (action == Action.RIGHT_CLICK_BLOCK) {
             if (module.isEnabled && module.isMeasureModeEnabled(player) && item.type == Material.COMPASS) {

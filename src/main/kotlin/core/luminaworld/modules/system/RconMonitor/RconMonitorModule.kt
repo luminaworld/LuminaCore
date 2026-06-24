@@ -113,7 +113,7 @@ class RconMonitorModule(plugin: LuminaCore) : LuminaModule(plugin, "RconMonitor"
                 .replace("%time%", timeStr)
                 .replace("%timestamp%", timeMs.toString())
                 .replace("%plugin_name%", "LuminaCore")
-                .replace("%plugin_version%", "1.0.0")
+                .replace("%plugin_version%", plugin.description.version)
         }
 
         val combinedReplacer: (String) -> String = { input ->

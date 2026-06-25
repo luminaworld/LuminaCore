@@ -34,3 +34,13 @@ messages:
   gui-click-to-toggle: "&7คลิกเพื่อเปิด/ปิดสถานะโมดูล"
   gui-status-enabled: "&aสถานะ: เปิดใช้งาน"
   gui-status-disabled: "&cสถานะ: ปิดใช้งาน"
+  
+  # ข้อความแจ้งเตือนอัปเดตสำหรับแอดมินตอนเข้าเซิร์ฟเวอร์
+  update-detected: "%prefix% &aตรวจพบเวอร์ชันใหม่ล่าสุด! &e(%latest_version%)"
+  update-current: "%prefix% &7เวอร์ชันปัจจุบันของคุณคือ: &c(v%current_version%)"
+  update-download: "%prefix% &aดาวน์โหลดเวอร์ชันใหม่ได้ที่: &b%url%"
+  
+  # ข้อความแสดงสถานะการโหลดโมดูลใน Console
+  module-enabled: "Module %module% enabled."
+  module-disabled: "Module %module% is disabled."
+

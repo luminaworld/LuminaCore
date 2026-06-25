@@ -24,6 +24,67 @@ class ConfirmDropListener(private val plugin: LuminaCore, private val module: Co
 
     private val pendingDrops = ConcurrentHashMap<UUID, PendingDrop>()
 
+    // ตัวแปรเก็บค่าคอนฟิกที่ทำการแคชเพื่อเพิ่มประสิทธิภาพในการเข้าถึงและลดอาการดีเลย์
+    private var confirmDelaySeconds: Double = 3.0
+    private var protectEnchantedOnly: Boolean = true
+    private val protectMaterials = HashSet<String>()
+    private var progressBarEnabled: Boolean = true
+    private var charCompleted: String = "|"
+    private var charRemaining: String = "|"
+    private var colorCompleted: String = "&c"
+    private var colorRemaining: String = "&7"
+    private var colorBracket: String = "&e"
+    private var colorNumber: String = "&b"
+    private var colorText: String = "&7"
+    private var progressFormat: String = ""
+    private var audioEnabled: Boolean = true
+    private var warningSound: String = "BLOCK_NOTE_BLOCK_BASS"
+    private var warningVolume: Float = 0.8f
+    private var warningPitch: Float = 0.5f
+    private var successSound: String = "minecraft:entity.ender_eye.death"
+    private var successVolume: Float = 0.6f
+    private var successPitch: Float = 1.2f
+
+    init {
+        loadSettings()
+    }
+
+    /**
+     * โหลดและแคชการตั้งค่าจากโมดูลเพื่อหลีกเลี่ยงการเปิดอ่านไฟล์ซ้ำในกระบวนการทำงานหลัก
+     */
+    private fun loadSettings() {
+        val config = module.config ?: return
+        confirmDelaySeconds = config.getDouble("settings.confirm-delay-seconds", 3.0)
+        protectEnchantedOnly = config.getBoolean("settings.protect-enchanted-only", true)
+        
+        protectMaterials.clear()
+        val materialsList = config.getStringList("settings.protect-materials")
+        for (mat in materialsList) {
+            protectMaterials.add(mat.uppercase())
+        }
+
+        progressBarEnabled = config.getBoolean("settings.progress-bar.enabled", true)
+        charCompleted = config.getString("settings.progress-bar.char-completed", "|") ?: "|"
+        charRemaining = config.getString("settings.progress-bar.char-remaining", "|") ?: "|"
+        colorCompleted = config.getString("settings.progress-bar.color-completed", "&c") ?: "&c"
+        colorRemaining = config.getString("settings.progress-bar.color-remaining", "&7") ?: "&7"
+        colorBracket = config.getString("settings.progress-bar.color-bracket", "&e") ?: "&e"
+        colorNumber = config.getString("settings.progress-bar.color-number", "&b") ?: "&b"
+        colorText = config.getString("settings.progress-bar.color-text", "&7") ?: "&7"
+        
+        val defaultFormat = "%color_bracket%[ %completed%%remaining% %color_bracket%] %color_number%%time% วินาที %color_text%(กดย้ำทิ้งไอเทม %item% อีกครั้งเพื่อยืนยัน)"
+        progressFormat = config.getString("settings.progress-bar.format", defaultFormat) ?: defaultFormat
+
+        audioEnabled = config.getBoolean("settings.audio.enabled", true)
+        warningSound = config.getString("settings.audio.warning-sound", "BLOCK_NOTE_BLOCK_BASS") ?: "BLOCK_NOTE_BLOCK_BASS"
+        warningVolume = config.getDouble("settings.audio.warning-volume", 0.8).toFloat()
+        warningPitch = config.getDouble("settings.audio.warning-pitch", 0.5).toFloat()
+
+        successSound = config.getString("settings.audio.success-sound", "minecraft:entity.ender_eye.death") ?: "minecraft:entity.ender_eye.death"
+        successVolume = config.getDouble("settings.audio.success-volume", 0.6).toFloat()
+        successPitch = config.getDouble("settings.audio.success-pitch", 1.2).toFloat()
+    }
+
     @EventHandler
     fun onPlayerDrop(event: PlayerDropItemEvent) {
         if (!module.isEnabled) return
@@ -38,14 +99,14 @@ class ConfirmDropListener(private val plugin: LuminaCore, private val module: Co
         val uuid = player.uniqueId
         val now = System.currentTimeMillis()
         val pending = pendingDrops[uuid]
-        val config = module.config ?: return
-        val delaySeconds = config.getDouble("settings.confirm-delay-seconds", 3.0)
-        val delayMs = (delaySeconds * 1000).toLong()
+        val delayMs = (confirmDelaySeconds * 1000).toLong()
 
         // หากผู้เล่นเพิ่งขอทิ้งไอเทมชนิดเดิมภายในเวลาจำกัด -> ยืนยันการทิ้งสำเร็จ
         if (pending != null && isSimilar(pending.itemStack, stack) && (now - pending.startTime) < delayMs) {
             pending.task.cancel()
-            pendingDrops.remove(uuid)
+            pendingDrops.computeIfPresent(uuid) { _, current ->
+                if (current.task == pending.task) null else current
+            }
             
             // เล่นเสียงยืนยันสำเร็จ
             playConfirmSound(player, true)
@@ -54,20 +115,24 @@ class ConfirmDropListener(private val plugin: LuminaCore, private val module: Co
 
         // ยกเลิกการทิ้งครั้งแรก
         event.isCancelled = true
+        player.updateInventory() // อัปเดตข้อมูลของฝั่งไคลเอนต์ทันทีเพื่อตัดอาการภาพกระตุก/หน่วง
+        
         pending?.task?.cancel()
 
         // เล่นเสียงแจ้งเตือนครั้งแรก
         playConfirmSound(player, false)
 
-        val totalTicks = (delaySeconds * 20).toLong()
+        val totalTicks = (confirmDelaySeconds * 20).toLong()
         val intervalTicks = 5L
         var elapsedTicks = 0L
+
+        // แสดงความคืบหน้าของเวลาเริ่มต้นทันทีบนหน้าจอ ไม่ต้องรอ 1 tick ถัดไปของ scheduler
+        showConfirmProgressBar(player, totalTicks, totalTicks, stack, confirmDelaySeconds)
 
         var taskRef: ScheduledTask? = null
         taskRef = player.scheduler.runAtFixedRate(plugin, { task ->
             elapsedTicks += intervalTicks
             if (elapsedTicks >= totalTicks || !player.isOnline) {
-                pendingDrops.remove(uuid)
                 task.cancel()
                 return@runAtFixedRate
             }
@@ -78,8 +143,11 @@ class ConfirmDropListener(private val plugin: LuminaCore, private val module: Co
             // วาดหลอดพลังแสดงเวลากดซ้ำแบบถอยหลังแอนิเมชัน
             showConfirmProgressBar(player, remainingTicks, totalTicks, stack, remainingSeconds)
         }, {
-            pendingDrops.remove(uuid)
-        }, 0L, intervalTicks)
+            // ใช้ computeIfPresent เพื่อให้มั่นใจว่าจะลบออกเฉพาะทาสก์ปัจจุบันที่เป็นเจ้าของเท่านั้น ป้องกัน Race Condition
+            pendingDrops.computeIfPresent(uuid) { _, current ->
+                if (current.task == taskRef) null else current
+            }
+        }, intervalTicks, intervalTicks)
 
         if (taskRef != null) {
             pendingDrops[uuid] = PendingDrop(stack.clone(), taskRef, now)
@@ -104,19 +172,15 @@ class ConfirmDropListener(private val plugin: LuminaCore, private val module: Co
     }
 
     private fun shouldProtect(stack: ItemStack): Boolean {
-        val config = module.config ?: return false
         val material = stack.type
         val name = material.name
 
-        val protectEnchantedOnly = config.getBoolean("settings.protect-enchanted-only", true)
         if (protectEnchantedOnly && stack.enchantments.isEmpty() && material != Material.ELYTRA) {
-            val protectMaterials = config.getStringList("settings.protect-materials")
             if (!protectMaterials.contains(name)) {
                 return false
             }
         }
 
-        val protectMaterials = config.getStringList("settings.protect-materials")
         if (protectMaterials.contains(name)) return true
 
         val isArmor = name.endsWith("_HELMET") || name.endsWith("_CHESTPLATE") || 
@@ -138,20 +202,7 @@ class ConfirmDropListener(private val plugin: LuminaCore, private val module: Co
     }
 
     private fun showConfirmProgressBar(player: Player, remainingTicks: Long, totalTicks: Long, stack: ItemStack, timeSeconds: Double) {
-        val config = module.config ?: return
-        val enabled = config.getBoolean("settings.progress-bar.enabled", true)
-        if (!enabled) return
-
-        val charCompleted = config.getString("settings.progress-bar.char-completed", "|") ?: "|"
-        val charRemaining = config.getString("settings.progress-bar.char-remaining", "|") ?: "|"
-        val colorCompleted = config.getString("settings.progress-bar.color-completed", "&c") ?: "&c"
-        val colorRemaining = config.getString("settings.progress-bar.color-remaining", "&7") ?: "&7"
-        val colorBracket = config.getString("settings.progress-bar.color-bracket", "&e") ?: "&e"
-        val colorNumber = config.getString("settings.progress-bar.color-number", "&b") ?: "&b"
-        val colorText = config.getString("settings.progress-bar.color-text", "&7") ?: "&7"
-
-        val defaultFormat = "%color_bracket%[ %completed%%remaining% %color_bracket%] %color_number%%time% วินาที %color_text%(กดย้ำทิ้งไอเทม %item% อีกครั้งเพื่อทิ้ง)"
-        val format = config.getString("settings.progress-bar.format", defaultFormat) ?: defaultFormat
+        if (!progressBarEnabled) return
 
         // คำนวณความก้าวหน้าถอยหลัง (Completed หมายถึงเวลาที่เหลืออยู่)
         val compCount = ((remainingTicks.toDouble() / totalTicks.toDouble()) * 10).toInt().coerceIn(0, 10)
@@ -179,7 +230,7 @@ class ConfirmDropListener(private val plugin: LuminaCore, private val module: Co
         }
 
         val formattedSeconds = String.format("%.1f", timeSeconds)
-        val finalMsg = format
+        val finalMsg = progressFormat
             .replace("%completed%", completedStr)
             .replace("%remaining%", remainingStr)
             .replace("%time%", formattedSeconds)
@@ -193,18 +244,20 @@ class ConfirmDropListener(private val plugin: LuminaCore, private val module: Co
     }
 
     private fun playConfirmSound(player: Player, isSuccess: Boolean) {
-        val config = module.config ?: return
-        val enabled = config.getBoolean("settings.audio.enabled", true)
-        if (!enabled) return
+        if (!audioEnabled) return
 
-        val section = if (isSuccess) "success" else "warning"
-        val soundName = config.getString("settings.audio.$section-sound", if (isSuccess) "ENTITY_EXPERIENCE_ORB_PICKUP" else "BLOCK_NOTE_BLOCK_BASS") ?: "BLOCK_NOTE_BLOCK_BASS"
-        val volume = config.getDouble("settings.audio.$section-volume", 0.6).toFloat()
-        val pitch = config.getDouble("settings.audio.$section-pitch", if (isSuccess) 1.2 else 0.5).toFloat()
+        val sName = if (isSuccess) successSound else warningSound
+        val vol = if (isSuccess) successVolume else warningVolume
+        val pitch = if (isSuccess) successPitch else warningPitch
 
         try {
-            val sound = Sound.valueOf(soundName)
-            player.playSound(player.location, sound, volume, pitch)
-        } catch (e: Exception) {}
+            val sound = Sound.valueOf(sName)
+            player.playSound(player.location, sound, vol, pitch)
+        } catch (e: Exception) {
+            // กรณีเป็นเสียงแบบ Custom Resource Key (เช่น minecraft:entity.ender_eye.death)
+            try {
+                player.playSound(player.location, sName, vol, pitch)
+            } catch (ex: Exception) {}
+        }
     }
 }

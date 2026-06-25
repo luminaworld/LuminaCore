@@ -187,6 +187,11 @@ abstract class LuminaModule(val plugin: LuminaCore, val name: String) : Listener
      * ตรวจสอบว่าผู้เล่นมีสิทธิ์ในการเข้าถึงระบบย่อยนี้หรือไม่
      */
     fun checkPermission(player: org.bukkit.entity.Player): Boolean {
+        // หากผู้เล่นถูกระงับสิทธิ์ชั่วคราวโดยระบบความปลอดภัยแกนกลาง จะไม่ผ่านการเช็คสิทธิ์และไม่มีการแจ้งเตือนสแปมในแชท
+        if (plugin.suspendedPlayers.contains(player.uniqueId)) {
+            return false
+        }
+
         val usePermission = config?.getBoolean("settings.use-permission", false) ?: false
         if (!usePermission) return true
         

@@ -1,5 +1,5 @@
 # ============================================================================
-# AntiOp Configuration (ระบบความปลอดภัยตรวจสอบสิทธิ์ OP)
+# AntiOp Configuration (ระบบความปลอดภัยตรวจสอบสิทธิ์ OP - อิงจาก StellaCore 100%)
 # ============================================================================
 settings:
   enabled: true
@@ -8,13 +8,27 @@ settings:
 # ANTI-OP SETTINGS
 # ============================================================================
 antiop:
-  enabled: true
-  code: "SECRET_CODE_HERE"
-  prefix: "&8[&c&lLumina-2&8] &r"
-  timeout: 1000
-  max_attempts: 2
+  code: "PASSWORD"
+  prefix: "&8[&cAntiOP&8] &r"
+  timeout: 1000 # ระยะเวลาจำกัดในการกรอกรหัสผ่าน (หน่วย: วินาที)
+  max_attempts: 2 # จำนวนครั้งสูงสุดที่กรอกผิดได้ ก่อนที่จะถูกแบน
   
-  # รายชื่อผู้เล่นที่ได้รับอนุญาตให้มี OP (Whitelist)
+  # รายชื่อกลุ่ม LuckPerms ที่ไม่อนุญาตให้ผู้เล่นธรรมดาเข้าถึง (หากไม่ใช่ whitelist)
+  block-parent-groups:
+    - "admin"
+    - "owner"
+    - "developer"
+
+  # โหมดเกมของผู้เล่นขณะรอการยืนยันตัวตน
+  suspended-gamemode: "ADVENTURE"
+  
+  # โหมดเกมที่จะคืนให้หลังยืนยันตัวตนสำเร็จ
+  verified-gamemode: "CREATIVE"
+
+  # แช่แข็งทิศทางการมอง (หันหน้าไม่ได้) ขณะพิมพ์โค้ด
+  freeze-look: true
+
+  # รายชื่อผู้เล่นที่ได้รับอนุญาตให้มี OP และสิทธิ์ * (Whitelist)
   whitelist:
     - "PlayerName1"
     - "PlayerName2"
@@ -22,57 +36,76 @@ antiop:
 
   # --------------------------------------------------------------------------
   # MESSAGES & UI CONFIGURATION
-  # Placeholders: %player%, %target%, %sender%, %remaining%, %max%
+  # Placeholders: {player}, {target}, {sender}, {remaining}, {max}
   # --------------------------------------------------------------------------
   
-  # --- Native Dialog UI (Requires server restart to apply) ---
+  # --- Native Dialog UI ---
   dialog:
-    title: "⚠ โปรดยืนยันตัวตน (AntiOP)"
-    body-line1: "ระบบตรวจพบสิทธิ์ผู้ดูแลระบบ (OP) บนบัญชีของคุณ\nกรุณากรอกรหัสผ่าน AntiOP เพื่อยืนยันสิทธิ์การใช้งาน"
-    body-line2: "⚠ คำเตือน: โปรดรักษาความลับของรหัสผ่านนี้ ห้ามเปิดเผยแก่ผู้อื่นโดยเด็ดขาด!"
-    input-label: "รหัสผ่าน AntiOP"
-    button-submit: "✔ ยืนยันตัวตน"
+    title: "⚠ ระบบยืนยันตัวตนผู้ดูแลระบบ (AntiOP)"
+    body-line1: "ตรวจพบการเข้าใช้งานด้วยสิทธิ์ผู้ดูแลระบบ (OP)\nโปรดระบุรหัสผ่านยืนยันตัวตนเพื่อเข้าใช้งานระบบความปลอดภัย"
+    body-line2: "⚠ คำเตือน: โปรดเก็บรักษารหัสผ่านนี้เป็นความลับขั้นสูงสุด ห้ามเปิดเผยแก่ผู้อื่นโดยเด็ดขาด!"
+    input-label: "รหัสผ่านยืนยันตัวตน (AntiOP)"
+    button-submit: "✔ ยืนยันสิทธิ์"
 
-  # --- Player Notifications (Legacy & format) ---
-  verify-success: "&a&lยืนยันตัวตนสำเร็จ! คืนสิทธิ์การใช้งานเรียบร้อยแล้ว"
-  verify-success-sub: "&7คุณสามารถเข้าใช้งานระบบได้ตามปกติ"
-  verify-wrong: "&cรหัสผ่านไม่ถูกต้อง! สามารถระบุใหม่ได้อีก &e%remaining% &cครั้ง"
-  kick-timeout: "&c&lหมดเวลาการยืนยันตัวตน AntiOP"
-  kick-banned-target: "&c&lถูกระงับการใช้งาน: ได้รับสิทธิ์ OP จากแหล่งที่ไม่ได้รับอนุญาต"
-  command-blocked: "&cกรุณายืนยันตัวตน AntiOP ให้เสร็จสิ้นก่อนใช้งานคำสั่ง"
-  dialog-not-found: "&c&lตรวจพบสิทธิ์ OP ที่ไม่ได้รับอนุญาต กรุณาติดต่อผู้ดูแลระบบ!"
-  escalation-blocked-player: "&c%target% ไม่ได้รับอนุญาตให้ครอบครองสิทธิ์พิเศษในเซิร์ฟเวอร์นี้!"
+  # --- Player Notifications ---
+  verify-success: "&a&lยืนยันสิทธิ์สำเร็จ คืนสิทธิ์การเข้าถึงระบบเรียบร้อยแล้ว"
+  verify-success-sub: "&7บัญชีของคุณได้รับการอนุญาตให้เข้าใช้งานตามปกติ"
+  verify-wrong: "&cรหัสผ่านไม่ถูกต้อง โปรดลองอีกครั้ง (คงเหลือโอกาสทดลอง %remaining% ครั้ง)"
+  kick-timeout: "&c&lหมดเวลาการยืนยันตัวตนตามมาตรการความปลอดภัย"
+  kick-banned-target: "&c&lบัญชีถูกระงับ: ตรวจพบสิทธิ์ OP จากแหล่งที่ไม่ได้รับอนุญาต"
+  command-blocked: "&cโปรดยืนยันตัวตนผ่านหน้าต่างระบบความปลอดภัยให้เสร็จสิ้นก่อนใช้งานคำสั่ง"
+  dialog-not-found: "&c&lระบบรักษาความปลอดภัยขัดข้อง: ตรวจพบสิทธิ์ไม่ถูกต้อง โปรดติดต่อแอดมินโดยด่วน"
+  escalation-blocked-player: "&cการดำเนินการล้มเหลว: บัญชี %target% ไม่ได้รับการอนุมัติให้เข้าถึงสิทธิ์ระดับผู้ดูแลระบบ"
 
-  # --- Ban Screen Reasons (Legacy &code format) ---
-  ban-reason-unauthorized-op: "&c&l[AntiOP] บัญชีถูกระงับ: ตรวจพบสิทธิ์ OP โดยไม่ได้รับอนุญาต"
-  ban-reason-max-attempts: "&c&l[AntiOP] บัญชีถูกระงับ: กรอกรหัสผ่านผิดเกิน %max% ครั้ง"
-  ban-reason-escalation-sender: "&c&l[AntiOP] บัญชีถูกระงับ: พยายามมอบสิทธิ์ OP แก่ผู้เล่นที่ไม่อยู่ในรายชื่อ"
-  ban-reason-escalation-target: "&c&l[AntiOP] บัญชีถูกระงับ: ได้รับสิทธิ์ OP จากแหล่งที่ไม่ได้รับอนุญาต"
-  ban-reason-console-target: "&c&l[AntiOP] บัญชีถูกระงับ: ตรวจพบการพยายามยกระดับสิทธิ์โดยไม่ได้รับอนุญาต"
+  # --- Ban Screen Reasons ---
+  ban-reason-unauthorized-op: "&c&l[AntiOP] ระงับบัญชีถาวร: ตรวจพบการถือครองสิทธิ์ OP โดยไม่ได้รับอนุญาต"
+  ban-reason-max-attempts: "&c&l[AntiOP] ระงับบัญชีถาวร: ระบุรหัสผ่านผิดเกินกำหนดสูงสุด (%max% ครั้ง)"
+  ban-reason-escalation-sender: "&c&l[AntiOP] ระงับบัญชีถาวร: พยายามมอบสิทธิ์ระดับสูงแก่บัญชีที่ไม่ได้รับอนุญาต"
+  ban-reason-escalation-target: "&c&l[AntiOP] ระงับบัญชีถาวร: ได้รับการยกระดับสิทธิ์จากแหล่งที่ไม่ได้รับการอนุญาต"
+  ban-reason-console-target: "&c&l[AntiOP] ระงับบัญชีถาวร: ตรวจพบความพยายามยกระดับสิทธิ์บัญชีโดยมิชอบ"
 
   # --- Broadcast Messages ---
   broadcast:
     # เมื่อแบนผู้มี OP ที่ไม่อยู่ใน whitelist
     ban-unauthorized-op:
       enabled: true
-      message: "&c%player% &7ถูกระงับการใช้งานเนื่องจากครอบครองสิทธิ์ OP โดยไม่ได้รับอนุญาต"
+      message: "&c%player% &7ถูกระงับบัญชีถาวรเนื่องจากถือครองสิทธิ์ OP โดยไม่ได้รับอนุญาต"
       
     # เมื่อถูกเตะเพราะหมดเวลายืนยัน
     timeout:
       enabled: true
-      message: "&7%player% &cถูกเชิญออกจากเซิร์ฟเวอร์เนื่องจากไม่ยืนยันตัวตนภายในเวลาที่กำหนด"
+      message: "&7%player% &cถูกเตะออกจากเซิร์ฟเวอร์เนื่องจากไม่ยืนยันตัวตนภายในเวลาที่กำหนด"
       
     # เมื่อถูกแบนเพราะป้อนโค้ดผิดหลายครั้ง
     max-attempts:
       enabled: true
-      message: "&7%player% &cถูกระงับการใช้งานเนื่องจากกรอกรหัสผ่านผิดเกินจำนวนครั้งที่กำหนด"
+      message: "&7%player% &cถูกระงับบัญชีถาวรเนื่องจากระบุรหัสผ่านยืนยันตัวตนผิดเกินขีดจำกัด"
       
     # เมื่อ Console พยายามให้สิทธิ์ OP (Escalation)
     escalation-console:
       enabled: true
-      message: "&cตรวจพบการพยายามมอบสิทธิ์ OP แก่ &e%target% &cผ่านคอนโซล → บัญชีเป้าหมายถูกระงับการใช้งานทันทีเพื่อความปลอดภัย"
+      message: "&cตรวจพบความพยายามมอบสิทธิ์ OP แก่ &e%target%&c ผ่านคอนโซล → บัญชีเป้าหมายถูกระงับการใช้งานทันที"
       
     # เมื่อ Player พยายามให้สิทธิ์ OP (Escalation)
     escalation-player:
       enabled: true
-      message: "&cตรวจพบ &l%sender% &r&cพยายามมอบสิทธิ์ OP แก่ &e%target% &c→ บัญชีของทั้งสองฝ่ายถูกระงับการใช้งานทันที"
+      message: "&cตรวจพบ &l%sender%&r&c พยายามมอบสิทธิ์ OP แก่ &e%target%&c → บัญชีของทั้งสองฝ่ายถูกระงับการใช้งานทันที"
+
+  # --------------------------------------------------------------------------
+  # CONSOLE LOG MESSAGES
+  # Placeholders: %player%, %target%, %sender%, %ip%, %command%, %error%, %raw%, %key%, %fallback%
+  # --------------------------------------------------------------------------
+  console:
+    enabled: "[AntiOP] Module enabled."
+    disabled: "[AntiOP] Module disabled."
+    ip-locked: "[AntiOP] IP Locked for %player% (%ip%)"
+    unauthorized-op: "[AntiOP] UNAUTHORIZED OP DETECTED FOR %player% (%ip%)"
+    save-whitelist-failed: "[AntiOP] Failed to save whitelist: %error%"
+    unsafe-console-command: "[AntiOP] Unsafe privilege target blocked from console command: %command%"
+    escalation-blocked: "[AntiOP] Console privilege escalation blocked for target '%target%': %command%"
+    escalation-blocked-offline: "[AntiOP] Console privilege escalation blocked for offline target '%target%': %command%"
+    banned-escalation: "[AntiOP] Banned sender '%sender%' and target '%target%' for unauthorized privilege escalation."
+    banned-escalation-offline: "[AntiOP] Banned sender '%sender%' and offline target '%target%' for privilege escalation."
+    session-op-removed: "[AntiOP] Session OP removed for offline player %player%"
+    invalid-gamemode: "[AntiOP] Invalid GameMode '%raw%' for key '%key%' - using %fallback%"
+    ban-failed: "[AntiOP] Failed to ban player %player%: %error%"

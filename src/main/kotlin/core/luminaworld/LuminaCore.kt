@@ -22,6 +22,7 @@ class LuminaCore : JavaPlugin() {
         private set
 
     val activeActionBarTasks = ConcurrentHashMap<UUID, ScheduledTask>()
+    val suspendedPlayers = ConcurrentHashMap.newKeySet<UUID>()
 
     var isStandalone: Boolean = false
         private set

@@ -98,17 +98,13 @@ class ModuleManager(private val plugin: LuminaCore) {
                 plugin.server.pluginManager.registerEvents(module, plugin)
                 if (module.isEnabled) {
                     module.onEnable()
-                    if (plugin.isStandalone) {
-                        plugin.logger.info("[Lumina-${plugin.standaloneModuleName}] Module ${module.name} enabled.")
-                    } else {
-                        plugin.logger.info("[LuminaCore] Module ${module.name} enabled.")
-                    }
+                    val msg = plugin.getMsg("module-enabled", "Module %module% enabled.")
+                        .replace("%module%", module.name)
+                    plugin.logger.info(msg)
                 } else {
-                    if (plugin.isStandalone) {
-                        plugin.logger.info("[Lumina-${plugin.standaloneModuleName}] Module ${module.name} is disabled.")
-                    } else {
-                        plugin.logger.info("[LuminaCore] Module ${module.name} is disabled.")
-                    }
+                    val msg = plugin.getMsg("module-disabled", "Module %module% is disabled.")
+                        .replace("%module%", module.name)
+                    plugin.logger.info(msg)
                 }
             } catch (e: Exception) {
                 if (plugin.isStandalone) {

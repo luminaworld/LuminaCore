@@ -68,4 +68,24 @@ messages:
   mode-disabled: "%prefix% &cปิดใช้งานโหมดวัดระยะทางแล้ว!"
   point-1: "%prefix% &aกำหนดจุดที่ 1 ที่พิกัด: &eX=%x%, Y=%y%, Z=%z%"
   point-2: "%prefix% &aกำหนดจุดที่ 2 ที่พิกัด: &eX=%x%, Y=%y%, Z=%z%"
-  result: "%prefix% &bระยะห่างแนวทแยง: &e%dist% บล็อก &7| &bระยะห่างแนวเดินบล็อก: &e%manhattan% บล็อก"
+  result: "%prefix% &bระยะทางหลัก: &e%main_dist% บล็อก&7%offset% &7(&fทแยง: &e%dist% บล็อก&7)"
+
+  # การตั้งค่าข้อความระบุระยะเบี่ยง (Offsets) เพื่อไม่ให้มี Hardcoded text ในโค้ด
+  offsets:
+    aligned: " (ตรงแนวพอดี)"
+    prefix: " | "
+    separator: ", "
+    left: "ซ้าย"
+    right: "ขวา"
+    above: "สูงกว่า"
+    below: "ต่ำกว่า"
+    east: "ตะวันออก"
+    west: "ตะวันตก"
+    north: "เหนือ"
+    south: "ใต้"
+    format-side: "ห่างออกไปทาง%dir% %amount% บล็อก"
+    format-height: "%dir% %amount% บล็อก"
+    format-axis-x: "ห่างแกน X %amount% บล็อก (%dir%)"
+    format-axis-z: "ห่างแกน Z %amount% บล็อก (%dir%)"
+
+

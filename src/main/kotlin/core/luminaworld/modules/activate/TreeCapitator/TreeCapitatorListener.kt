@@ -8,6 +8,7 @@ import org.bukkit.event.EventHandler
 import org.bukkit.event.EventPriority
 import org.bukkit.event.Listener
 import org.bukkit.event.block.BlockBreakEvent
+import org.bukkit.event.player.PlayerQuitEvent
 import java.util.ArrayDeque
 import java.util.Collections
 
@@ -40,6 +41,7 @@ class TreeCapitatorListener(
         // เริ่มขั้นตอนสแกนและตัดไม้หมดต้น
         event.isCancelled = true // ยกเลิก event ดั้งเดิมเพื่อจัดการขุดเองทั้งหมด
         runTreeCapitator(player, block, material)
+        module.clearPlayer(player)
     }
 
     private fun runTreeCapitator(player: Player, startBlock: Block, logType: Material) {
@@ -85,6 +87,46 @@ class TreeCapitatorListener(
             processingBlocks.add(logBlock)
             logBlock.breakNaturally(itemInHand)
             processingBlocks.remove(logBlock)
+        }
+
+        // ตรวจสอบว่ามีต้นไม้อื่นอยู่ใกล้เคียงหรือไม่
+        val anotherTreeNearby = isAnotherTreeNearby(visitedLogs)
+
+        // ค้นหาบล็อกใบไม้ทั้งหมดที่เชื่อมต่อกัน (BFS) เฉพาะเมื่อไม่มีต้นไม้อื่นอยู่ใกล้เคียง
+        if (breakLeaves && !anotherTreeNearby && leavesToBreak.isNotEmpty()) {
+            val leafQueue = ArrayDeque<Pair<Block, Int>>()
+            for (leaf in leavesToBreak) {
+                leafQueue.add(Pair(leaf, 1))
+            }
+            
+            val maxLeaves = maxBlocks * 8
+            val maxDepth = 6 // ระยะห่างสูงสุดจากท่อนไม้เพื่อความปลอดภัย
+            
+            val visitedLeaves = HashSet<Block>(leavesToBreak)
+            
+            while (leafQueue.isNotEmpty() && visitedLeaves.size < maxLeaves) {
+                val (current, depth) = leafQueue.poll()
+                if (depth >= maxDepth) continue
+                
+                for (x in -1..1) {
+                    for (y in -1..1) {
+                        for (z in -1..1) {
+                            if (x == 0 && y == 0 && z == 0) continue
+                            val relative = current.getRelative(x, y, z)
+                            
+                            if (isLeaves(relative.type) && !visitedLeaves.contains(relative)) {
+                                visitedLeaves.add(relative)
+                                leafQueue.add(Pair(relative, depth + 1))
+                            }
+                        }
+                    }
+                }
+            }
+            leavesToBreak.clear()
+            leavesToBreak.addAll(visitedLeaves)
+        } else if (anotherTreeNearby) {
+            // หากมีต้นไม้อื่นอยู่ใกล้เคียง จะไม่ทำลายใบไม้เลยตามความต้องการของผู้ใช้
+            leavesToBreak.clear()
         }
 
         // ทำลายบล็อกใบไม้ที่ค้นพบรอบๆ
@@ -145,5 +187,52 @@ class TreeCapitatorListener(
             name.contains("WARPED") -> Material.WARPED_NYLIUM
             else -> null
         }
+    }
+
+    private fun isAnotherTreeNearby(visitedLogs: Set<Block>): Boolean {
+        val searchRadius = 6
+        val checkedCoordinates = HashSet<Long>()
+        
+        for (log in visitedLogs) {
+            val world = log.world
+            val cx = log.x
+            val cy = log.y
+            val cz = log.z
+            
+            for (x in -searchRadius..searchRadius) {
+                for (z in -searchRadius..searchRadius) {
+                    for (y in -3..3) {
+                        if (x == 0 && y == 0 && z == 0) continue
+                        val checkX = cx + x
+                        val checkY = cy + y
+                        val checkZ = cz + z
+                        
+                        val key = (checkX.toLong() and 0x3FFFFFFL shl 38) or 
+                                  (checkZ.toLong() and 0x3FFFFFFL shl 12) or 
+                                  (checkY.toLong() and 0xFFFL)
+                                  
+                        if (!checkedCoordinates.add(key)) continue
+                        
+                        val checkBlock = world.getBlockAt(checkX, checkY, checkZ)
+                        if (isLog(checkBlock.type) && !visitedLogs.contains(checkBlock)) {
+                            // ตรวจสอบว่าบล็อกไม้นี้อยู่ห่างจากท่อนไม้ทั้งหมดใน visitedLogs ทางแนวราบอย่างน้อย 2 บล็อก
+                            // หากอยู่ใกล้กว่านั้น (ระยะห่างทางแนวราบ x และ z น้อยกว่า 2 บล็อก) ถือว่าเป็นท่อนไม้ส่วนล่าง/โคนของต้นเดียวกัน
+                            val isPartofSameTree = visitedLogs.any { vLog ->
+                                Math.abs(checkX - vLog.x) < 2 && Math.abs(checkZ - vLog.z) < 2
+                            }
+                            if (!isPartofSameTree) {
+                                return true
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        return false
+    }
+
+    @EventHandler
+    fun onPlayerQuit(event: PlayerQuitEvent) {
+        module.clearPlayer(event.player)
     }
 }

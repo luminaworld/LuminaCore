@@ -21,11 +21,19 @@ class PlayerJoinListener(private val plugin: LuminaCore) : Listener {
             // ส่งข้อความแจ้งเตือนหลังเข้าเซิร์ฟเวอร์ 2 วินาที (40 ticks) เพื่อไม่ให้สับสนกับข้อความตอนเข้าเกมทั่วไป
             player.scheduler.runDelayed(plugin, { _ ->
                 if (player.isOnline) {
-                    player.sendMessage("§7[§eLuminaCore§7] §aตรวจพบเวอร์ชันใหม่ล่าสุด! §e($latestVersion)")
-                    player.sendMessage("§7[§eLuminaCore§7] §7เวอร์ชันปัจจุบันของคุณคือ: §c(v$currentVersion)")
-                    player.sendMessage("§7[§eLuminaCore§7] §aดาวน์โหลดเวอร์ชันใหม่ได้ที่: §b$downloadUrl")
+                    val msg1 = plugin.getMsg("update-detected", "&7[&eLuminaCore&7] &aตรวจพบเวอร์ชันใหม่ล่าสุด! &e(%latest_version%)")
+                        .replace("%latest_version%", latestVersion)
+                    val msg2 = plugin.getMsg("update-current", "&7[&eLuminaCore&7] &7เวอร์ชันปัจจุบันของคุณคือ: &c(v%current_version%)")
+                        .replace("%current_version%", currentVersion)
+                    val msg3 = plugin.getMsg("update-download", "&7[&eLuminaCore&7] &aดาวน์โหลดเวอร์ชันใหม่ได้ที่: &b%url%")
+                        .replace("%url%", downloadUrl)
+                    
+                    player.sendMessage(msg1)
+                    player.sendMessage(msg2)
+                    player.sendMessage(msg3)
                 }
             }, null, 40L)
+
         }
     }
 }

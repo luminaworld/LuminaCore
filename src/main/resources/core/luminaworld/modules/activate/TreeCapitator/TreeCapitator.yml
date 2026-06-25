@@ -21,6 +21,9 @@ settings:
   max-blocks: 128
   break-leaves: true
   replant-sapling: true
+  # ระยะเวลาทำงานของโหมดหลังเปิดใช้งาน (วินาที)
+  # หากเลยกำหนดและยังไม่ได้ทำการตัดไม้ ระบบจะยกเลิกการทำงานและผู้เล่นต้องกดย่อเพื่อเปิดใช้งานใหม่
+  active-duration: 10.0
 
   # การตั้งค่าหลอดความก้าวหน้า (Progress Bar)
   # Placeholders ที่สามารถใช้งานใน format:
@@ -78,3 +81,4 @@ settings:
 messages:
   mode-enabled: "%prefix% &aเปิดใช้งานระบบตัดไม้หมดต้นเรียบร้อยแล้ว!"
   mode-disabled: "%prefix% &cปิดใช้งานระบบตัดไม้หมดต้นแล้ว!"
+  timeout-disabled: "%prefix% &cหมดเวลาตัดไม้! กรุณาย่อใหม่อีกครั้ง"

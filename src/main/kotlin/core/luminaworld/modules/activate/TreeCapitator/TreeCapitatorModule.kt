@@ -6,10 +6,12 @@ import org.bukkit.entity.Player
 import org.bukkit.event.HandlerList
 import java.util.UUID
 import java.util.concurrent.ConcurrentHashMap
+import io.papermc.paper.threadedregions.scheduler.ScheduledTask
 
 class TreeCapitatorModule(plugin: LuminaCore) : LuminaModule(plugin, "TreeCapitator") {
 
     private val activePlayers = ConcurrentHashMap.newKeySet<UUID>()
+    private val timeoutTasks = ConcurrentHashMap<UUID, ScheduledTask>()
     private var listener: TreeCapitatorListener? = null
 
     // Cache config values — reset เมื่อ reload()
@@ -18,6 +20,8 @@ class TreeCapitatorModule(plugin: LuminaCore) : LuminaModule(plugin, "TreeCapita
     var breakLeaves: Boolean = true
         private set
     var replantSapling: Boolean = true
+        private set
+    var activeDuration: Double = 10.0
         private set
 
     override fun onEnable() {
@@ -29,6 +33,8 @@ class TreeCapitatorModule(plugin: LuminaCore) : LuminaModule(plugin, "TreeCapita
     override fun onDisable() {
         listener?.let { HandlerList.unregisterAll(it) }
         listener = null
+        timeoutTasks.values.forEach { it.cancel() }
+        timeoutTasks.clear()
         activePlayers.clear()
     }
 
@@ -39,6 +45,7 @@ class TreeCapitatorModule(plugin: LuminaCore) : LuminaModule(plugin, "TreeCapita
         maxBlocks = config?.getInt("settings.max-blocks", 128) ?: 128
         breakLeaves = config?.getBoolean("settings.break-leaves", true) ?: true
         replantSapling = config?.getBoolean("settings.replant-sapling", true) ?: true
+        activeDuration = config?.getDouble("settings.active-duration", 10.0) ?: 10.0
     }
 
     override fun reload() {
@@ -53,13 +60,38 @@ class TreeCapitatorModule(plugin: LuminaCore) : LuminaModule(plugin, "TreeCapita
     fun toggleMode(player: Player) {
         val uuid = player.uniqueId
         if (activePlayers.contains(uuid)) {
-            activePlayers.remove(uuid)
+            clearPlayer(player)
             val msg = config?.getString("messages.mode-disabled", "%prefix% &cTree Capitator mode disabled!") ?: ""
             sendNotification(player, msg)
         } else {
             activePlayers.add(uuid)
             val msg = config?.getString("messages.mode-enabled", "%prefix% &aTree Capitator mode enabled!") ?: ""
             sendNotification(player, msg)
+
+            // ยกเลิก Task เก่าหากมี
+            timeoutTasks.remove(uuid)?.cancel()
+
+            // ตั้งเวลาสำหรับหมดเขต
+            val ticks = (activeDuration * 20).toLong()
+            val task = player.scheduler.runDelayed(plugin, { _ ->
+                if (activePlayers.contains(uuid)) {
+                    activePlayers.remove(uuid)
+                    timeoutTasks.remove(uuid)
+                    val timeoutMsg = config?.getString("messages.timeout-disabled", "%prefix% &cหมดเวลาตัดไม้! กรุณาย่อใหม่อีกครั้ง") ?: ""
+                    if (timeoutMsg.isNotEmpty()) {
+                        sendNotification(player, timeoutMsg)
+                    }
+                }
+            }, null, ticks)
+            if (task != null) {
+                timeoutTasks[uuid] = task
+            }
         }
+    }
+
+    fun clearPlayer(player: Player) {
+        val uuid = player.uniqueId
+        activePlayers.remove(uuid)
+        timeoutTasks.remove(uuid)?.cancel()
     }
 }

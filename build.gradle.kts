@@ -3,7 +3,7 @@ plugins {
 }
 
 group = "core.luminaworld"
-version = "1.1.0"
+version = "1.1.1"
 
 repositories {
     mavenCentral()
@@ -13,6 +13,7 @@ repositories {
 dependencies {
     compileOnly("io.papermc.paper:paper-api:26.1.2.build.+")
     compileOnly("org.apache.logging.log4j:log4j-core:2.20.0")
+    compileOnly("net.luckperms:api:5.4")
     
     implementation("org.jetbrains.kotlin:kotlin-stdlib:2.3.0")
 }
@@ -133,4 +134,3 @@ standaloneModuleList.forEach { (category, moduleName, packageName) ->
         dependsOn(standaloneJar)
     }
 }
-

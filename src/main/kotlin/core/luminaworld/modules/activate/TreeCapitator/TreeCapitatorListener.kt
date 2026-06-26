@@ -32,8 +32,24 @@ class TreeCapitatorListener(
         if (!item.type.name.endsWith("_AXE")) return
         if (processingBlocks.contains(block)) return
 
+        // ตรวจสอบระดับขวานที่อนุญาต (ถ้ามีกำหนด)
+        val allowedAxes = module.allowedAxes
+        if (allowedAxes.isNotEmpty() && !allowedAxes.contains("*")) {
+            if (!allowedAxes.any { it.equals(item.type.name, ignoreCase = true) }) {
+                return
+            }
+        }
+
         val material = block.type
         if (!isLog(material)) return
+
+        // ตรวจสอบประเภทบล็อกไม้ที่อนุญาต (ถ้ามีกำหนด)
+        val allowedBlocks = module.allowedBlocks
+        if (allowedBlocks.isNotEmpty() && !allowedBlocks.contains("*")) {
+            if (!allowedBlocks.any { it.equals(material.name, ignoreCase = true) }) {
+                return
+            }
+        }
 
         // ตรวจสอบว่าผู้เล่นมีสิทธิ์หรือไม่
         if (!module.checkPermission(player)) return
@@ -41,7 +57,6 @@ class TreeCapitatorListener(
         // เริ่มขั้นตอนสแกนและตัดไม้หมดต้น
         event.isCancelled = true // ยกเลิก event ดั้งเดิมเพื่อจัดการขุดเองทั้งหมด
         runTreeCapitator(player, block, material)
-        module.clearPlayer(player)
     }
 
     private fun runTreeCapitator(player: Player, startBlock: Block, logType: Material) {
@@ -175,6 +190,7 @@ class TreeCapitatorListener(
         val name = logMaterial.name
         return when {
             name.contains("DARK_OAK") -> Material.DARK_OAK_SAPLING
+            name.contains("PALE_OAK") -> Material.PALE_OAK_SAPLING
             name.contains("OAK") -> Material.OAK_SAPLING
             name.contains("SPRUCE") -> Material.SPRUCE_SAPLING
             name.contains("BIRCH") -> Material.BIRCH_SAPLING

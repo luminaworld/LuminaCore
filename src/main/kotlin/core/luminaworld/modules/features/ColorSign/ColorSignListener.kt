@@ -2,6 +2,7 @@ package core.luminaworld.modules.features.ColorSign
 
 import org.bukkit.Sound
 import org.bukkit.event.EventHandler
+import org.bukkit.event.EventPriority
 import org.bukkit.event.Listener
 import org.bukkit.event.block.SignChangeEvent
 import core.luminaworld.LuminaCore
@@ -9,7 +10,7 @@ import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer
 
 class ColorSignListener(private val plugin: LuminaCore, private val module: ColorSignModule) : Listener {
 
-    @EventHandler
+    @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
     fun onSignChange(event: SignChangeEvent) {
         val player = event.player
         if (!module.isEnabled) return

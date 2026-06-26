@@ -263,6 +263,11 @@ class SneakTriggerListener(private val plugin: LuminaCore) : Listener {
 
         val defaultReq = plugin.config.getInt("shortcut.required-sneaks", 10)
         val defaultInterval = plugin.config.getDouble("shortcut.reset-interval", 2.5)
+        val overrideGlobal = plugin.config.getBoolean("shortcut.override-global", false)
+
+        if (overrideGlobal) {
+            return Pair(defaultReq, defaultInterval)
+        }
 
         // ใช้ takeIf { it > 0 } เพราะ YamlConfiguration.getInt() คืน 0 เมื่อ key ไม่พบ
         // ซึ่งทำให้ req ?: defaultReq ได้ค่า 0 แทน defaultReq

@@ -3,7 +3,7 @@ plugins {
 }
 
 group = "core.luminaworld"
-version = "1.1.1"
+version = "1.1.2"
 
 repositories {
     mavenCentral()
@@ -36,6 +36,11 @@ tasks.withType<JavaCompile> {
 
 tasks.withType<ProcessResources> {
     filteringCharset = "UTF-8"
+    val props = mapOf("version" to project.version)
+    inputs.properties(props)
+    filesMatching("plugin.yml") {
+        expand(props)
+    }
 }
 
 tasks.jar {

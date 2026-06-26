@@ -17,6 +17,10 @@ class VeinMinerModule(plugin: LuminaCore) : LuminaModule(plugin, "VeinMiner") {
         private set
     var requireSneak: Boolean = false
         private set
+    var allowedPickaxes: List<String> = emptyList()
+        private set
+    var allowedBlocks: List<String> = emptyList()
+        private set
 
     override fun onEnable() {
         refreshConfigCache()
@@ -33,6 +37,8 @@ class VeinMinerModule(plugin: LuminaCore) : LuminaModule(plugin, "VeinMiner") {
     private fun refreshConfigCache() {
         maxBlocks = config?.getInt("settings.max-blocks", 64) ?: 64
         requireSneak = config?.getBoolean("settings.require-sneak", false) ?: false
+        allowedPickaxes = config?.getStringList("settings.allowed-pickaxes") ?: emptyList()
+        allowedBlocks = config?.getStringList("settings.allowed-blocks") ?: emptyList()
     }
 
     fun isModeEnabled(player: Player): Boolean {

@@ -22,6 +22,39 @@ settings:
   # - false : ไม่ต้องกดย่อตัวขณะขุดแร่ (แค่เปิดโหมดก็ทำงานทันที)
   require-sneak: false
 
+  # ที่ขุดแร่ (Pickaxe) ที่อนุญาตให้ใช้งานระบบขุดแร่รอบตัวได้
+  # หากระบุเป็นลิสต์ว่าง [] หรือมี "*" จะสามารถใช้พิกแอ็กระดับใดขุดก็ได้
+  allowed-pickaxes:
+    - "WOODEN_PICKAXE"
+    - "STONE_PICKAXE"
+    - "IRON_PICKAXE"
+    - "GOLDEN_PICKAXE"
+    - "DIAMOND_PICKAXE"
+    - "NETHERITE_PICKAXE"
+
+  # บล็อกแร่ที่อนุญาตให้ใช้งานระบบขุดแร่รอบตัวได้
+  # หากระบุเป็นลิสต์ว่าง [] หรือมี "*" จะสามารถขุดแร่ประเภทใดก็ได้
+  allowed-blocks:
+    - "COAL_ORE"
+    - "DEEPSLATE_COAL_ORE"
+    - "IRON_ORE"
+    - "DEEPSLATE_IRON_ORE"
+    - "GOLD_ORE"
+    - "DEEPSLATE_GOLD_ORE"
+    - "REDSTONE_ORE"
+    - "DEEPSLATE_REDSTONE_ORE"
+    - "LAPIS_ORE"
+    - "DEEPSLATE_LAPIS_ORE"
+    - "DIAMOND_ORE"
+    - "DEEPSLATE_DIAMOND_ORE"
+    - "EMERALD_ORE"
+    - "DEEPSLATE_EMERALD_ORE"
+    - "COPPER_ORE"
+    - "DEEPSLATE_COPPER_ORE"
+    - "NETHER_GOLD_ORE"
+    - "NETHER_QUARTZ_ORE"
+    - "ANCIENT_DEBRIS"
+
   # การตั้งค่าหลอดความก้าวหน้า (Progress Bar)
   # Placeholders ที่สามารถใช้งานใน format:
   # - %completed%: ขีดความก้าวหน้าที่ย่อสำเร็จแล้ว (สร้างจาก color-completed และ char-completed)

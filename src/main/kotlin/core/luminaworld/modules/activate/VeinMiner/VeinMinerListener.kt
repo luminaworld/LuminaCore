@@ -33,8 +33,24 @@ class VeinMinerListener(
         if (!item.type.name.endsWith("_PICKAXE")) return
         if (processingBlocks.contains(block)) return
 
+        // ตรวจสอบเครื่องมือขุดแร่ที่อนุญาต (ถ้ามีกำหนด)
+        val allowedPickaxes = module.allowedPickaxes
+        if (allowedPickaxes.isNotEmpty() && !allowedPickaxes.contains("*")) {
+            if (!allowedPickaxes.any { it.equals(item.type.name, ignoreCase = true) }) {
+                return
+            }
+        }
+
         val material = block.type
         if (!isOre(material)) return
+
+        // ตรวจสอบชนิดแร่ที่อนุญาต (ถ้ามีกำหนด)
+        val allowedBlocks = module.allowedBlocks
+        if (allowedBlocks.isNotEmpty() && !allowedBlocks.contains("*")) {
+            if (!allowedBlocks.any { it.equals(material.name, ignoreCase = true) }) {
+                return
+            }
+        }
 
         // เช็คสิทธิ์การใช้งานของโมดูลย่อย
         if (!module.checkPermission(player)) return

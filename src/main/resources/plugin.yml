@@ -1,5 +1,5 @@
 name: LuminaCore
-version: 1.1.1
+version: "${version}"
 main: core.luminaworld.LuminaCore
 api-version: "1.20"
 folia-supported: true

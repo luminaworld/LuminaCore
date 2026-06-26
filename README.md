@@ -173,7 +173,7 @@ LuminaCore เป็นปลั๊กอินสำหรับเซิร์
 
 - รันคำสั่ง:
   ```bash
-  gradle jar
+  gradle build
   ```
 - ผลลัพธ์: ไฟล์ปลั๊กอินหลักจะอยู่ที่ `build/libs/LuminaCore.jar` (หรือมีเวอร์ชันต่อท้าย)
 

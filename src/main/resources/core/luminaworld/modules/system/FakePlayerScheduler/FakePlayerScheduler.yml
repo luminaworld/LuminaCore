@@ -1,0 +1,80 @@
+settings:
+  enabled: true
+  use-permission: false
+  permission: "luminacore.module.fakeplayerscheduler"
+  
+  # พาธของไฟล์ข้อมูลในระบบโมดูลนี้
+  names-filepath: "plugins/LuminaCore/FakePlayerScheduler/name-list.yml"
+  active-bots-filepath: "plugins/LuminaCore/FakePlayerScheduler/active-bots.yml"
+  
+  # การสุ่มความปั่นป่วนของจำนวนบอท (Natural Noise)
+  noise:
+    enabled: true
+    min: -2
+    max: 2
+    update-interval-minutes: 15 # เปลี่ยนค่าความปั่นป่วนทุกกี่นาที
+    
+  # การตั้งค่าช่วงเวลาเล่นของบอท (Session Duration) ในช่วงเวลาทั่วไป (หน่วย: นาที)
+  session-duration:
+    short-chance: 0.40      # โอกาส 40%
+    short-range: [5, 15]    # เล่น 5-15 นาที
+    medium-chance: 0.40     # โอกาส 40%
+    medium-range: [15, 45]  # เล่น 15-45 นาที
+    long-range: [45, 90]    # ที่เหลือ (20%) เล่น 45-90 นาที
+    # ตัวคูณระยะเวลาเล่นในช่วงชั่วโมง Peak (เช่นเป้าหมาย > 15 ตัว) เพื่อให้บอทอยู่เซิร์ฟนานขึ้น
+    peak-hour-multiplier: 1.5
+
+  # คูลดาวน์การรับบอท เข้า/ออก (Throttling)
+  throttling:
+    # ช่วงรีสตาร์ตรัช (หลังเปิดเซิร์ฟ 10 นาทีแรก)
+    restart-rush:
+      join-delay-range: [10, 30]  # วินาที
+      leave-delay-range: [10, 20] # วินาที
+    # ช่วงเวลาการทำงานปกติ
+    normal:
+      join-delay-range: [60, 180]  # วินาที
+      leave-delay-range: [60, 120] # วินาที
+    # คูลดาวน์การทยอยเตะบอทกรณีหมดเวลา (Staggered Leave)
+    staggered-leave-delay: 15 # วินาที
+
+  # ระบบการสลับตัวผู้เล่นออนไลน์-ออฟไลน์ (Player Churn)
+  churn:
+    check-interval-seconds: 60
+    swap-chance: 0.15 # โอกาสสลับตัว (15%)
+    rejoin-delay-range: [15, 40] # วินาที เพื่อเว้นระยะก่อนบอทตัวใหม่จะเข้ามาเสียบแทนที่ว่าง
+
+  # คำสั่งควบคุมบอทคอนโซล
+  commands:
+    spawn: "fp spawn 1 spawn --name {name} -1244 70 1668"
+    rank: "fp rank {name} {rank}"
+    despawn: "fp despawn {name}"
+
+# กำหนดตารางสเก็ตดูลเป้าหมายบอทตามช่วงเวลาของแต่ละชั่วโมง (0-23)
+# อ้างอิงจากพฤติกรรมคนไทยเล่นเกมจริง: เที่ยงวันขึ้นมาเล็กน้อย และพีคสุดช่วง 18.00 - 22.00 น.
+# ระบบจะนำค่าเหล่านี้มาสุ่มในแบบ Deterministic ในแต่ละวัน
+schedule:
+  hours:
+    "0": { min: 8, max: 15 }   # ดึกดื่น (เริ่มทยอยเข้านอน)
+    "1": { min: 5, max: 10 }
+    "2": { min: 2, max: 6 }    # ดึกมาก (คนหลับเกือบหมด)
+    "3": { min: 1, max: 4 }
+    "4": { min: 1, max: 3 }
+    "5": { min: 1, max: 3 }
+    "6": { min: 2, max: 6 }    # เริ่มตื่นนอน / ตื่นมาเช็คของก่อนเรียน-ทำงาน
+    "7": { min: 3, max: 8 }
+    "8": { min: 4, max: 9 }    # ชั่วโมงเรียน / ชั่วโมงทำงานช่วงเช้า
+    "9": { min: 5, max: 10 }
+    "10": { min: 5, max: 11 }
+    "11": { min: 6, max: 12 }
+    "12": { min: 10, max: 16 } # ช่วงพักเที่ยง (คนออนไลน์สั้นๆ สูงขึ้นชัดเจน)
+    "13": { min: 8, max: 14 }
+    "14": { min: 6, max: 12 }  # ช่วงเรียน-ทำงานครึ่งบ่าย
+    "15": { min: 8, max: 15 }
+    "16": { min: 12, max: 20 } # เลิกเรียน / เลิกงาน คนเริ่มออนไลน์
+    "17": { min: 18, max: 28 }
+    "18": { min: 22, max: 35 } # ช่วงหัวค่ำ (ช่วงที่คนไทยเล่นเกมเยอะที่สุด - Peak)
+    "19": { min: 25, max: 40 }
+    "20": { min: 25, max: 40 }
+    "21": { min: 20, max: 35 }
+    "22": { min: 15, max: 25 } # ช่วงค่ำ/ดึก ทยอยปิดเกมเพื่อพักผ่อน
+    "23": { min: 8, max: 15 }

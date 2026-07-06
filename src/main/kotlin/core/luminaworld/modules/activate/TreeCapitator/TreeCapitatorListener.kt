@@ -100,7 +100,7 @@ class TreeCapitatorListener(
         // ทำลายบล็อกไม้ทั้งหมด
         for (logBlock in visitedLogs) {
             processingBlocks.add(logBlock)
-            logBlock.breakNaturally(itemInHand)
+            player.breakBlock(logBlock)
             processingBlocks.remove(logBlock)
         }
 
@@ -149,7 +149,7 @@ class TreeCapitatorListener(
             for (leafBlock in leavesToBreak) {
                 if (isLeaves(leafBlock.type)) {
                     processingBlocks.add(leafBlock)
-                    leafBlock.breakNaturally()
+                    player.breakBlock(leafBlock)
                     processingBlocks.remove(leafBlock)
                 }
             }

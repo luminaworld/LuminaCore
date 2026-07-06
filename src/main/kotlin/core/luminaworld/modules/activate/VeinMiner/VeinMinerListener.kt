@@ -93,7 +93,7 @@ class VeinMinerListener(
         // ลงมือขุดบล็อกทั้งหมดทีละบล็อก
         for (oreBlock in visitedOres) {
             processingBlocks.add(oreBlock)
-            oreBlock.breakNaturally(itemInHand)
+            player.breakBlock(oreBlock)
             processingBlocks.remove(oreBlock)
         }
     }

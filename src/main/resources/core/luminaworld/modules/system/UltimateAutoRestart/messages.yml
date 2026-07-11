@@ -24,7 +24,6 @@ stripConsole: false
 defaultReason: "Scheduled restart"
 
 messages:
-
   # หมายเหตุ: ใช้ {PREFIX} &f» ในข้อความใดๆ เพื่อดึงคำนำหน้าด้านล่างมาแสดงผล!
   prefix: "<GRADIENT:9483FF>&lUltimateAutoRestart</GRADIENT:FB9AF2>&r"
 

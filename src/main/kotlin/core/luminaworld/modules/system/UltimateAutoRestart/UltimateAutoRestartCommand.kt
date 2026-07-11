@@ -51,28 +51,23 @@ class UltimateAutoRestartCommand(private val module: UltimateAutoRestartModule) 
                 val seconds: Int
                 val reason: String
                 
-                if (sub == "now") {
-                    seconds = 0
-                    reason = if (args.size > 1) args.drop(1).joinToString(" ") else module.defaultReason
-                } else {
-                    if (args.size > 1) {
-                        val secArg = args[1]
-                        val parsedSec = secArg.toIntOrNull()
-                        if (parsedSec != null) {
-                            seconds = parsedSec
-                            reason = if (args.size > 2) args.drop(2).joinToString(" ") else module.defaultReason
-                        } else if (secArg.equals("now", ignoreCase = true)) {
-                            seconds = 0
-                            reason = if (args.size > 2) args.drop(2).joinToString(" ") else module.defaultReason
-                        } else {
-                            // กรณีอาร์กิวเมนต์แรกเป็นข้อความเหตุผลเลย ให้ถือว่ารีสตาร์ททันที (0 วินาที)
-                            seconds = 0
-                            reason = args.drop(1).joinToString(" ")
-                        }
-                    } else {
+                if (args.size > 1) {
+                    val secArg = args[1]
+                    val parsedSec = secArg.toIntOrNull()
+                    if (parsedSec != null) {
+                        seconds = parsedSec
+                        reason = if (args.size > 2) args.drop(2).joinToString(" ") else module.defaultReason
+                    } else if (secArg.equals("now", ignoreCase = true)) {
                         seconds = 0
-                        reason = module.defaultReason
+                        reason = if (args.size > 2) args.drop(2).joinToString(" ") else module.defaultReason
+                    } else {
+                        // กรณีอาร์กิวเมนต์แรกเป็นข้อความเหตุผลเลย ให้ถือว่ารีสตาร์ททันที (0 วินาที)
+                        seconds = 0
+                        reason = args.drop(1).joinToString(" ")
                     }
+                } else {
+                    seconds = 0
+                    reason = module.defaultReason
                 }
 
                 if (seconds < 0) {
@@ -208,8 +203,8 @@ class UltimateAutoRestartCommand(private val module: UltimateAutoRestartModule) 
 
         sender.sendMessage("§6§l=== UltimateAutoRestart Admin Menu ===")
         sender.sendMessage("§e/uar status §7- ดูรายละเอียดสถานะและเวลารีสตาร์ท")
-        sender.sendMessage("§e/uar force [วินาที] [เหตุผล] §7- บังคับนับถอยหลังรีสตาร์ท (เว้นไว้เพื่อรีสตาร์ททันที)")
-        sender.sendMessage("§e/uar now [เหตุผล] §7- บังคับรีสตาร์ทเซิร์ฟเวอร์ทันที")
+        sender.sendMessage("§e/uar force [วินาที] [เหตุผล] §7- บังคับนับถอยหลังรีสตาร์ท (เหมือนกับ now)")
+        sender.sendMessage("§e/uar now [วินาที] [เหตุผล] §7- บังคับรีสตาร์ททันที หรือระบุวิเพื่อรีสตาร์ทนับถอยหลัง")
         sender.sendMessage("§e/uar delay [วินาที] §7- เลื่อนเวลาการรีสตาร์ทออกไป")
         sender.sendMessage("§e/uar stop §7- ยกเลิกการรีสตาร์ทที่ตั้งตารางเวลาไว้")
         sender.sendMessage("§e/uar reload §7- รีโหลดค่าตั้งค่าทั้งหมด")
@@ -232,7 +227,7 @@ class UltimateAutoRestartCommand(private val module: UltimateAutoRestartModule) 
         if (isAdmin && args.size == 2) {
             when (args[0].lowercase(Locale.ROOT)) {
                 "debug" -> return listOf("webhook").filter { it.startsWith(args[1].lowercase(Locale.ROOT)) }
-                "force" -> return listOf("now", "10", "30", "60", "300").filter { it.startsWith(args[1].lowercase(Locale.ROOT)) }
+                "force", "now" -> return listOf("now", "10", "30", "60", "300").filter { it.startsWith(args[1].lowercase(Locale.ROOT)) }
                 "delay" -> return listOf("60", "300", "600", "1200").filter { it.startsWith(args[1].lowercase(Locale.ROOT)) }
             }
         }

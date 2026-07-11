@@ -17,8 +17,8 @@ import java.util.concurrent.CopyOnWriteArrayList
 class FakePlayerSchedulerModule(plugin: LuminaCore) : LuminaModule(plugin, "FakePlayerScheduler"), Listener {
 
     // พาธของไฟล์
-    private var namesFilePath = "plugins/LuminaCore/system/FakePlayerScheduler/name-list.yml"
-    private var activeBotsStatePath = "plugins/LuminaCore/system/FakePlayerScheduler/active-bots.yml"
+    private var namesFilePath = "plugins/LuminaCore/system/name-list.yml"
+    private var activeBotsStatePath = "plugins/LuminaCore/system/active-bots.yml"
 
     // คลาสและตัวสั่งการคำสั่ง
     private var commandExecutor: FakePlayerSchedulerCommand? = null
@@ -63,8 +63,8 @@ class FakePlayerSchedulerModule(plugin: LuminaCore) : LuminaModule(plugin, "Fake
     override fun loadConfig() {
         super.loadConfig()
         config?.let {
-            namesFilePath = it.getString("settings.names-filepath", "plugins/LuminaCore/system/FakePlayerScheduler/name-list.yml") ?: "plugins/LuminaCore/system/FakePlayerScheduler/name-list.yml"
-            activeBotsStatePath = it.getString("settings.active-bots-filepath", "plugins/LuminaCore/system/FakePlayerScheduler/active-bots.yml") ?: "plugins/LuminaCore/system/FakePlayerScheduler/active-bots.yml"
+            namesFilePath = it.getString("settings.names-filepath", "plugins/LuminaCore/system/name-list.yml") ?: "plugins/LuminaCore/system/name-list.yml"
+            activeBotsStatePath = it.getString("settings.active-bots-filepath", "plugins/LuminaCore/system/active-bots.yml") ?: "plugins/LuminaCore/system/active-bots.yml"
             
             spawnCommandTemplate = it.getString("settings.commands.spawn", "fp spawn 1 spawn --name {name} -1244 70 1668") ?: "fp spawn 1 spawn --name {name} -1244 70 1668"
             rankCommandTemplate = it.getString("settings.commands.rank", "fp rank {name} {rank}") ?: "fp rank {name} {rank}"

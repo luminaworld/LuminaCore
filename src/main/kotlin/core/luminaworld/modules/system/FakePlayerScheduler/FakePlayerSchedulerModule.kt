@@ -404,24 +404,30 @@ class FakePlayerSchedulerModule(plugin: LuminaCore) : LuminaModule(plugin, "Fake
                 if (!rank.isNullOrEmpty()) {
                     plugin.server.globalRegionScheduler.runDelayed(plugin, { _ ->
                         try {
-                            val setLuckpermsGroup = bot.javaClass.getMethod("setLuckpermsGroup", String::class.java)
-                            setLuckpermsGroup.invoke(bot, rank)
+                            try {
+                                val setLuckpermsGroup = bot.javaClass.getMethod("setLuckpermsGroup", String::class.java)
+                                setLuckpermsGroup.invoke(bot, rank)
 
-                            val getFakePlayerManager = fppPlugin.javaClass.getMethod("getFakePlayerManager")
-                            val manager = getFakePlayerManager.invoke(fppPlugin)
+                                val getFakePlayerManager = fppPlugin.javaClass.getMethod("getFakePlayerManager")
+                                val manager = getFakePlayerManager.invoke(fppPlugin)
 
-                            val getHandle = bot.javaClass.getMethod("getHandle")
-                            val handle = getHandle.invoke(bot)
+                                val getHandle = bot.javaClass.getMethod("getHandle")
+                                val handle = getHandle.invoke(bot)
 
-                            if (manager != null && handle != null) {
-                                val persistMethod = manager.javaClass.getMethod("persistBotSettings", handle.javaClass)
-                                persistMethod.invoke(manager, handle)
+                                if (manager != null && handle != null) {
+                                    val persistMethod = manager.javaClass.getMethod("persistBotSettings", handle.javaClass)
+                                    persistMethod.invoke(manager, handle)
 
-                                val refreshMethod = manager.javaClass.getMethod("refreshLpDisplayName", handle.javaClass)
-                                refreshMethod.invoke(manager, handle)
+                                    val refreshMethod = manager.javaClass.getMethod("refreshLpDisplayName", handle.javaClass)
+                                    refreshMethod.invoke(manager, handle)
+                                }
+                            } catch (ex: Exception) {
+                                // รันคำสั่งคอนโซลเป็นสำรอง (Fallback) หากใช้ Reflection API ไม่สำเร็จ
+                                val rankCmd = rankCommandTemplate.replace("{name}", name).replace("{rank}", rank)
+                                plugin.server.dispatchCommand(plugin.server.consoleSender, rankCmd)
                             }
                         } catch (ex: Exception) {
-                            plugin.logger.severe("[FP-Scheduler] Reflection error setting rank: ${ex.message}")
+                            plugin.logger.severe("[FP-Scheduler] Error setting rank for $name: ${ex.message}")
                         }
                     }, 20L)
                 }

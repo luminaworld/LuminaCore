@@ -464,6 +464,32 @@ class UltimateAutoRestartModule(plugin: LuminaCore) : LuminaModule(plugin, "Ulti
     /**
      * เล่นเสียงโดยดึงข้อมูลจาก sounds.yml
      */
+    private fun getSoundEnum(name: String): Sound? {
+        val cleaned = name.uppercase().replace(" ", "_").trim()
+        try {
+            return Sound.valueOf(cleaned)
+        } catch (e: Exception) {
+            // ค้นหาคำใกล้เคียงที่สุดใน Sound Enum
+            for (sound in Sound.values()) {
+                if (sound.name() == cleaned) return sound
+            }
+            // ค้นหาแบบยืดหยุ่นโดยลบเครื่องหมายขีดล่าง
+            val strippedCleaned = cleaned.replace("_", "")
+            for (sound in Sound.values()) {
+                if (sound.name().replace("_", "").equals(strippedCleaned, ignoreCase = true)) {
+                    return sound
+                }
+            }
+            // ค้นหาคำที่มีส่วนใดส่วนหนึ่งคล้ายกัน
+            for (sound in Sound.values()) {
+                if (sound.name().contains(cleaned) || cleaned.contains(sound.name())) {
+                    return sound
+                }
+            }
+            return null
+        }
+    }
+
     fun playSound(sectionKey: String, targetPlayer: org.bukkit.entity.Player? = null) {
         val section = uarSounds.getConfigurationSection("sounds.$sectionKey") ?: return
         if (!section.getBoolean("enabled", false)) return
@@ -472,8 +498,13 @@ class UltimateAutoRestartModule(plugin: LuminaCore) : LuminaModule(plugin, "Ulti
         val volume = section.getDouble("volume", 1.0).toFloat()
         val pitch = section.getDouble("pitch", 1.0).toFloat()
         
+        val sound = getSoundEnum(soundStr)
+        if (sound == null) {
+            plugin.logger.warning("Could not find any sound enum matching: $soundStr")
+            return
+        }
+        
         try {
-            val sound = Sound.valueOf(soundStr.uppercase())
             if (targetPlayer != null) {
                 targetPlayer.playSound(targetPlayer.location, sound, volume, pitch)
             } else {

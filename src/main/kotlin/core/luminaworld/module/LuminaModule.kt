@@ -165,6 +165,14 @@ abstract class LuminaModule(val plugin: LuminaCore, val name: String) : Listener
     fun parseToComponent(input: String): net.kyori.adventure.text.Component {
         var formatted = input
         
+        // แปลง Norska's gradient <GRADIENT:XXXXXX>text</GRADIENT:YYYYYY> -> <gradient:#XXXXXX:#YYYYYY>text</gradient>
+        formatted = NORSKA_GRADIENT_REGEX.replace(formatted) { matchResult ->
+            val startColor = matchResult.groupValues[1]
+            val content = matchResult.groupValues[2]
+            val endColor = matchResult.groupValues[3]
+            "<gradient:#$startColor:#$endColor>$content</gradient>"
+        }
+
         // แปลง HEX สีแบบ &#xxxxxx -> <#xxxxxx>
         formatted = HEX_REGEX.replace(formatted) { matchResult ->
             "<#${matchResult.groupValues[1]}>"
@@ -183,6 +191,7 @@ abstract class LuminaModule(val plugin: LuminaCore, val name: String) : Listener
     }
 
     companion object {
+        private val NORSKA_GRADIENT_REGEX = Regex("<GRADIENT:([A-Fa-f0-9]{6})>(.*?)</GRADIENT:([A-Fa-f0-9]{6})>", RegexOption.IGNORE_CASE)
         private val HEX_REGEX = Regex("&#([A-Fa-f0-9]{6})")
         private val LEGACY_COLOR_MAP = mapOf(
             "&0" to "<black>", "&1" to "<dark_blue>", "&2" to "<dark_green>", "&3" to "<dark_aqua>",

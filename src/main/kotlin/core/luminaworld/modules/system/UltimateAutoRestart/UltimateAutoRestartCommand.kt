@@ -48,7 +48,7 @@ class UltimateAutoRestartCommand(private val module: UltimateAutoRestartModule) 
         val sub = args[0].lowercase(Locale.ROOT)
         when (sub) {
             "force", "now" -> {
-                val seconds: Int
+                var seconds: Int
                 val reason: String
                 
                 if (args.size > 1) {
@@ -75,6 +75,11 @@ class UltimateAutoRestartCommand(private val module: UltimateAutoRestartModule) 
                     module.sendFormattedMessageToSender(sender, "COMMAND_FORCE_RESTART_INVALID", placeholders)
                     module.playSound("COMMAND_FORCE_RESTART_INVALID", sender as? org.bukkit.entity.Player)
                     return true
+                }
+
+                // กำหนดเวลาขั้นต่ำเป็น 5 วินาทีเพื่อความปลอดภัยของข้อมูล
+                if (seconds in 0..4) {
+                    seconds = 5
                 }
 
                 // สั่งบังคับรีสตาร์ท
@@ -203,8 +208,8 @@ class UltimateAutoRestartCommand(private val module: UltimateAutoRestartModule) 
 
         sender.sendMessage("§6§l=== UltimateAutoRestart Admin Menu ===")
         sender.sendMessage("§e/uar status §7- ดูรายละเอียดสถานะและเวลารีสตาร์ท")
-        sender.sendMessage("§e/uar force [วินาที] [เหตุผล] §7- บังคับนับถอยหลังรีสตาร์ท (เหมือนกับ now)")
-        sender.sendMessage("§e/uar now [วินาที] [เหตุผล] §7- บังคับรีสตาร์ททันที หรือระบุวิเพื่อรีสตาร์ทนับถอยหลัง")
+        sender.sendMessage("§e/uar force [วินาที] [เหตุผล] §7- บังคับนับถอยหลังรีสตาร์ท (ขั้นต่ำ 5 วิ)")
+        sender.sendMessage("§e/uar now [วินาที] [เหตุผล] §7- บังคับรีสตาร์ท (นับถอยหลังขั้นต่ำ 5 วิ)")
         sender.sendMessage("§e/uar delay [วินาที] §7- เลื่อนเวลาการรีสตาร์ทออกไป")
         sender.sendMessage("§e/uar stop §7- ยกเลิกการรีสตาร์ทที่ตั้งตารางเวลาไว้")
         sender.sendMessage("§e/uar reload §7- รีโหลดค่าตั้งค่าทั้งหมด")

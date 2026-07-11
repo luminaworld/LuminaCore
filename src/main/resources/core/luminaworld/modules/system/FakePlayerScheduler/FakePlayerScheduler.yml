@@ -1,5 +1,5 @@
 settings:
-  enabled: true
+  enabled: false
   use-permission: false
   permission: "luminacore.module.fakeplayerscheduler"
   

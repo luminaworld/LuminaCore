@@ -96,13 +96,7 @@ class FakePlayerSchedulerModule(plugin: LuminaCore) : LuminaModule(plugin, "Fake
         )
         commandExecutor = cmd
 
-        // ตรวจสอบว่ามีปลั๊กอิน FakePlayer หรือไม่
-        if (!plugin.server.pluginManager.isPluginEnabled("FakePlayer")) {
-            plugin.logger.severe("§c[FakePlayerScheduler] ไม่พบหรือไม่ได้เปิดใช้งานปลั๊กอิน FakePlayer (https://github.com/Pepe-tf/Fake-Player-plugin-2.0)!")
-            plugin.logger.severe("§cระบบสุ่มบอท FakePlayerScheduler จะถูกระงับการทำงานชั่วคราว!")
-            isEnabled = false
-            return
-        }
+
 
         // โหลดข้อมูลบอทและกำหนดการเริ่มต้น
         loadYamlDatabase()

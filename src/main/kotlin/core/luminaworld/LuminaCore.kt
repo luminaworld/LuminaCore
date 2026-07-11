@@ -21,6 +21,9 @@ class LuminaCore : JavaPlugin() {
     var moduleManager: ModuleManager? = null
         private set
 
+    var commandManager: core.luminaworld.command.CommandManager? = null
+        private set
+
     val activeActionBarTasks = ConcurrentHashMap<UUID, ScheduledTask>()
     val suspendedPlayers = ConcurrentHashMap.newKeySet<UUID>()
 
@@ -99,6 +102,9 @@ class LuminaCore : JavaPlugin() {
             core.luminaworld.updater.UpdateChecker.checkForUpdates(this)
         }
         
+        // เริ่มระบบจัดการคำสั่งแบบไดนามิก
+        commandManager = core.luminaworld.command.CommandManager(this)
+
         // เริ่มระบบจัดการโมดูล
         moduleManager = ModuleManager(this)
         moduleManager?.loadModules()
@@ -136,10 +142,59 @@ class LuminaCore : JavaPlugin() {
         moduleManager?.disableModules()
         moduleManager = null
 
+        // ปิดและล้างคำสั่งไดนามิกทั้งหมด
+        commandManager?.unregisterAll()
+        commandManager = null
+
+        if (!isStandalone) {
+            // ยกเลิกการลงทะเบียน Command Executor เพื่อป้องกัน memory leak ในกรณี reload ปลั๊กอิน
+            val commands = arrayOf("luminacore", "luminaris", "luminaworld", "llw", "lc")
+            for (cmd in commands) {
+                getCommand(cmd)?.apply {
+                    setExecutor(null)
+                    tabCompleter = null
+                }
+            }
+        }
+
         if (isStandalone) {
             logger.info("[Lumina-$standaloneModuleName] Standalone Plugin disabled.")
         } else {
             logger.info("[LuminaCore] Plugin disabled.")
+        }
+
+        // ล้างข้อมูลปลั๊กอินออกจาก Paper/Leaf เพื่อไม่ให้เกิด duplicate identifier เมื่อโหลดใหม่
+        cleanupPaperPluginManager()
+    }
+
+    private fun cleanupPaperPluginManager() {
+        try {
+            val paperPluginManagerClass = Class.forName("io.papermc.paper.plugin.manager.PaperPluginManagerImpl")
+            val getInstanceMethod = paperPluginManagerClass.getMethod("getInstance")
+            val pluginManager = getInstanceMethod.invoke(null)
+            
+            val instanceManagerField = paperPluginManagerClass.getDeclaredField("instanceManager")
+            instanceManagerField.isAccessible = true
+            val instanceManager = instanceManagerField.get(pluginManager)
+            
+            // ล้างจาก plugins List
+            val pluginsField = instanceManager.javaClass.getDeclaredField("plugins")
+            pluginsField.isAccessible = true
+            val pluginsList = pluginsField.get(instanceManager) as? MutableList<Any>
+            pluginsList?.remove(this)
+            
+            // ล้างจาก lookupNames Map
+            val lookupNamesField = instanceManager.javaClass.getDeclaredField("lookupNames")
+            lookupNamesField.isAccessible = true
+            val lookupNamesMap = lookupNamesField.get(instanceManager) as? MutableMap<Any, Any>
+            if (lookupNamesMap != null) {
+                val nameKey = description.name.lowercase().replace(" ", "_")
+                val originalKey = description.name
+                lookupNamesMap.remove(nameKey)
+                lookupNamesMap.remove(originalKey)
+            }
+        } catch (e: Exception) {
+            // ละเว้นหากเกิดข้อผิดพลาดในการใช้ Reflection หรือทำงานบนระบบอื่นที่ไม่ใช่ Paper/Leaf
         }
     }
 

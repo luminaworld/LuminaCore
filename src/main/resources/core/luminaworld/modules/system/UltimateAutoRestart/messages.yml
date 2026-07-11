@@ -1,0 +1,464 @@
+#########################################################################################
+#                                                                                       #
+# หมายเหตุ: โปรดอ่านก่อนทำการกำหนดค่าตั้งค่า!                                                      #
+#                                                                                       #
+# หากติดตั้ง PlaceholderAPI แล้ว คุณสามารถใช้เพลสโฮลเดอร์ตัวแปรใดๆ ในข้อความได้                         #
+# ตรวจสอบให้แน่ใจว่าได้ติดตั้งส่วนเสริมที่ถูกต้องโดยใช้คำสั่ง /papi ecloud                                   #
+#                                                                                       #
+# ตัวแปรเพลสโฮลเดอร์ที่อยู่ในเครื่องหมายปีกกา {} (เช่น {0}, {1}) คือตัวแปรภายในระบบ UAR                    #
+# ส่วนตัวแปรของ PAPI ให้เรียกใช้ตามปกติ เช่น %player_gamemode% เป็นต้น                               #
+#                                                                                       #
+# ขอบเขตข้อความ (Scopes):                                                                 #
+# 1) Global -> ผู้เล่นออนไลน์ทุกคนจะได้รับข้อความ                                                  #
+# 2) User -> ผู้เล่นที่ใช้คำสั่งหรือกระตุ้นเหตุการณ์จะได้รับข้อความ                                          #
+# 3) Limited -> เฉพาะผู้เล่น/ระบบที่ได้รับสิทธิ์เฉพาะจะได้รับข้อความ                                       #
+#                                                                                       #
+# หมายเหตุ: ขอบเขตของแต่ละข้อความไม่สามารถเปลี่ยนเองได้แบบแมนวล                                      #
+#                                                                                       #
+#########################################################################################
+
+# หมายเหตุ: เลือกว่าจะล้างรหัสสีออกจากข้อความที่แสดงใน Console หรือไม่ (เพื่อแก้ปัญหาบนหน้าควบคุมบางชนิด)
+stripConsole: false
+
+# หมายเหตุ: ข้อความเหตุผลดีฟอลต์ หากไม่มีการระบุเหตุผลคัสตอม (เช่น ในคำสั่ง force restart)
+defaultReason: "Scheduled restart"
+
+messages:
+
+  # หมายเหตุ: ใช้ {PREFIX} &f» ในข้อความใดๆ เพื่อดึงคำนำหน้าด้านล่างมาแสดงผล!
+  prefix: "<GRADIENT:9483FF>&lUltimateAutoRestart</GRADIENT:FB9AF2>&r"
+
+  EVENT_INTERVAL_GLOBAL:
+    # ตัวแปร: {0} = ช่วงเวลา, {1} = เหตุผล (หากกำหนดโดยการสั่ง force มิฉะนั้นจะแสดง N/A)
+    # ขอบเขต: Global
+    chatMessage:
+      enabled: false
+      centered: false
+      content:
+        - ""
+        - "{PREFIX} &f» &fRestarting in &d{0}&f!"
+        - ""
+    actionbar:
+      enabled: true
+      content: "{PREFIX} &f» &fRestarting in &d{0}&f!"
+      duration: 0
+    titles:
+      enabled: false
+      titleContent: "{PREFIX}"
+      subtitleContent: "&fRestarting in &d{0}&f!"
+
+  EVENT_INTERVAL_CONSOLE:
+    # ตัวแปร: {0} = ช่วงเวลา, {1} = เหตุผล
+    # ขอบเขต: Limited -> เฉพาะ Console เท่านั้น
+    chatMessage:
+      enabled: true
+      centered: false
+      content:
+        - "{PREFIX} &f» &fRestarting in &d{0}&f!"
+
+  EVENT_RESTART_GLOBAL:
+    # ตัวแปร: ไม่มี
+    # ขอบเขต: Global
+    chatMessage:
+      enabled: false
+      centered: false
+      content:
+        - ""
+        - "{PREFIX} &f» &fRestarting... join back soon!"
+        - ""
+    actionbar:
+      enabled: true
+      content: "{PREFIX} &f» &fRestarting... join back soon!"
+      duration: 0
+    titles:
+      enabled: false
+      titleContent: "{PREFIX}"
+      subtitleContent: "&fRestarting... join back soon!"
+
+  EVENT_RESTART_DELAY_GLOBAL:
+    # ตัวแปร: {0} = ช่วงเวลา
+    # ขอบเขต: Global
+    chatMessage:
+      enabled: false
+      centered: false
+      content:
+        - ""
+        - "{PREFIX} &f» &fThe restart has been delayed by &d{0}&f!"
+        - ""
+    actionbar:
+      enabled: true
+      content: "{PREFIX} &f» &fThe restart has been delayed by &d{0}&f!"
+      duration: 0
+    titles:
+      enabled: false
+      titleContent: "{PREFIX}"
+      subtitleContent: "&fRestart has been delayed by &d{0}&f!"
+
+  EVENT_RESTART_DELAY_STAFF:
+    # ตัวแปร: {0} = ช่วงเวลา
+    # ขอบเขต: Limited -> เฉพาะกลุ่มทีมงาน uar.notifydelay
+    chatMessage:
+      enabled: false
+      centered: false
+      content:
+        - ""
+        - "{PREFIX} &f» &fThe restart has been delayed by &d{0}&f!"
+        - ""
+    actionbar:
+      enabled: true
+      content: "&c(Staff) {PREFIX} &f» &fThe restart has been delayed by &d{0}&f!"
+      duration: 0
+    titles:
+      enabled: false
+      titleContent: "{PREFIX}"
+      subtitleContent: "&fRestart has been delayed by &d{0}&f!"
+
+  ###############################
+
+  COMMAND_USER_VIEWINTERVAL:
+    # ตัวแปร: {0} = ช่วงเวลา, {1} = เวลาตั้งแต่รีสตาร์ทครั้งล่าสุด, {2} = เหตุผล
+    # ขอบเขต: User
+    chatMessage:
+      enabled: true
+      centered: true
+      content:
+        - ""
+        - "{PREFIX} &f» &fRestarting in &d{0}&f!"
+        - "&7&o(Last restart happened {1} ago)"
+        - ""
+    actionbar:
+      enabled: false
+      content: "{PREFIX} &f» &fRestarting in &d{0}&f!"
+      duration: 0
+    titles:
+      enabled: false
+      titleContent: "{PREFIX}"
+      subtitleContent: "&fRestarting in &d{0}&f!"
+
+  ###############################
+
+  COMMAND_FORCE_RESTART:
+    # ตัวแปร: {0} = ช่วงเวลา
+    # ขอบเขต: User
+    chatMessage:
+      enabled: true
+      centered: false
+      content:
+        - ""
+        - "{PREFIX} &f» &fForced the restart. Restarting in &d{0}&f!"
+        - ""
+    actionbar:
+      enabled: false
+      content: "{PREFIX} &f» &fForced the restart. &fRestarting in &d{0}&f!"
+      duration: 0
+    titles:
+      enabled: false
+      titleContent: "{PREFIX}"
+      subtitleContent: "&fForced the restart. Restarting in &d{0}&f!"
+
+  COMMAND_FORCE_RESTART_GLOBAL:
+    # ตัวแปร: {0} = ช่วงเวลา, {1} = ชื่อผู้เล่นที่สั่งรีสตาร์ท
+    # ขอบเขต: Global
+    chatMessage:
+      enabled: true
+      centered: false
+      content:
+        - ""
+        - "{PREFIX} &f» &c{1} &fforced a restart. &fRestarting in &d{0}&f!"
+        - ""
+    actionbar:
+      enabled: false
+      content: "{PREFIX} &f» &c{1} &fforced a restart. &fRestarting in &d{0}&f!"
+      duration: 0
+    titles:
+      enabled: false
+      titleContent: "{PREFIX}"
+      subtitleContent: "&fRestarting in &d{0}&f!"
+
+  COMMAND_FORCE_RESTART_WITH_REASON:
+    # ตัวแปร: {0} = ช่วงเวลา
+    # ขอบเขต: User
+    chatMessage:
+      enabled: true
+      centered: false
+      content:
+        - ""
+        - "{PREFIX} &f» &fForced the restart w/ reason. Restarting in &d{0}&f!"
+        - ""
+    actionbar:
+      enabled: false
+      content: "{PREFIX} &f» &fForced the restart w/ reason. &fRestarting in &d{0}&f!"
+      duration: 0
+    titles:
+      enabled: false
+      titleContent: "{PREFIX}"
+      subtitleContent: "&fForced the restart w/ reason. Restarting in &d{0}&f!"
+
+  COMMAND_FORCE_RESTART_GLOBAL_WITH_REASON:
+    # ตัวแปร: {0} = ช่วงเวลา, {1} = ชื่อผู้เล่นที่สั่งรีสตาร์ท, {2} = เหตุผล
+    # ขอบเขต: Global
+    chatMessage:
+      enabled: true
+      centered: true
+      content:
+        - ""
+        - "{PREFIX} &f» &c{1} &fforced a restart. &fRestarting in &d{0}&f!"
+        - "&7&oReason:&r {2}"
+        - ""
+    actionbar:
+      enabled: false
+      content: "{PREFIX} &f» &c{1} &fforced a restart. &fRestarting in &d{0}&f! &7&oReason:&r {2}"
+      duration: 0
+    titles:
+      enabled: false
+      titleContent: "{PREFIX}"
+      subtitleContent: "&fRestarting in &d{0}&f! &7&o(&r{2}&7&o)"
+
+  COMMAND_FORCE_RESTART_INVALID:
+    # ตัวแปร: {0} = ค่าอาร์กิวเมนต์ทีป้อนเข้ามา
+    # ขอบเขต: User
+    chatMessage:
+      enabled: true
+      centered: false
+      content:
+        - ""
+        - " {PREFIX} &f» &fCould not force restart because your interval argument is faulty!"
+        - ""
+        - "  &dDetails:"
+        - "  &7• &dYour argument: &f{0}"
+        - "  &7• &dExpected argument: &fPositive Integer (e.g 60)"
+        - ""
+    actionbar:
+      enabled: false
+      content: "{PREFIX} &f» &fCould not force restart because your interval argument is faulty!"
+      duration: 0
+    titles:
+      enabled: false
+      titleContent: "{PREFIX}"
+      subtitleContent: "&fYour command is faulty!"
+
+  ###############################
+
+  COMMAND_DELAY_RESTART:
+    # ตัวแปร: {0} = ช่วงเวลา
+    # ขอบเขต: User
+    chatMessage:
+      enabled: true
+      centered: false
+      content:
+        - ""
+        - "{PREFIX} &f» &fDelayed the restart. Restarting in &d{0}&f!"
+        - ""
+    actionbar:
+      enabled: false
+      content: "{PREFIX} &f» &fDelayed the restart. &fRestarting in &d{0}&f!"
+      duration: 0
+    titles:
+      enabled: false
+      titleContent: "{PREFIX}"
+      subtitleContent: "&fDelayed a restart. Restarting in &d{0}&f!"
+
+  COMMAND_DELAY_RESTART_GLOBAL:
+    # ตัวแปร: {0} = ช่วงเวลา
+    # ขอบเขต: Global
+    chatMessage:
+      enabled: false
+      centered: false
+      content:
+        - ""
+        - "{PREFIX} &f» &cAn admin delayed the restart. &fRestarting in &d{0}&f!"
+        - ""
+    actionbar:
+      enabled: true
+      content: "{PREFIX} &f» &cAn admin delayed the restart. &fRestarting in &d{0}&f!"
+      duration: 0
+    titles:
+      enabled: false
+      titleContent: "{PREFIX}"
+      subtitleContent: "&fRestarting in &d{0}&f!"
+
+  COMMAND_DELAY_RESTART_INVALID:
+    # ตัวแปร: {0} = ค่าอาร์กิวเมนต์ที่ป้อนเข้ามา
+    # ขอบเขต: User
+    chatMessage:
+      enabled: true
+      centered: false
+      content:
+        - ""
+        - " {PREFIX} &f» &fCould not delay restart because your interval argument is faulty!"
+        - ""
+        - "  &dDetails:"
+        - "  &7• &dYour argument: &f{0}"
+        - "  &7• &dExpected argument: &fPositive Integer (e.g 60)"
+        - ""
+    actionbar:
+      enabled: false
+      content: "{PREFIX} &f» &fCould not delay restart because your interval argument is faulty!"
+      duration: 0
+    titles:
+      enabled: false
+      titleContent: "{PREFIX}"
+      subtitleContent: "&fYour command is faulty!"
+
+  COMMAND_DELAY_RESTART_NOT_POSSIBLE:
+    # ตัวแปร: ไม่มี
+    # ขอบเขต: User
+    chatMessage:
+      enabled: true
+      centered: false
+      content:
+        - ""
+        - " {PREFIX} &f» &fCould not delay restart because the restart is stopped!"
+        - ""
+    actionbar:
+      enabled: false
+      content: "{PREFIX} &f» &fCould not delay restart because the restart is stopped!"
+      duration: 0
+    titles:
+      enabled: false
+      titleContent: "{PREFIX}"
+      subtitleContent: "&fCould not delay restart!"
+
+  ###############################
+
+  COMMAND_STOP_RESTART:
+    # ตัวแปร: ไม่มี
+    # ขอบเขต: User
+    chatMessage:
+      enabled: true
+      centered: false
+      content:
+        - ""
+        - "{PREFIX} &f» &fYou have cancelled the autorestart!"
+        - ""
+    actionbar:
+      enabled: false
+      content: "{PREFIX} &f» &fYou have cancelled the autorestart!"
+      duration: 0
+    titles:
+      enabled: false
+      titleContent: "{PREFIX}"
+      subtitleContent: "&fCancelled the autorestart!"
+
+  COMMAND_STOP_RESTART_GLOBAL:
+    # ตัวแปร: ไม่มี
+    # ขอบเขต: Global
+    chatMessage:
+      enabled: true
+      centered: false
+      content:
+        - ""
+        - "{PREFIX} &f» &cAn admin cancelled the autorestart!"
+        - ""
+    actionbar:
+      enabled: false
+      content: "{PREFIX} &f» &cAn admin cancelled the autorestart!"
+      duration: 0
+    titles:
+      enabled: false
+      titleContent: "{PREFIX}"
+      subtitleContent: "&fAn admin cancelled the restart!"
+
+  COMMAND_STOP_RESTART_FAIL:
+    # ตัวแปร: ไม่มี
+    # ขอบเขต: User
+    chatMessage:
+      enabled: true
+      centered: false
+      content:
+        - ""
+        - "{PREFIX} &f» &fCould not cancel autorestart, it was not running!"
+        - ""
+    actionbar:
+      enabled: false
+      content: "{PREFIX} &f» &fCould not cancel autorestart, it was not running!"
+      duration: 0
+    titles:
+      enabled: false
+      titleContent: "{PREFIX}"
+      subtitleContent: "&fNo scheduled restart running!"
+
+  ###############################
+
+  COMMAND_DEBUG_SUCCESS:
+    # ตัวแปร: {0} = ฟีเจอร์ที่ดีบั๊ก
+    # ขอบเขต: User
+    chatMessage:
+      enabled: true
+      centered: false
+      content:
+        - ""
+        - " {PREFIX} &f» &fRunning debug for: &d&l{0}"
+        - " &7(Make sure the feature is enabled when doing this!)"
+        - ""
+    actionbar:
+      enabled: false
+      content: "{PREFIX} &f» &fRunning debug for: &d&l{0}"
+      duration: 0
+    titles:
+      enabled: false
+      titleContent: "{PREFIX}"
+      subtitleContent: "&fRunning debug for: &d&l{0}"
+
+  COMMAND_DEBUG_INVALID:
+    # ตัวแปร: {0} = อาร์กิวเมนต์
+    # ขอบเขต: User
+    chatMessage:
+      enabled: true
+      centered: false
+      content:
+        - ""
+        - " {PREFIX} &f» &fCould not use debug command! Missing/Invalid argument!"
+        - ""
+        - "  &dDetails:"
+        - "  &7• &dYour argument: &f{0}"
+        - "  &7• &dExpected argument: &fWebhook"
+        - ""
+    actionbar:
+      enabled: false
+      content: "{PREFIX} &f» &fCould not use debug command! Missing/Invalid argument!"
+      duration: 0
+    titles:
+      enabled: false
+      titleContent: "{PREFIX}"
+      subtitleContent: "&fCould not use debug command! Missing/Invalid argument!"
+
+  ###############################
+
+  COMMAND_RELOAD:
+    # ตัวแปร: {0} = เวลาเป็นมิลลิวินาที
+    # ขอบเขต: User
+    chatMessage:
+      enabled: true
+      centered: false
+      content:
+        - ""
+        - "{PREFIX} &f» &fReloaded configuration files. &7(&f{0}ms&7)"
+        - ""
+    actionbar:
+      enabled: false
+      content: "{PREFIX} &f» &fReloaded configuration files. &7(&f{0}ms&7)"
+      duration: 0
+    titles:
+      enabled: false
+      titleContent: "{PREFIX}"
+      subtitleContent: "&fReloaded configuration!"
+
+  COMMAND_NOPERMISSION:
+    # ตัวแปร: ไม่มี
+    # ขอบเขต: User
+    chatMessage:
+      enabled: true
+      centered: false
+      content:
+        - ""
+        - "{PREFIX} &f» &fYou do not have permission to run this command!"
+        - ""
+    actionbar:
+      enabled: false
+      content: "{PREFIX} &f» &fYou do not have permission to run this command!"
+      duration: 0
+    titles:
+      enabled: false
+      titleContent: "{PREFIX}"
+      subtitleContent: "&fYou do not have permission!"

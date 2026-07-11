@@ -86,12 +86,15 @@ class FakePlayerSchedulerModule(plugin: LuminaCore) : LuminaModule(plugin, "Fake
 
     override fun onEnable() {
         // ลงทะเบียน Command Executor
-        plugin.getCommand("fpscheduler")?.apply {
-            val cmd = FakePlayerSchedulerCommand(this@FakePlayerSchedulerModule)
-            setExecutor(cmd)
-            tabCompleter = cmd
-            commandExecutor = cmd
-        }
+        val cmd = FakePlayerSchedulerCommand(this@FakePlayerSchedulerModule)
+        plugin.commandManager?.registerCommand(
+            name = "fpscheduler",
+            executor = cmd,
+            tabCompleter = cmd,
+            description = "คำสั่งจัดการระบบ FakePlayer Scheduler",
+            usage = "/fpscheduler [status|reload|reset|rush]"
+        )
+        commandExecutor = cmd
 
         // ตรวจสอบว่ามีปลั๊กอิน FakePlayer หรือไม่
         if (!plugin.server.pluginManager.isPluginEnabled("FakePlayer")) {
@@ -117,10 +120,7 @@ class FakePlayerSchedulerModule(plugin: LuminaCore) : LuminaModule(plugin, "Fake
 
     override fun onDisable() {
         // ยกเลิกคำสั่ง
-        plugin.getCommand("fpscheduler")?.apply {
-            setExecutor(null)
-            tabCompleter = null
-        }
+        plugin.commandManager?.unregisterCommand("fpscheduler")
         commandExecutor = null
 
         // ยกเลิกงานสเก็ตดูลเลอร์

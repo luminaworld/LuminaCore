@@ -1,0 +1,36 @@
+#########################################################################################
+#                                                                                       #
+# หมายเหตุ: โปรดอ่านก่อนทำการกำหนดค่าตั้งค่า!                                                #
+#                                                                                       #
+# โปรดศึกษาข้อมูลจากวิกิสำหรับคำถามเกี่ยวกับการตั้งค่า หรือเปิดตั๋วติดต่อสอบถามในเซิร์ฟเวอร์        #
+# ดิสคอร์ดของเราหากต้องการความช่วยเหลือเพิ่มเติม!                                             #
+#                                                                                       #
+#########################################################################################
+
+# โปรดอ่านก่อนใช้งาน:
+# 1. อักขระขึ้นบรรทัดใหม่ (\n) ต้องทำการหลบหลีก (Escape) โดยให้ใช้ "\\n" แทน "\n"
+# 2. หาก Webhook ส่งคืนสถานะ HTTP 400 Error แสดงว่าการตั้งค่ามีข้อผิดพลาด
+# 3. คุณสามารถทดสอบการส่ง Webhook ได้โดยใช้คำสั่ง "/uar debug webhook"
+
+webhook:
+  enabled: false
+  # หมายเหตุ: ค้นหา URL ได้ที่ การตั้งค่าเซิร์ฟเวอร์ -> Integrations -> Webhooks -> เลือก Webhook ของคุณ (หรือสร้างใหม่) -> คัดลอก URL ของ Webhook
+  url: ""
+
+format:
+  timestamp: "dd.MM.yyyy - HH:mm:ss"
+
+# ตัวแปรเพลสโฮลเดอร์: {TIMESTAMP}, {SECONDS}, {FORMATTED}
+# ตัวแปรเพลสโฮลเดอร์เฉพาะสำหรับ SERVER_FORCED_RESTART เท่านั้น: {REASON}
+messages:
+  SERVER_RESTARTING:
+    enabled: true
+    content: "The server is currently restarting! Join back soon!"
+
+  SERVER_BACK_UP:
+    enabled: true
+    content: "The server is back up! Join at play.servername.com!"
+
+  SERVER_FORCED_RESTART:
+    enabled: true
+    content: "The server will force restart in {FORMATTED}. Reason: {REASON}"

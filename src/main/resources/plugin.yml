@@ -19,7 +19,4 @@ commands:
       - lc
     permission: luminacore.admin
     usage: /<command> [reload]
-  fpscheduler:
-    description: คำสั่งจัดการระบบ FakePlayer Scheduler
-    permission: luminacore.admin
-    usage: /<command> [status|reload|reset|rush]
+

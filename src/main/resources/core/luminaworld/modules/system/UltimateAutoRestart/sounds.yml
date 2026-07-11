@@ -1,0 +1,150 @@
+########################################################################################
+#                                                                                       #
+# คำเตือน: โปรดอ่านก่อนทำการกำหนดค่าตั้งค่า!                                                 #
+#                                                                                       #
+# ปลั๊กอินนี้ใช้ชื่อเสียงในรูปแบบ ENUM หมายความว่าคุณไม่สามารถใช้ชื่อเสียงแบบทั่วไปได้          #
+# ค้นหาชื่อ ENUM ของเสียงได้โดยค้นหาใน Google ว่า: "<เวอร์ชันเซิร์ฟเวอร์> ENUM Sounds"      #
+#                                                                                       #
+# กรุณาอย่าเปิดตั๋วสอบถามเกี่ยวกับปัญหาเรื่องเสียง เนื่องจากปัญหานี้แก้ไขได้ง่ายๆ            #
+# โดยการใช้ชื่อเสียงที่ตรงกับค่า ENUM ที่ถูกต้องสำหรับเวอร์ชันเซิร์ฟเวอร์หลักของคุณ              #
+#                                                                                       #
+#########################################################################################
+
+sounds:
+  EVENT_INTERVAL_GLOBAL:
+    enabled: true
+    sound: "BLOCK_NOTE_BLOCK_PLING"
+    volume: 1.0
+    pitch: 1.0
+
+  EVENT_RESTART_GLOBAL:
+    enabled: true
+    sound: "BLOCK_BELL_USE"
+    volume: 2.0
+    pitch: 2.0
+
+  EVENT_RESTART_DELAY_GLOBAL:
+    enabled: true
+    sound: "BLOCK_NOTE_BLOCK_PLING"
+    volume: 1.0
+    pitch: 1.0
+
+  EVENT_RESTART_DELAY_STAFF:
+    enabled: true
+    sound: "BLOCK_NOTE_BLOCK_PLING"
+    volume: 1.0
+    pitch: 1.0
+
+  ###############################
+
+  COMMAND_USER_VIEWINTERVAL:
+    enabled: true
+    sound: "BLOCK_NOTE_BLOCK_PLING"
+    volume: 1.0
+    pitch: 1.0
+
+  ###############################
+
+  COMMAND_FORCE_RESTART:
+    enabled: true
+    sound: "BLOCK_NOTE_BLOCK_PLING"
+    volume: 1.0
+    pitch: 1.0
+
+  COMMAND_FORCE_RESTART_WITH_REASON:
+    enabled: true
+    sound: "BLOCK_NOTE_BLOCK_PLING"
+    volume: 1.0
+    pitch: 1.0
+
+  COMMAND_FORCE_RESTART_GLOBAL:
+    enabled: true
+    sound: "BLOCK_NOTE_BLOCK_PLING"
+    volume: 1.0
+    pitch: 1.0
+
+  COMMAND_FORCE_RESTART_GLOBAL_WITH_REASON:
+    enabled: true
+    sound: "BLOCK_NOTE_BLOCK_PLING"
+    volume: 1.0
+    pitch: 1.0
+
+  COMMAND_FORCE_RESTART_INVALID:
+    enabled: true
+    sound: "ENTITY_VILLAGER_NO"
+    volume: 1.0
+    pitch: 1.0
+
+  ###############################
+
+  COMMAND_DELAY_RESTART:
+    enabled: true
+    sound: "BLOCK_NOTE_BLOCK_PLING"
+    volume: 1.0
+    pitch: 1.0
+
+  COMMAND_DELAY_RESTART_GLOBAL:
+    enabled: true
+    sound: "BLOCK_NOTE_BLOCK_PLING"
+    volume: 1.0
+    pitch: 1.0
+
+  COMMAND_DELAY_RESTART_INVALID:
+    enabled: true
+    sound: "ENTITY_VILLAGER_NO"
+    volume: 1.0
+    pitch: 1.0
+
+  COMMAND_DELAY_RESTART_NOT_POSSIBLE:
+    enabled: true
+    sound: "ENTITY_VILLAGER_NO"
+    volume: 1.0
+    pitch: 1.0
+
+  ###############################
+
+  COMMAND_STOP_RESTART:
+    enabled: true
+    sound: "BLOCK_NOTE_BLOCK_PLING"
+    volume: 1.0
+    pitch: 1.0
+
+  COMMAND_STOP_RESTART_GLOBAL:
+    enabled: true
+    sound: "BLOCK_NOTE_BLOCK_PLING"
+    volume: 1.0
+    pitch: 1.0
+
+  COMMAND_STOP_RESTART_FAIL:
+    enabled: true
+    sound: "BLOCK_NOTE_BLOCK_PLING"
+    volume: 1.0
+    pitch: 1.0
+
+  ###############################
+
+  COMMAND_DEBUG_SUCCESS:
+    enabled: true
+    sound: "BLOCK_NOTE_BLOCK_PLING"
+    volume: 1.0
+    pitch: 1.0
+
+  COMMAND_DEBUG_INVALID:
+    enabled: true
+    sound: "ENTITY_VILLAGER_NO"
+    volume: 1.0
+    pitch: 1.0
+
+  ###############################
+
+  COMMAND_RELOAD:
+    enabled: true
+    sound: "BLOCK_NOTE_BLOCK_PLING"
+    volume: 1.0
+    pitch: 1.0
+
+  COMMAND_NOPERMISSION:
+    enabled: true
+    sound: "ENTITY_VILLAGER_NO"
+    volume: 1.0
+    pitch: 1.0

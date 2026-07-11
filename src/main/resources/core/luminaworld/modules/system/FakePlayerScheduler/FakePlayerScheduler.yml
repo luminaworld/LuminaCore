@@ -4,8 +4,8 @@ settings:
   permission: "luminacore.module.fakeplayerscheduler"
   
   # พาธของไฟล์ข้อมูลในระบบโมดูลนี้
-  names-filepath: "plugins/LuminaCore/FakePlayerScheduler/name-list.yml"
-  active-bots-filepath: "plugins/LuminaCore/FakePlayerScheduler/active-bots.yml"
+  names-filepath: "plugins/LuminaCore/system/FakePlayerScheduler/name-list.yml"
+  active-bots-filepath: "plugins/LuminaCore/system/FakePlayerScheduler/active-bots.yml"
   
   # การสุ่มความปั่นป่วนของจำนวนบอท (Natural Noise)
   noise:

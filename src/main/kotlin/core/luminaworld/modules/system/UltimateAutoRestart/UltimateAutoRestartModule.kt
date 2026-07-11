@@ -24,7 +24,7 @@ class UltimateAutoRestartModule(plugin: LuminaCore) : LuminaModule(plugin, "Ulti
     lateinit var uarWebhook: YamlConfiguration
         private set
 
-    private val moduleDir = File(plugin.dataFolder, "UltimateAutoRestart")
+    private val moduleDir = File(plugin.dataFolder, "system/UltimateAutoRestart")
     
     // Runtime States
     var restartTimeMs: Long? = null

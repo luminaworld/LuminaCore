@@ -17,8 +17,8 @@ import java.util.concurrent.CopyOnWriteArrayList
 class FakePlayerSchedulerModule(plugin: LuminaCore) : LuminaModule(plugin, "FakePlayerScheduler"), Listener {
 
     // พาธของไฟล์
-    private var namesFilePath = "plugins/LuminaCore/FakePlayerScheduler/name-list.yml"
-    private var activeBotsStatePath = "plugins/LuminaCore/FakePlayerScheduler/active-bots.yml"
+    private var namesFilePath = "plugins/LuminaCore/system/FakePlayerScheduler/name-list.yml"
+    private var activeBotsStatePath = "plugins/LuminaCore/system/FakePlayerScheduler/active-bots.yml"
 
     // คลาสและตัวสั่งการคำสั่ง
     private var commandExecutor: FakePlayerSchedulerCommand? = null
@@ -63,8 +63,8 @@ class FakePlayerSchedulerModule(plugin: LuminaCore) : LuminaModule(plugin, "Fake
     override fun loadConfig() {
         super.loadConfig()
         config?.let {
-            namesFilePath = it.getString("settings.names-filepath", "plugins/LuminaCore/FakePlayerScheduler/name-list.yml") ?: "plugins/LuminaCore/FakePlayerScheduler/name-list.yml"
-            activeBotsStatePath = it.getString("settings.active-bots-filepath", "plugins/LuminaCore/FakePlayerScheduler/active-bots.yml") ?: "plugins/LuminaCore/FakePlayerScheduler/active-bots.yml"
+            namesFilePath = it.getString("settings.names-filepath", "plugins/LuminaCore/system/FakePlayerScheduler/name-list.yml") ?: "plugins/LuminaCore/system/FakePlayerScheduler/name-list.yml"
+            activeBotsStatePath = it.getString("settings.active-bots-filepath", "plugins/LuminaCore/system/FakePlayerScheduler/active-bots.yml") ?: "plugins/LuminaCore/system/FakePlayerScheduler/active-bots.yml"
             
             spawnCommandTemplate = it.getString("settings.commands.spawn", "fp spawn 1 spawn --name {name} -1244 70 1668") ?: "fp spawn 1 spawn --name {name} -1244 70 1668"
             rankCommandTemplate = it.getString("settings.commands.rank", "fp rank {name} {rank}") ?: "fp rank {name} {rank}"
@@ -186,19 +186,31 @@ class FakePlayerSchedulerModule(plugin: LuminaCore) : LuminaModule(plugin, "Fake
         botRanks.clear()
 
         val file = File(namesFilePath)
-        // สร้างเทมเพลตเริ่มต้นกรณีไม่มีไฟล์อยู่จริง เพื่อความง่ายในการใช้งาน
+        // โหลดจากทรัพยากรเริ่มต้นใน JAR เสมอหากยังไม่มีไฟล์อยู่จริง
         if (!file.exists()) {
-            file.parentFile.mkdirs()
+            val parent = file.parentFile
+            if (parent != null && !parent.exists()) {
+                parent.mkdirs()
+            }
             try {
-                val yaml = YamlConfiguration()
-                yaml.set("settings.restart-rush-enabled", true)
-                yaml.set("bots.BR_Newexc", "rankf")
-                yaml.set("bots.BR_PloyKrub", "rankf")
-                yaml.set("bots.BR_PornthipZa", "rankf")
-                yaml.set("bots.DarkHawk4321", "rankf")
-                yaml.set("bots.Kratos9461", "rankf")
-                yaml.save(file)
-                plugin.logger.info("§6[FP-Scheduler] §eสร้างไฟล์ข้อมูลบอทเริ่มต้นสำเร็จ: $namesFilePath")
+                val classPackage = javaClass.`package`.name.replace(".", "/")
+                val resourcePath = "$classPackage/name-list.yml"
+                val inputStream = javaClass.classLoader.getResourceAsStream(resourcePath)
+                if (inputStream != null) {
+                    java.nio.file.Files.copy(inputStream, file.toPath())
+                    plugin.logger.info("§6[FP-Scheduler] §eสร้างไฟล์ข้อมูลบอทเริ่มต้นสำเร็จ: $namesFilePath")
+                } else {
+                    // Fallback หากหาไฟล์ใน JAR ไม่เจอจริงๆ
+                    val yaml = YamlConfiguration()
+                    yaml.set("settings.restart-rush-enabled", true)
+                    yaml.set("bots.BR_Newexc", "rankf")
+                    yaml.set("bots.BR_PloyKrub", "rankf")
+                    yaml.set("bots.BR_PornthipZa", "rankf")
+                    yaml.set("bots.DarkHawk4321", "rankf")
+                    yaml.set("bots.Kratos9461", "rankf")
+                    yaml.save(file)
+                    plugin.logger.info("§6[FP-Scheduler] §eสร้างไฟล์ข้อมูลบอทดีฟอลต์ (Fallback) สำเร็จ: $namesFilePath")
+                }
             } catch (e: Exception) {
                 plugin.logger.severe("[FP-Scheduler] Could not create default name-list.yml: ${e.message}")
             }

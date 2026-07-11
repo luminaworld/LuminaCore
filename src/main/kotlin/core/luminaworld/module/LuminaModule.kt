@@ -13,7 +13,17 @@ abstract class LuminaModule(val plugin: LuminaCore, val name: String) : Listener
     var isEnabled: Boolean = false
     var config: YamlConfiguration? = null
         protected set
-    val configFile: File = File(plugin.dataFolder, "$name.yml")
+    val configFile: File by lazy {
+        val classPackage = javaClass.`package`.name
+        val category = when {
+            classPackage.contains(".modules.system") -> "system"
+            classPackage.contains(".modules.activate") -> "activate"
+            classPackage.contains(".modules.features") -> "features"
+            else -> ""
+        }
+        val folder = if (category.isNotEmpty()) File(plugin.dataFolder, category) else plugin.dataFolder
+        File(folder, "$name.yml")
+    }
 
     /**
      * โหลดข้อมูลการตั้งค่าเฉพาะของโมดูลย่อย
@@ -27,8 +37,9 @@ abstract class LuminaModule(val plugin: LuminaCore, val name: String) : Listener
                 // ค้นหาไฟล์ตั้งค่าดีฟอลต์ในแพ็คเกจเดียวกับคลาสลูก
                 val inputStream = javaClass.classLoader.getResourceAsStream(resourcePath)
                 if (inputStream != null) {
-                    if (!plugin.dataFolder.exists()) {
-                        plugin.dataFolder.mkdirs()
+                    val parentFile = configFile.parentFile
+                    if (!parentFile.exists()) {
+                        parentFile.mkdirs()
                     }
                     Files.copy(inputStream, configFile.toPath())
                 } else {

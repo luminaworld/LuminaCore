@@ -163,44 +163,7 @@ abstract class LuminaModule(val plugin: LuminaCore, val name: String) : Listener
      * แปลง String ข้อความสีให้เป็น Component ของ Adventure
      */
     fun parseToComponent(input: String): net.kyori.adventure.text.Component {
-        var formatted = input
-        
-        // แปลง Norska's gradient <GRADIENT:XXXXXX>text</GRADIENT:YYYYYY> -> <gradient:#XXXXXX:#YYYYYY>text</gradient>
-        formatted = NORSKA_GRADIENT_REGEX.replace(formatted) { matchResult ->
-            val startColor = matchResult.groupValues[1]
-            val content = matchResult.groupValues[2]
-            val endColor = matchResult.groupValues[3]
-            "<gradient:#$startColor:#$endColor>$content</gradient>"
-        }
-
-        // แปลง HEX สีแบบ &#xxxxxx -> <#xxxxxx>
-        formatted = HEX_REGEX.replace(formatted) { matchResult ->
-            "<#${matchResult.groupValues[1]}>"
-        }
-        
-        // แปลงรหัสสีดั้งเดิม & ให้กลายเป็น MiniMessage tags
-        for ((legacy, tag) in LEGACY_COLOR_MAP) {
-            formatted = formatted.replace(legacy, tag)
-        }
-        
-        return try {
-            net.kyori.adventure.text.minimessage.MiniMessage.miniMessage().deserialize(formatted)
-        } catch (e: Exception) {
-            net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer.legacyAmpersand().deserialize(input)
-        }
-    }
-
-    companion object {
-        private val NORSKA_GRADIENT_REGEX = Regex("<GRADIENT:([A-Fa-f0-9]{6})>(.*?)</GRADIENT:([A-Fa-f0-9]{6})>", RegexOption.IGNORE_CASE)
-        private val HEX_REGEX = Regex("&#([A-Fa-f0-9]{6})")
-        private val LEGACY_COLOR_MAP = mapOf(
-            "&0" to "<black>", "&1" to "<dark_blue>", "&2" to "<dark_green>", "&3" to "<dark_aqua>",
-            "&4" to "<dark_red>", "&5" to "<dark_purple>", "&6" to "<gold>", "&7" to "<gray>",
-            "&8" to "<dark_gray>", "&9" to "<blue>", "&a" to "<green>", "&b" to "<aqua>",
-            "&c" to "<red>", "&d" to "<light_purple>", "&e" to "<yellow>", "&f" to "<white>",
-            "&k" to "<obfuscated>", "&l" to "<bold>", "&m" to "<strikethrough>",
-            "&n" to "<underlined>", "&o" to "<italic>", "&r" to "<reset>"
-        )
+        return core.luminaworld.utils.ColorParser.parse(input)
     }
 
     /**

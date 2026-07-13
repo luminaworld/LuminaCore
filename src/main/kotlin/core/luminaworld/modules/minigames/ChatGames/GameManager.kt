@@ -476,7 +476,7 @@ class GameManager(private val module: ChatGamesModule) {
         playSoundToAll(soundWin)
 
         // มอบรางวัลตามคอนฟิก
-        giveRewards(game.type, player)
+        giveRewards(game, player)
 
         // สุ่มเริ่มเกมนัดถัดไป
         val nextDelay = getNextGameDelayTicks()
@@ -488,17 +488,23 @@ class GameManager(private val module: ChatGamesModule) {
     /**
      * มอบรางวัลแก่ผู้เล่นตามที่ตั้งไว้ใน rewards.yml
      */
-    private fun giveRewards(gameType: String, player: Player) {
-        val section = if (currentGame?.isRace == true) {
+    private fun giveRewards(game: ActiveGame, player: Player) {
+        val section = if (game.isRace) {
             // โหลดรางวัลสำหรับ Race
-            val configKey = module.chatConfig.chatRaces.getString("$gameType.data.${currentGame?.raceTargetValue}.${currentGame?.raceTargetAmount}.rewards.0") ?: "reward_1"
+            val rewardsList = module.chatConfig.chatRaces.getStringList("${game.type}.data.${game.raceTargetValue}.${game.raceTargetAmount}.rewards")
+            val configKey = rewardsList.firstOrNull() ?: "reward_1"
             module.chatConfig.rewards.getConfigurationSection("races.rewards.$configKey")
         } else {
             // โหลดรางวัลสำหรับ Game ปกติ (จาก rewards.yml ในลำดับที่ 1)
-            module.chatConfig.rewards.getConfigurationSection("$gameType.rewards.1.reward_1")
+            val rewardsSec = module.chatConfig.rewards.getConfigurationSection("${game.type}.rewards")
+            val spotSec = rewardsSec?.getConfigurationSection("1") ?: rewardsSec?.get("1") as? org.bukkit.configuration.ConfigurationSection
+            spotSec?.getConfigurationSection("reward_1")
         }
 
-        if (section == null) return
+        if (section == null) {
+            module.plugin.logger.warning("[ChatGames] ไม่พบข้อมูลของรางวัลสำหรับ ${game.type} (isRace=${game.isRace})")
+            return
+        }
 
         val commands = section.getStringList("data")
         val chance = section.getDouble("chance", 100.0)

@@ -37,6 +37,11 @@ settings:
     # คูลดาวน์การทยอยเตะบอทกรณีหมดเวลา (Staggered Leave)
     staggered-leave-delay: 15 # วินาที
 
+  # คูลดาวน์ของบอทที่เพิ่งล็อกเอาท์ออกไป ไม่ให้ล็อกอินกลับมาทันที (หน่วย: นาที)
+  cooldown:
+    min-minutes: 5
+    max-minutes: 15
+
   # ระบบการสลับตัวผู้เล่นออนไลน์-ออฟไลน์ (Player Churn)
   churn:
     check-interval-seconds: 60

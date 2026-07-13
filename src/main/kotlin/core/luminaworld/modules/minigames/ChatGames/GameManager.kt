@@ -23,9 +23,9 @@ class GameManager(private val module: ChatGamesModule) {
 
     // รายชื่อเสียงเกมแชท
     private val volume get() = module.chatConfig.config.getDouble("GameSounds.volume", 1.0).toFloat()
-    private val soundStart get() = getSound(module.chatConfig.config.getString("GameSounds.game-start", "LEVEL_UP"))
-    private val soundWin get() = getSound(module.chatConfig.config.getString("GameSounds.win", "ORB_PICKUP"))
-    private val soundExpired get() = getSound(module.chatConfig.config.getString("GameSounds.time-expired", "VILLAGER_NO"))
+    private val soundStart get() = module.chatConfig.config.getString("GameSounds.game-start", "minecraft:entity.player.levelup")
+    private val soundWin get() = module.chatConfig.config.getString("GameSounds.win", "minecraft:entity.experience_orb.pickup")
+    private val soundExpired get() = module.chatConfig.config.getString("GameSounds.time-expired", "minecraft:entity.villager.no")
 
     fun startScheduler() {
         stopScheduler()
@@ -83,27 +83,50 @@ class GameManager(private val module: ChatGamesModule) {
     }
 
     /**
-     * ดึงค่าเสียงจากชื่อ String
+     * เล่นเสียงให้ผู้เล่นทุกคนในโลกที่อนุญาต (และไม่ได้ปิดเสียงมินิเกมแชทไว้)
+     * รองรับทั้งชื่อ Enum (เช่น LEVEL_UP, ENTITY_PLAYER_LEVELUP) และสตริงคีย์เสียงตรงๆ (เช่น minecraft:entity.player.levelup)
      */
-    private fun getSound(name: String?): Sound? {
-        if (name.isNullOrBlank()) return null
-        return try {
-            Sound.valueOf(name.uppercase())
-        } catch (e: Exception) {
-            null
-        }
-    }
-
-    /**
-     * เล่นเสียงให้ผู้เล่นทุกคนในโลกที่อนุญาต
-     */
-    fun playSoundToAll(sound: Sound?) {
-        if (sound == null) return
+    fun playSoundToAll(soundKey: String?) {
+        if (soundKey.isNullOrBlank()) return
         val disabledWorlds = module.chatConfig.config.getStringList("disabled-worlds")
         for (player in Bukkit.getOnlinePlayers()) {
             if (disabledWorlds.contains(player.world.name)) continue
-            // ตรวจสอบความพึงพอใจการเปิดเสียงของผู้เล่น (ถ้ามี)
-            player.playSound(player.location, sound, volume, 1.0f)
+            // ตรวจสอบความพึงพอใจการเปิดเสียงของผู้เล่น (ถ้าสลับปิดเสียงไว้ใน mutedPlayers)
+            if (module.commandExecutor.mutedPlayers.contains(player.uniqueId)) continue
+
+            val upper = soundKey.uppercase()
+            var played = false
+            try {
+                val enumSound = Sound.valueOf(upper)
+                player.playSound(player.location, enumSound, volume, 1.0f)
+                played = true
+            } catch (e: Exception) {
+                // Fallback สำหรับ Minecraft รุ่นดั้งเดิมในเซิร์ฟเวอร์รุ่นใหม่ (1.9+)
+                val fallbackEnum = when (upper) {
+                    "LEVEL_UP" -> "ENTITY_PLAYER_LEVELUP"
+                    "ORB_PICKUP" -> "ENTITY_EXPERIENCE_ORB_PICKUP"
+                    "VILLAGER_NO" -> "ENTITY_VILLAGER_NO"
+                    else -> null
+                }
+                if (fallbackEnum != null) {
+                    try {
+                        val enumSound = Sound.valueOf(fallbackEnum)
+                        player.playSound(player.location, enumSound, volume, 1.0f)
+                        played = true
+                    } catch (ex: Exception) {
+                        //
+                    }
+                }
+            }
+
+            // หากไม่ใช่ Enum หรือ Enum ไม่มีอยู่ในคีย์ Bukkit ให้ส่งชื่อเสียงสตริงตรงๆ ให้ Minecraft ประมวลผล
+            if (!played) {
+                try {
+                    player.playSound(player.location, soundKey, volume, 1.0f)
+                } catch (e: Exception) {
+                    module.plugin.logger.warning("[ChatGames] ไม่สามารถเล่นเสียง: $soundKey ได้ (${e.message})")
+                }
+            }
         }
     }
 
@@ -160,6 +183,7 @@ class GameManager(private val module: ChatGamesModule) {
         var selection = ""
         var shoppingListOriginal = emptyList<String>()
         val clickUuid = UUID.randomUUID()
+        val customPlaceholders = HashMap<String, String>()
 
         when (gameType) {
             "unscramble" -> {
@@ -310,21 +334,48 @@ class GameManager(private val module: ChatGamesModule) {
 
                 val dataList = module.chatConfig.config.getStringList("variable.data")
                 if (dataList.isEmpty()) return
-                val symbolData = dataList.random().split(";")
-                val symbol = symbolData.getOrNull(0) ?: "✯"
-                val symbolVal = symbolData.getOrNull(1)?.toIntOrNull() ?: 10
+
+                val symbolData1 = dataList.random().split(";")
+                val symbol1 = symbolData1.getOrNull(0) ?: "✯"
+                val symbolVal1 = symbolData1.getOrNull(1)?.toIntOrNull() ?: 10
+
+                // สุ่มสัญลักษณ์ตัวที่สอง (พยายามให้ไม่ซ้ำกับตัวแรก)
+                val remainingData = dataList.filter { !it.startsWith(symbol1) }
+                val symbolData2 = (if (remainingData.isNotEmpty()) remainingData else dataList).random().split(";")
+                val symbol2 = symbolData2.getOrNull(0) ?: "♛"
+                val symbolVal2 = symbolData2.getOrNull(1)?.toIntOrNull() ?: 15
 
                 val toGet = module.chatConfig.config.getString("variable.toGet", "✗") ?: "✗"
+                val toGetVal = Random.nextInt(1, 21) // สุ่มค่าคำตอบที่จะให้ผู้เล่นตอบ
 
-                // สุ่มสร้างสมการ เช่น symbol + toGet = resultVal
-                val isSymbolFirst = Random.nextBoolean()
-                if (isSymbolFirst) {
-                    selection = "$symbol + $toGet = $resultVal"
-                } else {
-                    selection = "$toGet + $symbol = $resultVal"
-                }
-                answer = (resultVal - symbolVal).toString()
+                // ดึง format การแสดงผลสมการจาก messages.yml
+                val line1and2Format = module.chatConfig.getMessage("variable.line1and2-format", "&c%symbol%&f + &c%symbol%&f + &c%symbol%&f = &e")
+                val line3Format = module.chatConfig.getMessage("variable.line3-format", "&c%symbol_1%&f + &c%symbol_2%&f + &b%toGet% &f= &e%result%")
+
+                // คำนวณผลลัพธ์ของสมการแถวที่ 1 และ 2 ตามจำนวนตัวแปรที่อยู่ใน format
+                val count1 = line1and2Format.split("%symbol%").size - 1
+                val val1 = if (count1 > 0) count1 else 3
+                val result1 = symbolVal1 * val1
+                val result2 = symbolVal2 * val1
+
+                val line1 = line1and2Format.replace("%symbol%", symbol1) + result1
+                val line2 = line1and2Format.replace("%symbol%", symbol2) + result2
+
+                // คำนวณผลลัพธ์รวมของสมการเป้าหมายแถวที่ 3
+                val result3 = symbolVal1 + symbolVal2 + toGetVal
+                val line3 = line3Format.replace("%symbol_1%", symbol1)
+                                       .replace("%symbol_2%", symbol2)
+                                       .replace("%toGet%", toGet)
+                                       .replace("%result%", result3.toString())
+
+                answer = toGetVal.toString()
+                selection = line3
                 question = selection
+
+                customPlaceholders["%line_1%"] = line1
+                customPlaceholders["%line_2%"] = line2
+                customPlaceholders["%line_3%"] = line3
+                customPlaceholders["%symbol%"] = toGet
             }
             "trivia" -> {
                 val dataSection = module.chatConfig.words.getConfigurationSection("trivia.data")
@@ -353,7 +404,8 @@ class GameManager(private val module: ChatGamesModule) {
             timeToGuessSeconds = timeToGuess,
             isRace = false,
             shoppingListOriginal = shoppingListOriginal,
-            clickUuid = clickUuid
+            clickUuid = clickUuid,
+            customPlaceholders = customPlaceholders
         )
 
         currentGame = game
@@ -583,9 +635,15 @@ class GameManager(private val module: ChatGamesModule) {
         val prefix = module.chatConfig.config.getString("prefix", "&a[ChatGames]") ?: "&a[ChatGames]"
         
         for (line in list) {
-            val formatted = line.replace("%prefix%", prefix)
+            var formatted = line.replace("%prefix%", prefix)
                 .replace("%selection%", selection)
                 .replace("%timeToGuess%", timeToGuess.toString())
+            
+            // แทนที่ custom placeholders หากมีใน ActiveGame
+            currentGame?.customPlaceholders?.forEach { (key, value) ->
+                formatted = formatted.replace(key, value)
+            }
+            
             broadcastMessage(formatted)
         }
     }
@@ -755,7 +813,8 @@ class ActiveGame(
     val raceTargetAmount: Int = 1,
     val raceTargetValue: String = "",
     val shoppingListOriginal: List<String> = emptyList(),
-    val clickUuid: UUID = UUID.randomUUID()
+    val clickUuid: UUID = UUID.randomUUID(),
+    val customPlaceholders: Map<String, String> = emptyMap()
 ) {
     val raceProgress = ConcurrentHashMap<UUID, Int>()
     var isShoppingListMemorizePhase: Boolean = false

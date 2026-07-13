@@ -19,6 +19,7 @@ class AutoReplenishListener(private val plugin: LuminaCore, private val module: 
     fun onBlockPlace(event: BlockPlaceEvent) {
         if (!module.isEnabled) return
         val player = event.player
+        if (!core.luminaworld.settings.PlayerSettingsManager.isSettingEnabled(player, module.name)) return
         if (!module.checkPermission(player)) return
 
         val config = module.config ?: return
@@ -34,6 +35,7 @@ class AutoReplenishListener(private val plugin: LuminaCore, private val module: 
     fun onItemBreak(event: PlayerItemBreakEvent) {
         if (!module.isEnabled) return
         val player = event.player
+        if (!core.luminaworld.settings.PlayerSettingsManager.isSettingEnabled(player, module.name)) return
         if (!module.checkPermission(player)) return
 
         val config = module.config ?: return
@@ -52,6 +54,7 @@ class AutoReplenishListener(private val plugin: LuminaCore, private val module: 
         if (event.isCancelled) return
         if (!module.isEnabled) return
         val player = event.player
+        if (!core.luminaworld.settings.PlayerSettingsManager.isSettingEnabled(player, module.name)) return
         if (!module.checkPermission(player)) return
 
         val config = module.config ?: return
@@ -65,6 +68,7 @@ class AutoReplenishListener(private val plugin: LuminaCore, private val module: 
     fun onItemConsume(event: PlayerItemConsumeEvent) {
         if (!module.isEnabled) return
         val player = event.player
+        if (!core.luminaworld.settings.PlayerSettingsManager.isSettingEnabled(player, module.name)) return
         if (!module.checkPermission(player)) return
 
         val item = event.item
@@ -79,6 +83,7 @@ class AutoReplenishListener(private val plugin: LuminaCore, private val module: 
     fun onPlayerInteract(event: PlayerInteractEvent) {
         if (!module.isEnabled) return
         val player = event.player
+        if (!core.luminaworld.settings.PlayerSettingsManager.isSettingEnabled(player, module.name)) return
         if (!module.checkPermission(player)) return
 
         val item = event.item ?: return

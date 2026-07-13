@@ -12,14 +12,28 @@ class TimeWeatherViewerModule(plugin: LuminaCore) : LuminaModule(plugin, "TimeWe
     override fun onEnable() {
         listener = TimeWeatherViewerListener(plugin, this)
         plugin.server.pluginManager.registerEvents(listener!!, plugin)
+
+        val desc = config?.getString("settings.description", "ระบบแสดงเวลาและสภาพอากาศปัจจุบันของโลก") ?: "ระบบแสดงเวลาและสภาพอากาศปัจจุบันของโลก"
+        core.luminaworld.settings.PlayerSettingsManager.registerSetting(
+            core.luminaworld.settings.PlayerSettingOption(
+                moduleName = name,
+                key = name,
+                displayName = "ระบบดูเวลาและสภาพอากาศ (TimeWeatherViewer)",
+                material = org.bukkit.Material.CLOCK,
+                description = desc
+            )
+        )
     }
 
     override fun onDisable() {
         listener?.let { HandlerList.unregisterAll(it) }
         listener = null
+
+        core.luminaworld.settings.PlayerSettingsManager.unregisterSettingsOfModule(name)
     }
 
     fun showTimeAndWeather(player: Player) {
+        if (!core.luminaworld.settings.PlayerSettingsManager.isSettingEnabled(player, name)) return
         val world = player.world
         val ticks = world.time
         

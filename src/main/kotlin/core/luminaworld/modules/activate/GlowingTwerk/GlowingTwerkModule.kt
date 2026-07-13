@@ -15,6 +15,17 @@ class GlowingTwerkModule(plugin: LuminaCore) : LuminaModule(plugin, "GlowingTwer
         listener?.let {
             plugin.server.pluginManager.registerEvents(it, plugin)
         }
+
+        val desc = config?.getString("settings.description", "ระบบย่อตัวเพื่อเร่งการเจริญเติบโตของพืช") ?: "ระบบย่อตัวเพื่อเร่งการเจริญเติบโตของพืช"
+        core.luminaworld.settings.PlayerSettingsManager.registerSetting(
+            core.luminaworld.settings.PlayerSettingOption(
+                moduleName = name,
+                key = name,
+                displayName = "ระบบย่อปุ๋ยเร่งพืช (GlowingTwerk)",
+                material = org.bukkit.Material.BONE_MEAL,
+                description = desc
+            )
+        )
     }
 
     override fun onDisable() {
@@ -23,5 +34,7 @@ class GlowingTwerkModule(plugin: LuminaCore) : LuminaModule(plugin, "GlowingTwer
             listener = null
         }
         cooldowns.clear()
+
+        core.luminaworld.settings.PlayerSettingsManager.unregisterSettingsOfModule(name)
     }
 }

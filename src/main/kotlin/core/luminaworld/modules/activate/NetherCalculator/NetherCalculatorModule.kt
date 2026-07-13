@@ -12,14 +12,28 @@ class NetherCalculatorModule(plugin: LuminaCore) : LuminaModule(plugin, "NetherC
     override fun onEnable() {
         listener = NetherCalculatorListener(plugin, this)
         plugin.server.pluginManager.registerEvents(listener!!, plugin)
+
+        val desc = config?.getString("settings.description", "ระบบคำนวณและแปลงพิกัดระหว่างโลก Overworld และ Nether") ?: "ระบบคำนวณและแปลงพิกัดระหว่างโลก Overworld และ Nether"
+        core.luminaworld.settings.PlayerSettingsManager.registerSetting(
+            core.luminaworld.settings.PlayerSettingOption(
+                moduleName = name,
+                key = name,
+                displayName = "ระบบคำนวณพิกัดนรก (NetherCalculator)",
+                material = org.bukkit.Material.OBSIDIAN,
+                description = desc
+            )
+        )
     }
 
     override fun onDisable() {
         listener?.let { HandlerList.unregisterAll(it) }
         listener = null
+
+        core.luminaworld.settings.PlayerSettingsManager.unregisterSettingsOfModule(name)
     }
 
     fun calculateCoordinates(player: Player) {
+        if (!core.luminaworld.settings.PlayerSettingsManager.isSettingEnabled(player, name)) return
         val loc = player.location
         val world = player.world
         val env = world.environment

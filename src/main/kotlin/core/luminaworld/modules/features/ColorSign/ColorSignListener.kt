@@ -14,6 +14,7 @@ class ColorSignListener(private val plugin: LuminaCore, private val module: Colo
     fun onSignChange(event: SignChangeEvent) {
         val player = event.player
         if (!module.isEnabled) return
+        if (!core.luminaworld.settings.PlayerSettingsManager.isSettingEnabled(player, module.name)) return
         
         // ตรวจสอบ permission เฉพาะของระบบนี้
         if (!module.checkPermission(player)) return

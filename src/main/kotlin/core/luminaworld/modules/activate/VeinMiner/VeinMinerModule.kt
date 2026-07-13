@@ -26,12 +26,25 @@ class VeinMinerModule(plugin: LuminaCore) : LuminaModule(plugin, "VeinMiner") {
         refreshConfigCache()
         listener = VeinMinerListener(plugin, this)
         plugin.server.pluginManager.registerEvents(listener!!, plugin)
+
+        val desc = config?.getString("settings.description", "ระบบขุดแร่ทั้งยวงทีเดียวเมื่อย่อตัว") ?: "ระบบขุดแร่ทั้งยวงทีเดียวเมื่อย่อตัว"
+        core.luminaworld.settings.PlayerSettingsManager.registerSetting(
+            core.luminaworld.settings.PlayerSettingOption(
+                moduleName = name,
+                key = name,
+                displayName = "ระบบขุดแร่ (VeinMiner)",
+                material = org.bukkit.Material.DIAMOND_ORE,
+                description = desc
+            )
+        )
     }
 
     override fun onDisable() {
         listener?.let { HandlerList.unregisterAll(it) }
         listener = null
         activePlayers.clear()
+
+        core.luminaworld.settings.PlayerSettingsManager.unregisterSettingsOfModule(name)
     }
 
     private fun refreshConfigCache() {
@@ -42,6 +55,7 @@ class VeinMinerModule(plugin: LuminaCore) : LuminaModule(plugin, "VeinMiner") {
     }
 
     fun isModeEnabled(player: Player): Boolean {
+        if (!core.luminaworld.settings.PlayerSettingsManager.isSettingEnabled(player, name)) return false
         return activePlayers.contains(player.uniqueId)
     }
 

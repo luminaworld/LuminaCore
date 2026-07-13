@@ -11,14 +11,28 @@ class CoordDirectionViewerModule(plugin: LuminaCore) : LuminaModule(plugin, "Coo
     override fun onEnable() {
         listener = CoordDirectionViewerListener(plugin, this)
         plugin.server.pluginManager.registerEvents(listener!!, plugin)
+
+        val desc = config?.getString("settings.description", "ระบบแสดงพิกัดและทิศทางหันหน้าของผู้เล่น") ?: "ระบบแสดงพิกัดและทิศทางหันหน้าของผู้เล่น"
+        core.luminaworld.settings.PlayerSettingsManager.registerSetting(
+            core.luminaworld.settings.PlayerSettingOption(
+                moduleName = name,
+                key = name,
+                displayName = "ระบบแสดงพิกัดและทิศทาง (CoordDirectionViewer)",
+                material = org.bukkit.Material.COMPASS,
+                description = desc
+            )
+        )
     }
 
     override fun onDisable() {
         listener?.let { HandlerList.unregisterAll(it) }
         listener = null
+
+        core.luminaworld.settings.PlayerSettingsManager.unregisterSettingsOfModule(name)
     }
 
     fun showCoordinatesAndDirection(player: Player) {
+        if (!core.luminaworld.settings.PlayerSettingsManager.isSettingEnabled(player, name)) return
         val loc = player.location
         val x = loc.blockX
         val y = loc.blockY

@@ -646,6 +646,11 @@ class GameManager(private val module: ChatGamesModule) {
             
             broadcastMessage(formatted)
         }
+
+        val titleText = module.parseToComponent("§a§l- CHAT GAMES -")
+        val subText = module.parseToComponent("§fร่วมสนุกพิมพ์ตอบคำถามในแชท!")
+        broadcastTitle(titleText, subText)
+        broadcastActionBar(module.parseToComponent("§eเริ่มเกมทายคำตอบแล้ว! พิมพ์ตอบรับรางวัล"))
     }
 
     private fun announceShoppingListGuessPhase(timeToGuess: Int) {
@@ -657,6 +662,11 @@ class GameManager(private val module: ChatGamesModule) {
                 .replace("%timeToGuess%", timeToGuess.toString())
             broadcastMessage(formatted)
         }
+
+        val titleText = module.parseToComponent("§6§l Santa's List ")
+        val subText = module.parseToComponent("§fเขียนรายการของขวัญตามลำดับ!")
+        broadcastTitle(titleText, subText)
+        broadcastActionBar(module.parseToComponent("§eพิมพ์รายการคั่นด้วยจุลภาค (,) ในแชท!"))
     }
 
     private fun announceRaceStart(raceType: String, amount: Int, value: String, timeToComplete: Int) {
@@ -674,6 +684,11 @@ class GameManager(private val module: ChatGamesModule) {
                 .replace("%timeToComplete%", timeToComplete.toString())
             broadcastMessage(formatted)
         }
+
+        val titleText = module.parseToComponent("§a§l- RACES STARTED -")
+        val subText = module.parseToComponent("§fเริ่มการแข่งขุด/ล่า/ตกปลา!")
+        broadcastTitle(titleText, subText)
+        broadcastActionBar(module.parseToComponent("§eทำภารกิจที่ได้รับมอบหมายให้สำเร็จเป็นคนแรก!"))
     }
 
     private fun announceWinner(game: ActiveGame, player: Player, timeTaken: Double) {
@@ -694,6 +709,11 @@ class GameManager(private val module: ChatGamesModule) {
                 .replace("%value%", displayName)
             broadcastMessage(formatted)
         }
+
+        val titleText = module.parseToComponent("§a§lมีผู้ชนะแล้ว!")
+        val subText = module.parseToComponent("§e${player.name} §fตอบถูกต้อง!")
+        broadcastTitle(titleText, subText)
+        broadcastActionBar(module.parseToComponent("§e${player.name} §aตอบคำถามถูกต้อง!"))
     }
 
     private fun announceTimeout(game: ActiveGame) {
@@ -712,6 +732,11 @@ class GameManager(private val module: ChatGamesModule) {
                 .replace("%value%", displayName)
             broadcastMessage(formatted)
         }
+
+        val titleText = module.parseToComponent("§c§lหมดเวลา!")
+        val subText = module.parseToComponent("§7ไม่มีผู้ตอบถูกในรอบนี้")
+        broadcastTitle(titleText, subText)
+        broadcastActionBar(module.parseToComponent("§cหมดเวลากิจกรรมแชทในรอบนี้!"))
     }
 
     private fun broadcastMessage(msg: String) {
@@ -719,18 +744,37 @@ class GameManager(private val module: ChatGamesModule) {
         val component = module.parseToComponent(msg)
         
         if (msg.contains("<center>")) {
-            // ฟอร์แมตกึ่งกลาง (ถ้าต้องการ) - ปัจจุบัน MiniMessage parsed content
             val textOnly = msg.replace("<center>", "")
             val finalComp = module.parseToComponent(textOnly)
             for (player in Bukkit.getOnlinePlayers()) {
                 if (disabledWorlds.contains(player.world.name)) continue
+                if (!core.luminaworld.settings.PlayerSettingsManager.isSettingEnabled(player, "chatgames_message")) continue
                 player.sendMessage(finalComp)
             }
         } else {
             for (player in Bukkit.getOnlinePlayers()) {
                 if (disabledWorlds.contains(player.world.name)) continue
+                if (!core.luminaworld.settings.PlayerSettingsManager.isSettingEnabled(player, "chatgames_message")) continue
                 player.sendMessage(component)
             }
+        }
+    }
+
+    fun broadcastTitle(title: net.kyori.adventure.text.Component, subtitle: net.kyori.adventure.text.Component) {
+        val disabledWorlds = module.chatConfig.config.getStringList("disabled-worlds")
+        for (player in Bukkit.getOnlinePlayers()) {
+            if (disabledWorlds.contains(player.world.name)) continue
+            if (!core.luminaworld.settings.PlayerSettingsManager.isSettingEnabled(player, "chatgames_title")) continue
+            player.showTitle(net.kyori.adventure.title.Title.title(title, subtitle))
+        }
+    }
+
+    fun broadcastActionBar(msg: net.kyori.adventure.text.Component) {
+        val disabledWorlds = module.chatConfig.config.getStringList("disabled-worlds")
+        for (player in Bukkit.getOnlinePlayers()) {
+            if (disabledWorlds.contains(player.world.name)) continue
+            if (!core.luminaworld.settings.PlayerSettingsManager.isSettingEnabled(player, "chatgames_actionbar")) continue
+            player.sendActionBar(msg)
         }
     }
 

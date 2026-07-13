@@ -38,6 +38,7 @@ class GlowingTwerkListener(private val module: GlowingTwerkModule) : Listener {
         if (!module.isEnabled) return
 
         val player = event.player
+        if (!core.luminaworld.settings.PlayerSettingsManager.isSettingEnabled(player, module.name)) return
         val uuid = player.uniqueId
         val world = player.world
 

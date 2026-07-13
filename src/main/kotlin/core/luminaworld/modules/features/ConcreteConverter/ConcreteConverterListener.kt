@@ -36,7 +36,7 @@ class ConcreteConverterListener(private val plugin: LuminaCore, private val modu
             val throwerUuid = entity.thrower
             if (throwerUuid != null) {
                 val player = plugin.server.getPlayer(throwerUuid)
-                if (player != null && !module.checkPermission(player)) {
+                if (player != null && (!core.luminaworld.settings.PlayerSettingsManager.isSettingEnabled(player, module.name) || !module.checkPermission(player))) {
                     // หากไม่มี Permission ให้ข้ามและปล่อยไว้อย่างนั้น
                     return@runAtFixedRate
                 }

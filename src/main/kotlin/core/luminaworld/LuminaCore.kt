@@ -27,6 +27,9 @@ class LuminaCore : JavaPlugin() {
     var databaseService: core.luminaworld.database.DatabaseService? = null
         private set
 
+    var playerSettingsGUI: core.luminaworld.settings.PlayerSettingsGUI? = null
+        private set
+
     val activeActionBarTasks = ConcurrentHashMap<UUID, ScheduledTask>()
     val suspendedPlayers = ConcurrentHashMap.newKeySet<UUID>()
 
@@ -127,6 +130,16 @@ class LuminaCore : JavaPlugin() {
                 }
             }
 
+            // เริ่มระบบตั้งค่าผู้เล่น
+            core.luminaworld.settings.PlayerSettingsManager.initialize(this)
+            val gui = core.luminaworld.settings.PlayerSettingsGUI(this)
+            server.pluginManager.registerEvents(gui, this)
+            playerSettingsGUI = gui
+
+            val settingsExecutor = core.luminaworld.settings.PlayerSettingsCommand(this, gui)
+            getCommand("setting")?.setExecutor(settingsExecutor)
+            getCommand("settings")?.setExecutor(settingsExecutor)
+
             // ลงทะเบียน Listener ส่วนกลางในการดักฟังปุ่มลัดการกดย่อตัว
             server.pluginManager.registerEvents(core.luminaworld.listener.SneakTriggerListener(this), this)
             // ลงทะเบียน Listener ตรวจเช็คการแจ้งเตือนอัปเดตแก่ผู้เล่นที่เข้าเซิร์ฟเวอร์
@@ -158,6 +171,10 @@ class LuminaCore : JavaPlugin() {
         databaseService = null
 
         if (!isStandalone) {
+            getCommand("setting")?.setExecutor(null)
+            getCommand("settings")?.setExecutor(null)
+            playerSettingsGUI = null
+
             // ยกเลิกการลงทะเบียน Command Executor เพื่อป้องกัน memory leak ในกรณี reload ปลั๊กอิน
             val commands = arrayOf("luminacore", "luminaris", "luminaworld", "llw", "lc")
             for (cmd in commands) {

@@ -106,6 +106,9 @@ abstract class LuminaModule(val plugin: LuminaCore, val name: String) : Listener
      * รองรับสีแบบ Legacy (&a), Hex (&#ff0000) และ MiniMessage (<gradient:red:blue>)
      */
     fun sendNotification(player: org.bukkit.entity.Player, msg: String) {
+        // หากผู้เล่นปิดการทำงานของโมดูลนี้ใน settings ส่วนตัว ไม่ต้องส่งแจ้งเตือนใดๆ
+        if (!core.luminaworld.settings.PlayerSettingsManager.isSettingEnabled(player, name)) return
+
         val style = config?.getString("settings.message-style", "CHAT") ?: "CHAT"
         if (style.equals("NONE", ignoreCase = true)) return
         

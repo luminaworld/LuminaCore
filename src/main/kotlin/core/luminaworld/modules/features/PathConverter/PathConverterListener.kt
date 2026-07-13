@@ -20,6 +20,7 @@ class PathConverterListener(private val plugin: LuminaCore, private val module: 
     fun onPlayerInteract(event: PlayerInteractEvent) {
         if (!module.isEnabled) return
         val player = event.player
+        if (!core.luminaworld.settings.PlayerSettingsManager.isSettingEnabled(player, module.name)) return
         val action = event.action
 
         if (action != Action.RIGHT_CLICK_BLOCK) return

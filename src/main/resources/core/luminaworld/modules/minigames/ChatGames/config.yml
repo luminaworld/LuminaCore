@@ -1,7 +1,6 @@
 # ==========================================
 #          ChatGames - ตั้งค่าทั่วไป
 # ==========================================
-check-update: true
 
 # รหัสภาษาสำหรับการแปลชื่อบล็อกและมอนสเตอร์ใน Race (สถิติ)
 lang: en_us
@@ -18,28 +17,8 @@ discord:
   winner-field: '%winner% (%time%)'
   game-field: 'เกม: %game%'
 
-# ประเภทการจัดเก็บข้อมูล: SQLite หรือ MySQL
-Storage: SQLite
-
 # ชื่อตารางในฐานข้อมูลที่จะเก็บข้อมูลคะแนนและสถิติ
 table_name: chatgames
-
-SQLite:
-  Filename: chatgames-data
-
-MySQL:
-  host: localhost
-  port: '3306'
-  user: root
-  password: ww1c14Thn10z1o2mo608abqYI
-  database: minecraft
-  connection-parameters: ?autoReconnect=true&useSSL=false&useUnicode=true&characterEncoding=UTF-8
-  Pool-Settings:
-    max-pool-size: 10
-    min-idle: 10
-    max-lifetime: 180000
-    keep-alive-time: 60000
-    time-out: 20000
 
 # โลกที่ไม่อนุญาตให้เริ่มกิจกรรม Chat Games
 disabled-worlds:

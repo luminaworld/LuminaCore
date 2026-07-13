@@ -647,9 +647,9 @@ class GameManager(private val module: ChatGamesModule) {
             broadcastMessage(formatted)
         }
 
-        // อ่าน title/subtitle/actionbar จาก messages.yml (ค่าว่าง = ไม่แสดง)
-        broadcastTitleFromConfig("$gameType.gameStart_title_message", "$gameType.gameStart_subtitle_message")
-        broadcastActionBarFromConfig("$gameType.gameStart_actionbar_message")
+        // อ่าน title/subtitle/actionbar จาก config.yml (ค่าว่าง = ไม่แสดง)
+        broadcastTitleFromConfig(false, gameType, "gameStart")
+        broadcastActionBarFromConfig(false, gameType, "gameStart")
     }
 
     private fun announceShoppingListGuessPhase(timeToGuess: Int) {
@@ -662,8 +662,8 @@ class GameManager(private val module: ChatGamesModule) {
             broadcastMessage(formatted)
         }
 
-        broadcastTitleFromConfig("shoppinglist.guessPhase_title_message", "shoppinglist.guessPhase_subtitle_message")
-        broadcastActionBarFromConfig("shoppinglist.guessPhase_actionbar_message")
+        broadcastTitleFromConfig(false, "shoppinglist", "guessPhase")
+        broadcastActionBarFromConfig(false, "shoppinglist", "guessPhase")
     }
 
     private fun announceRaceStart(raceType: String, amount: Int, value: String, timeToComplete: Int) {
@@ -682,8 +682,8 @@ class GameManager(private val module: ChatGamesModule) {
             broadcastMessage(formatted)
         }
 
-        broadcastTitleFromConfig("$keyName.gameStart_title_message", "$keyName.gameStart_subtitle_message")
-        broadcastActionBarFromConfig("$keyName.gameStart_actionbar_message")
+        broadcastTitleFromConfig(true, keyName, "gameStart")
+        broadcastActionBarFromConfig(true, keyName, "gameStart")
     }
 
     private fun announceWinner(game: ActiveGame, player: Player, timeTaken: Double) {
@@ -705,15 +705,17 @@ class GameManager(private val module: ChatGamesModule) {
             broadcastMessage(formatted)
         }
 
-        // อ่าน title/subtitle/actionbar จาก messages.yml แทน hardcode
-        // รองรับ placeholder %winner_1%, %winner%
+        // อ่าน title/subtitle/actionbar จาก config/chatRaces แทน hardcode
         broadcastTitleFromConfig(
-            "${game.type}.winner_title_message",
-            "${game.type}.winner_subtitle_message",
+            game.isRace,
+            game.type,
+            "winner",
             mapOf("%winner_1%" to player.name, "%winner%" to player.name, "%time_1%" to timeStr, "%time%" to timeStr)
         )
         broadcastActionBarFromConfig(
-            "${game.type}.winner_actionbar_message",
+            game.isRace,
+            game.type,
+            "winner",
             mapOf("%winner_1%" to player.name, "%winner%" to player.name, "%time_1%" to timeStr, "%time%" to timeStr)
         )
     }
@@ -736,12 +738,15 @@ class GameManager(private val module: ChatGamesModule) {
         }
 
         broadcastTitleFromConfig(
-            "${game.type}.timeout_title_message",
-            "${game.type}.timeout_subtitle_message",
+            game.isRace,
+            game.type,
+            "timeout",
             mapOf("%timeToGuess%" to timeToGuess, "%timeToComplete%" to timeToGuess, "%correct_answer%" to game.answer)
         )
         broadcastActionBarFromConfig(
-            "${game.type}.timeout_actionbar_message",
+            game.isRace,
+            game.type,
+            "timeout",
             mapOf("%timeToGuess%" to timeToGuess, "%timeToComplete%" to timeToGuess)
         )
     }
@@ -786,16 +791,18 @@ class GameManager(private val module: ChatGamesModule) {
     }
 
     /**
-     * อ่าน title+subtitle จาก messages.yml แล้วแสดงให้ผู้เล่น
+     * อ่าน title+subtitle จาก config.yml หรือ chatRaces.yml แล้วแสดงให้ผู้เล่น
      * ถ้าค่าว่างเปล่าหรือเป็น '' จะไม่แสดงเลย
      */
     private fun broadcastTitleFromConfig(
-        titleKey: String,
-        subtitleKey: String,
+        isRace: Boolean,
+        gameOrRaceType: String,
+        subKey: String,
         placeholders: Map<String, String> = emptyMap()
     ) {
-        val rawTitle = module.chatConfig.messages.getString(titleKey, "") ?: ""
-        val rawSub = module.chatConfig.messages.getString(subtitleKey, "") ?: ""
+        val cfg = if (isRace) module.chatConfig.chatRaces else module.chatConfig.config
+        val rawTitle = cfg.getString("$gameOrRaceType.$subKey.title", "") ?: ""
+        val rawSub = cfg.getString("$gameOrRaceType.$subKey.subtitle", "") ?: ""
         if (rawTitle.isBlank() && rawSub.isBlank()) return
 
         var titleStr = rawTitle
@@ -811,14 +818,17 @@ class GameManager(private val module: ChatGamesModule) {
     }
 
     /**
-     * อ่าน actionbar message จาก messages.yml แล้วแสดงให้ผู้เล่น
+     * อ่าน actionbar message จาก config.yml หรือ chatRaces.yml แล้วแสดงให้ผู้เล่น
      * ถ้าค่าว่างเปล่าหรือเป็น '' จะไม่แสดงเลย
      */
     private fun broadcastActionBarFromConfig(
-        key: String,
+        isRace: Boolean,
+        gameOrRaceType: String,
+        subKey: String,
         placeholders: Map<String, String> = emptyMap()
     ) {
-        val raw = module.chatConfig.messages.getString(key, "") ?: ""
+        val cfg = if (isRace) module.chatConfig.chatRaces else module.chatConfig.config
+        val raw = cfg.getString("$gameOrRaceType.$subKey.actionbar", "") ?: ""
         if (raw.isBlank()) return
         var msg = raw
         placeholders.forEach { (k, v) -> msg = msg.replace(k, v) }

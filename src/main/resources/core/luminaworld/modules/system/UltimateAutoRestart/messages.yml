@@ -27,6 +27,20 @@ messages:
   # หมายเหตุ: ใช้ {PREFIX} &f» ในข้อความใดๆ เพื่อดึงคำนำหน้าด้านล่างมาแสดงผล!
   prefix: "<GRADIENT:9483FF>&lUltimateAutoRestart</GRADIENT:FB9AF2>&r"
 
+  COMMAND_HELP:
+    chatMessage:
+      enabled: true
+      centered: false
+      content:
+        - "&6&l=== UltimateAutoRestart Admin Menu ==="
+        - "&e/uar status &7- ดูรายละเอียดสถานะและเวลารีสตาร์ท"
+        - "&e/uar force [วินาที] [เหตุผล] &7- บังคับนับถอยหลังรีสตาร์ท (ขั้นต่ำ 5 วิ)"
+        - "&e/uar now [วินาที] [เหตุผล] &7- บังคับรีสตาร์ท (นับถอยหลังขั้นต่ำ 5 วิ)"
+        - "&e/uar delay [วินาที] &7- เลื่อนเวลาการรีสตาร์ทออกไป"
+        - "&e/uar stop &7- ยกเลิกการรีสตาร์ทที่ตั้งตารางเวลาไว้"
+        - "&e/uar reload &7- รีโหลดค่าตั้งค่าทั้งหมด"
+        - "&e/uar debug webhook &7- ทดสอบส่ง Webhook ไปยัง Discord"
+
   EVENT_INTERVAL_GLOBAL:
     # ตัวแปร: {0} = ช่วงเวลา, {1} = เหตุผล (หากกำหนดโดยการสั่ง force มิฉะนั้นจะแสดง N/A)
     # ขอบเขต: Global

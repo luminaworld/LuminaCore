@@ -10,8 +10,6 @@ creative-enabled: true
 hunt:
   enable: true
   timeToComplete_seconds: 90
-  titleMessage: ''
-  subtitleMessage: ''
   
   # นับสัตว์/มอนสเตอร์ที่เกิดจากกรงสปอว์น (Spawner) หรือไข่สปอว์น (Spawn Egg)
   count-spawner-mobs: true
@@ -54,13 +52,23 @@ hunt:
       '3':
         rewards:
         - reward_1
+  gameStart:
+    title: '&a&l- RACES STARTED -'
+    subtitle: '&fเริ่มการแข่งขุด/ล่า/ตกปลา!'
+    actionbar: '&eทำภารกิจที่ได้รับมอบหมายให้สำเร็จเป็นคนแรก!'
+  winner:
+    title: '&a&lมีผู้ชนะแล้ว!'
+    subtitle: '&e%winner% &fทำภารกิจสำเร็จ!'
+    actionbar: '&e%winner% &aชนะการแข่งขัน!'
+  timeout:
+    title: '&c&lหมดเวลา!'
+    subtitle: '&7ไม่มีผู้สำเร็จภารกิจในรอบนี้'
+    actionbar: '&cหมดเวลากิจกรรมการแข่งขันในรอบนี้!'
 
 # 2. mine: ขุดบล็อกที่กำหนดให้ครบตามจำนวน
 mine:
   enable: true
   timeToComplete_seconds: 60
-  titleMessage: ''
-  subtitleMessage: ''
   
   # รายชื่อบล็อกและเงื่อนไข (รูปแบบ: ID_บล็อก: จำนวนที่ต้องขุด)
   data:
@@ -92,13 +100,23 @@ mine:
       '16':
         rewards:
         - reward_1
+  gameStart:
+    title: '&a&l- RACES STARTED -'
+    subtitle: '&fเริ่มการแข่งขุด/ล่า/ตกปลา!'
+    actionbar: '&eทำภารกิจที่ได้รับมอบหมายให้สำเร็จเป็นคนแรก!'
+  winner:
+    title: '&a&lมีผู้ชนะแล้ว!'
+    subtitle: '&e%winner% &fทำภารกิจสำเร็จ!'
+    actionbar: '&e%winner% &aชนะการแข่งขัน!'
+  timeout:
+    title: '&c&lหมดเวลา!'
+    subtitle: '&7ไม่มีผู้สำเร็จภารกิจในรอบนี้'
+    actionbar: '&cหมดเวลากิจกรรมการแข่งขันในรอบนี้!'
 
 # 3. place: วางบล็อกที่กำหนดให้ครบตามจำนวน
 place:
   enable: true
   timeToComplete_seconds: 60
-  titleMessage: ''
-  subtitleMessage: ''
   
   # รายชื่อบล็อกและเงื่อนไข (รูปแบบ: ID_บล็อก: จำนวนที่ต้องวาง)
   data:
@@ -122,20 +140,40 @@ place:
       '16':
         rewards:
         - reward_1
+  gameStart:
+    title: '&a&l- RACES STARTED -'
+    subtitle: '&fเริ่มการแข่งขุด/ล่า/ตกปลา!'
+    actionbar: '&eทำภารกิจที่ได้รับมอบหมายให้สำเร็จเป็นคนแรก!'
+  winner:
+    title: '&a&lมีผู้ชนะแล้ว!'
+    subtitle: '&e%winner% &fทำภารกิจสำเร็จ!'
+    actionbar: '&e%winner% &aชนะการแข่งขัน!'
+  timeout:
+    title: '&c&lหมดเวลา!'
+    subtitle: '&7ไม่มีผู้สำเร็จภารกิจในรอบนี้'
+    actionbar: '&cหมดเวลากิจกรรมการแข่งขันในรอบนี้!'
 
 # 4. fish: ตกปลาให้สำเร็จตามจำนวน (ไม่มี data กำหนด คือตกปลาชนิดใดก็ได้ครบ 1 ตัว)
 fish:
   enable: true
   timeToComplete_seconds: 120
-  titleMessage: ''
-  subtitleMessage: ''
+  gameStart:
+    title: '&a&l- RACES STARTED -'
+    subtitle: '&fเริ่มการแข่งขุด/ล่า/ตกปลา!'
+    actionbar: '&eทำภารกิจที่ได้รับมอบหมายให้สำเร็จเป็นคนแรก!'
+  winner:
+    title: '&a&lมีผู้ชนะแล้ว!'
+    subtitle: '&e%winner% &fทำภารกิจสำเร็จ!'
+    actionbar: '&e%winner% &aชนะการแข่งขัน!'
+  timeout:
+    title: '&c&lหมดเวลา!'
+    subtitle: '&7ไม่มีผู้สำเร็จภารกิจในรอบนี้'
+    actionbar: '&cหมดเวลากิจกรรมการแข่งขันในรอบนี้!'
 
 # 5. eat: กินอาหารที่กำหนดให้ครบตามจำนวน
 eat:
   enable: true
   timeToComplete_seconds: 60
-  titleMessage: ''
-  subtitleMessage: ''
   
   # รายชื่ออาหารและเงื่อนไข (รูปแบบ: ID_อาหาร: จำนวนที่ต้องกิน)
   data:
@@ -159,13 +197,23 @@ eat:
       '1':
         rewards:
         - reward_1
+  gameStart:
+    title: '&a&l- RACES STARTED -'
+    subtitle: '&fเริ่มการแข่งขุด/ล่า/ตกปลา!'
+    actionbar: '&eทำภารกิจที่ได้รับมอบหมายให้สำเร็จเป็นคนแรก!'
+  winner:
+    title: '&a&lมีผู้ชนะแล้ว!'
+    subtitle: '&e%winner% &fทำภารกิจสำเร็จ!'
+    actionbar: '&e%winner% &aชนะการแข่งขัน!'
+  timeout:
+    title: '&c&lหมดเวลา!'
+    subtitle: '&7ไม่มีผู้สำเร็จภารกิจในรอบนี้'
+    actionbar: '&cหมดเวลากิจกรรมการแข่งขันในรอบนี้!'
 
 # 6. craft: คราฟต์ไอเทมที่กำหนดให้ครบตามจำนวน
 craft:
   enable: true
   timeToComplete_seconds: 120
-  titleMessage: ''
-  subtitleMessage: ''
   
   # รายชื่อไอเทมและเงื่อนไข (รูปแบบ: ID_ไอเทม: จำนวนที่ต้องคราฟต์)
   data:
@@ -185,13 +233,23 @@ craft:
       '16':
         rewards:
         - reward_1
+  gameStart:
+    title: '&a&l- RACES STARTED -'
+    subtitle: '&fเริ่มการแข่งขุด/ล่า/ตกปลา!'
+    actionbar: '&eทำภารกิจที่ได้รับมอบหมายให้สำเร็จเป็นคนแรก!'
+  winner:
+    title: '&a&lมีผู้ชนะแล้ว!'
+    subtitle: '&e%winner% &fทำภารกิจสำเร็จ!'
+    actionbar: '&e%winner% &aชนะการแข่งขัน!'
+  timeout:
+    title: '&c&lหมดเวลา!'
+    subtitle: '&7ไม่มีผู้สำเร็จภารกิจในรอบนี้'
+    actionbar: '&cหมดเวลากิจกรรมการแข่งขันในรอบนี้!'
 
 # 7. furnace: เผาไอเทมจากเตาให้สำเร็จและดึงออกมาตามจำนวน
 furnace:
   enable: true
   timeToComplete_seconds: 150
-  titleMessage: ''
-  subtitleMessage: ''
   
   # รายชื่อผลผลิตจากการเผาและเงื่อนไข (รูปแบบ: ID_ผลผลิต: จำนวนที่ต้องดึง)
   data:
@@ -211,3 +269,15 @@ furnace:
       '3':
         rewards:
         - reward_1
+  gameStart:
+    title: '&a&l- RACES STARTED -'
+    subtitle: '&fเริ่มการแข่งขุด/ล่า/ตกปลา!'
+    actionbar: '&eทำภารกิจที่ได้รับมอบหมายให้สำเร็จเป็นคนแรก!'
+  winner:
+    title: '&a&lมีผู้ชนะแล้ว!'
+    subtitle: '&e%winner% &fทำภารกิจสำเร็จ!'
+    actionbar: '&e%winner% &aชนะการแข่งขัน!'
+  timeout:
+    title: '&c&lหมดเวลา!'
+    subtitle: '&7ไม่มีผู้สำเร็จภารกิจในรอบนี้'
+    actionbar: '&cหมดเวลากิจกรรมการแข่งขันในรอบนี้!'

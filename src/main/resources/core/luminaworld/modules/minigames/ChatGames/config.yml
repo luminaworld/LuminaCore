@@ -87,8 +87,18 @@ unscramble:
   winners: 1
   case-sensitive: true
   timeToGuess_seconds: 20
-  titleMessage: ''
-  subtitleMessage: ''
+  gameStart:
+    title: '&a&l- CHAT GAMES -'
+    subtitle: '&fร่วมสนุกพิมพ์ตอบคำถามในแชท!'
+    actionbar: '&eเริ่มเกมทายคำตอบแล้ว! พิมพ์ตอบรับรางวัล'
+  winner:
+    title: '&a&lมีผู้ชนะแล้ว!'
+    subtitle: '&e%winner% &fตอบถูกต้อง!'
+    actionbar: '&e%winner% &aตอบคำถามถูกต้อง!'
+  timeout:
+    title: '&c&lหมดเวลา!'
+    subtitle: '&7ไม่มีผู้ตอบถูกในรอบนี้'
+    actionbar: '&cหมดเวลากิจกรรมแชทในรอบนี้!'
 
 # 2. unreverse: กลับด้านคำศัพท์ที่ส่งมาให้ถูกต้อง
 unreverse:
@@ -96,8 +106,18 @@ unreverse:
   winners: 1
   case-sensitive: true
   timeToGuess_seconds: 20
-  titleMessage: ''
-  subtitleMessage: ''
+  gameStart:
+    title: '&a&l- CHAT GAMES -'
+    subtitle: '&fร่วมสนุกพิมพ์ตอบคำถามในแชท!'
+    actionbar: '&eเริ่มเกมทายคำตอบแล้ว! พิมพ์ตอบรับรางวัล'
+  winner:
+    title: '&a&lมีผู้ชนะแล้ว!'
+    subtitle: '&e%winner% &fตอบถูกต้อง!'
+    actionbar: '&e%winner% &aตอบคำถามถูกต้อง!'
+  timeout:
+    title: '&c&lหมดเวลา!'
+    subtitle: '&7ไม่มีผู้ตอบถูกในรอบนี้'
+    actionbar: '&cหมดเวลากิจกรรมแชทในรอบนี้!'
 
 # 3. reaction: พิมพ์ข้อความตามที่กำหนดให้เร็วที่สุด
 reaction:
@@ -105,8 +125,18 @@ reaction:
   winners: 1
   case-sensitive: true
   timeToGuess_seconds: 20
-  titleMessage: ''
-  subtitleMessage: ''
+  gameStart:
+    title: '&a&l- CHAT GAMES -'
+    subtitle: '&fร่วมสนุกพิมพ์ตอบคำถามในแชท!'
+    actionbar: '&eเริ่มเกมทายคำตอบแล้ว! พิมพ์ตอบรับรางวัล'
+  winner:
+    title: '&a&lมีผู้ชนะแล้ว!'
+    subtitle: '&e%winner% &fตอบถูกต้อง!'
+    actionbar: '&e%winner% &aตอบคำถามถูกต้อง!'
+  timeout:
+    title: '&c&lหมดเวลา!'
+    subtitle: '&7ไม่มีผู้ตอบถูกในรอบนี้'
+    actionbar: '&cหมดเวลากิจกรรมแชทในรอบนี้!'
 
 # 4. guess_the_number: ทายตัวเลขสุ่มในช่วงที่กำหนด
 guess_the_number:
@@ -116,8 +146,18 @@ guess_the_number:
   lower-limit: 1
   upper-limit: 20
   timeToGuess_seconds: 20
-  titleMessage: ''
-  subtitleMessage: ''
+  gameStart:
+    title: '&a&l- CHAT GAMES -'
+    subtitle: '&fร่วมสนุกพิมพ์ตอบคำถามในแชท!'
+    actionbar: '&eเริ่มเกมทายคำตอบแล้ว! พิมพ์ตอบรับรางวัล'
+  winner:
+    title: '&a&lมีผู้ชนะแล้ว!'
+    subtitle: '&e%winner% &fตอบถูกต้อง!'
+    actionbar: '&e%winner% &aตอบคำถามถูกต้อง!'
+  timeout:
+    title: '&c&lหมดเวลา!'
+    subtitle: '&7ไม่มีผู้ตอบถูกในรอบนี้'
+    actionbar: '&cหมดเวลากิจกรรมแชทในรอบนี้!'
 
 # 5. shoppinglist: จำรายการไอเทมในเวลาที่กำหนดและพิมพ์ตอบตามลำดับคั่นด้วยเครื่องหมายจุลภาค (,)
 shoppinglist:
@@ -127,16 +167,40 @@ shoppinglist:
   listLength: 3
   timeToMemorize: 7
   timeToGuess_seconds: 20
-  titleMessage: ''
-  subtitleMessage: ''
+  gameStart:
+    title: '&a&l- CHAT GAMES -'
+    subtitle: '&fร่วมสนุกพิมพ์ตอบคำถามในแชท!'
+    actionbar: '&eเริ่มเกมทายคำตอบแล้ว! พิมพ์ตอบรับรางวัล'
+  winner:
+    title: '&a&lมีผู้ชนะแล้ว!'
+    subtitle: '&e%winner% &fตอบถูกต้อง!'
+    actionbar: '&e%winner% &aตอบคำถามถูกต้อง!'
+  timeout:
+    title: '&c&lหมดเวลา!'
+    subtitle: '&7ไม่มีผู้ตอบถูกในรอบนี้'
+    actionbar: '&cหมดเวลากิจกรรมแชทในรอบนี้!'
+  guessPhase:
+    title: "&6&l Santa's List "
+    subtitle: '&fเขียนรายการของขวัญตามลำดับ!'
+    actionbar: '&eพิมพ์รายการคั่นด้วยจุลภาค (,) ในแชท!'
 
 # 6. clickable: คลิกที่ลิงก์แชทเพื่อรับชัยชนะ
 clickable:
   enable: false
   winners: 1
   timeToGuess_seconds: 20
-  titleMessage: ''
-  subtitleMessage: ''
+  gameStart:
+    title: '&a&l- CHAT GAMES -'
+    subtitle: '&fร่วมสนุกพิมพ์ตอบคำถามในแชท!'
+    actionbar: '&eเริ่มเกมทายคำตอบแล้ว! พิมพ์ตอบรับรางวัล'
+  winner:
+    title: '&a&lมีผู้ชนะแล้ว!'
+    subtitle: '&e%winner% &fตอบถูกต้อง!'
+    actionbar: '&e%winner% &aตอบคำถามถูกต้อง!'
+  timeout:
+    title: '&c&lหมดเวลา!'
+    subtitle: '&7ไม่มีผู้ตอบถูกในรอบนี้'
+    actionbar: '&cหมดเวลากิจกรรมแชทในรอบนี้!'
 
 # 7. fillout: เติมตัวอักษรในช่องว่างของคำศัพท์
 fillout:
@@ -145,8 +209,18 @@ fillout:
   difficulty: 30 # เปอร์เซ็นต์ตัวอักษรที่จะซ่อน (1-100)
   case-sensitive: true
   timeToGuess_seconds: 20
-  titleMessage: ''
-  subtitleMessage: ''
+  gameStart:
+    title: '&a&l- CHAT GAMES -'
+    subtitle: '&fร่วมสนุกพิมพ์ตอบคำถามในแชท!'
+    actionbar: '&eเริ่มเกมทายคำตอบแล้ว! พิมพ์ตอบรับรางวัล'
+  winner:
+    title: '&a&lมีผู้ชนะแล้ว!'
+    subtitle: '&e%winner% &fตอบถูกต้อง!'
+    actionbar: '&e%winner% &aตอบคำถามถูกต้อง!'
+  timeout:
+    title: '&c&lหมดเวลา!'
+    subtitle: '&7ไม่มีผู้ตอบถูกในรอบนี้'
+    actionbar: '&cหมดเวลากิจกรรมแชทในรอบนี้!'
 
 # 8. hoverable: เอาเมาส์ชี้เพื่อดูคำศัพท์และพิมพ์ตอบ
 hoverable:
@@ -154,8 +228,18 @@ hoverable:
   winners: 1
   case-sensitive: true
   timeToGuess_seconds: 20
-  titleMessage: ''
-  subtitleMessage: ''
+  gameStart:
+    title: '&a&l- CHAT GAMES -'
+    subtitle: '&fร่วมสนุกพิมพ์ตอบคำถามในแชท!'
+    actionbar: '&eเริ่มเกมทายคำตอบแล้ว! พิมพ์ตอบรับรางวัล'
+  winner:
+    title: '&a&lมีผู้ชนะแล้ว!'
+    subtitle: '&e%winner% &fตอบถูกต้อง!'
+    actionbar: '&e%winner% &aตอบคำถามถูกต้อง!'
+  timeout:
+    title: '&c&lหมดเวลา!'
+    subtitle: '&7ไม่มีผู้ตอบถูกในรอบนี้'
+    actionbar: '&cหมดเวลากิจกรรมแชทในรอบนี้!'
 
 # 9. random: สุ่มตัวอักษรตามยาวและประเภทที่กำหนด
 random:
@@ -166,8 +250,18 @@ random:
   lengthRange: 6-8 # ความยาวสุ่ม
   character_type: ALPHANUMERIC # ตัวเลือก: ALPHA, ALPHANUMERIC, NUMERIC, SYMBOLIC, LOWERCASE_ALPHA, UPPERCASE_ALPHA, HEXADECIMAL, CUSTOM
   custom_characters: abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789
-  titleMessage: ''
-  subtitleMessage: ''
+  gameStart:
+    title: '&a&l- CHAT GAMES -'
+    subtitle: '&fร่วมสนุกพิมพ์ตอบคำถามในแชท!'
+    actionbar: '&eเริ่มเกมทายคำตอบแล้ว! พิมพ์ตอบรับรางวัล'
+  winner:
+    title: '&a&lมีผู้ชนะแล้ว!'
+    subtitle: '&e%winner% &fตอบถูกต้อง!'
+    actionbar: '&e%winner% &aตอบคำถามถูกต้อง!'
+  timeout:
+    title: '&c&lหมดเวลา!'
+    subtitle: '&7ไม่มีผู้ตอบถูกในรอบนี้'
+    actionbar: '&cหมดเวลากิจกรรมแชทในรอบนี้!'
 
 # 10. math: คำนวณสมการเลขคณิตสุ่มตามระดับความยาก
 math:
@@ -181,8 +275,18 @@ math:
   - '-'
   - x
   - /
-  titleMessage: ''
-  subtitleMessage: ''
+  gameStart:
+    title: '&a&l- CHAT GAMES -'
+    subtitle: '&fร่วมสนุกพิมพ์ตอบคำถามในแชท!'
+    actionbar: '&eเริ่มเกมทายคำตอบแล้ว! พิมพ์ตอบรับรางวัล'
+  winner:
+    title: '&a&lมีผู้ชนะแล้ว!'
+    subtitle: '&e%winner% &fตอบถูกต้อง!'
+    actionbar: '&e%winner% &aตอบคำถามถูกต้อง!'
+  timeout:
+    title: '&c&lหมดเวลา!'
+    subtitle: '&7ไม่มีผู้ตอบถูกในรอบนี้'
+    actionbar: '&cหมดเวลากิจกรรมแชทในรอบนี้!'
 
 # 11. variable: หาค่าสมการสัญลักษณ์ (ตัวแปร)
 variable:
@@ -190,8 +294,6 @@ variable:
   winners: 1
   case-sensitive: false
   timeToGuess_seconds: 60
-  titleMessage: ''
-  subtitleMessage: ''
   result-min: 20
   result-max: 100
   toGet: ✗
@@ -200,6 +302,18 @@ variable:
   - ♛;15
   - ❅;20
   - ♫;25
+  gameStart:
+    title: '&a&l- CHAT GAMES -'
+    subtitle: '&fร่วมสนุกพิมพ์ตอบคำถามในแชท!'
+    actionbar: '&eเริ่มเกมทายคำตอบแล้ว! พิมพ์ตอบรับรางวัล'
+  winner:
+    title: '&a&lมีผู้ชนะแล้ว!'
+    subtitle: '&e%winner% &fตอบถูกต้อง!'
+    actionbar: '&e%winner% &aตอบคำถามถูกต้อง!'
+  timeout:
+    title: '&c&lหมดเวลา!'
+    subtitle: '&7ไม่มีผู้ตอบถูกในรอบนี้'
+    actionbar: '&cหมดเวลากิจกรรมแชทในรอบนี้!'
 
 # 12. trivia: สุ่มคำถามความรู้รอบตัว
 trivia:
@@ -207,5 +321,15 @@ trivia:
   winners: 1
   case-sensitive: false
   timeToGuess_seconds: 30
-  titleMessage: ''
-  subtitleMessage: ''
+  gameStart:
+    title: '&a&l- CHAT GAMES -'
+    subtitle: '&fร่วมสนุกพิมพ์ตอบคำถามในแชท!'
+    actionbar: '&eเริ่มเกมทายคำตอบแล้ว! พิมพ์ตอบรับรางวัล'
+  winner:
+    title: '&a&lมีผู้ชนะแล้ว!'
+    subtitle: '&e%winner% &fตอบถูกต้อง!'
+    actionbar: '&e%winner% &aตอบคำถามถูกต้อง!'
+  timeout:
+    title: '&c&lหมดเวลา!'
+    subtitle: '&7ไม่มีผู้ตอบถูกในรอบนี้'
+    actionbar: '&cหมดเวลากิจกรรมแชทในรอบนี้!'

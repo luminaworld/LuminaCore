@@ -83,3 +83,38 @@ schedule:
     "21": { min: 20, max: 35 }
     "22": { min: 15, max: 25 } # ช่วงค่ำ/ดึก ทยอยปิดเกมเพื่อพักผ่อน
     "23": { min: 8, max: 15 }
+
+messages:
+  prefix: '&6[FP-Scheduler]'
+  system_enabled_reload_success: '&aเปิดการทำงานระบบบอทสำเร็จหลังรีโหลด!'
+  system_disabled_reload: '&cระบบยังคงปิดใช้งานอยู่ (ตรวจสอบ settings.enabled ในไฟล์คอนฟิก)'
+  system_disabled: '&cระบบสเก็ตดูลเลอร์บอทถูกปิดใช้งานอยู่ในขณะนี้ (settings.enabled: false)'
+  system_enable_hint: '&7หากต้องการเปิดใช้งาน กรุณาแก้ไขไฟล์คอนฟิกแล้วพิมพ์ &e/fpscheduler reload'
+  reload_success: '&aรีโหลดฐานข้อมูลบอทและตารางใหม่สำเร็จ!'
+  reset_success: '&eสั่งเตะบอททั้งหมดเรียบร้อยแล้ว'
+  rush_usage: '&cวิธีใช้: /fpscheduler rush [on/off]'
+  rush_status: '&fโหมดช่วงเปิดเซิร์ฟใหม่ (Rush): %status%'
+  add_usage: '&cวิธีใช้: /fpscheduler add [ชื่อบอท] [ยศ]'
+  add_success: '&aเพิ่ม/อัปเดตบอท &e%name% &7(ยศ: %rank%) เรียบร้อย!'
+  remove_usage: '&cวิธีใช้: /fpscheduler remove [ชื่อบอท]'
+  bot_not_found: '&cไม่พบบอท &e%name% &cในระบบ'
+  remove_success: '&eลบบอท &f%name% &eออกจากระบบแล้ว'
+  status_title: '=== FakePlayer สถานะระบบ ==='
+  status_stats: '&eเป้าหมายชั่วโมงนี้: &a%base_target% ตัว &8| &eสุ่มจริง: &a%target% ตัว &8| &eออนไลน์: &a%current%/%target% ตัว'
+  status_info: '&eบอททั้งหมด: &b%total% ตัว &8| &eโหมด Rush: %rush%'
+  status_next_join: '&eคิวถัดไป: &aบอทเข้าในอีก %time% วินาที'
+  status_next_leave: '&eคิวถัดไป: &cบอทออกในอีก %time% วินาที'
+  status_list_title: '&eรายชื่อบอทที่ออนไลน์:'
+  status_list_title_page: '&eรายชื่อบอทที่ออนไลน์ (หน้า %page%/%total_pages%):'
+  status_list_empty: ' &8- &7ไม่มีบอทออนไลน์ในขณะนี้'
+  status_list_item: ' &7• &f%name% &a[%rank%] &8- &eเหลือเวลา %time%'
+  status_next_page: '&8» &7พิมพ์ &e/fpscheduler status %next_page% &7เพื่อดูหน้าถัดไป'
+  help_title: '=== FakePlayer สั่งการระบบ ==='
+  help_status: '&e/fpscheduler status &7- ดูสถานะการสุ่มบอทปัจจุบัน'
+  help_reload: '&e/fpscheduler reload &7- รีโหลดและเริ่มตารางสุ่มใหม่'
+  help_reset: '&e/fpscheduler reset &7- สั่งเตะบอททั้งหมดออก'
+  help_rush: '&e/fpscheduler rush [on/off] &7- เปิด/ปิดเร่งบอทช่วงเปิดเซิร์ฟ'
+  help_add: '&e/fpscheduler add [ชื่อ] [ยศ] &7- เพิ่มบอทลงระบบ'
+  help_remove: '&e/fpscheduler remove [ชื่อ] &7- ลบบอทออกจากระบบ'
+  no_permission: '&cYou do not have permission to execute this command.'
+

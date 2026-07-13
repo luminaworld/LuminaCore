@@ -61,7 +61,7 @@ database:
     port: 3306
     database: "minecraft"
     user: "root"
-    password: """"
+    password: ""
     # พารามิเตอร์การเชื่อมต่อสำหรับ MySQL
     connection-parameters: "?autoReconnect=true&useSSL=false&useUnicode=true&characterEncoding=UTF-8"
 

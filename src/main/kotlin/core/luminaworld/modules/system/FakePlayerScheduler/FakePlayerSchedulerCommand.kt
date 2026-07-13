@@ -15,20 +15,19 @@ class FakePlayerSchedulerCommand(private val module: FakePlayerSchedulerModule) 
             return true
         }
 
-        // ตรวจสอบสถานะการทำงานของโมดูลย่อย (กรณีปิดใช้งาน หรือ ขาดปลั๊กอิน FakePlayer)
-        if (!module.isEnabled) {
+        // ตรวจสอบสถานะการทำงานของโมดูลย่อย
+        if (!module.isSchedulerActive) {
             if (args.isNotEmpty() && (args[0].equals("reload", ignoreCase = true) || args[0].equals("sync", ignoreCase = true))) {
                 module.reload()
-                if (module.isEnabled) {
-                    sender.sendMessage("§6[FP-Scheduler] §aเปิดการทำงานโมดูลสเก็ตดูลเลอร์บอทสำเร็จหลังรีโหลด!")
+                if (module.isSchedulerActive) {
+                    sender.sendMessage("§6[FP-Scheduler] §aเปิดการทำงานระบบสเก็ตดูลเลอร์บอทสำเร็จหลังรีโหลด!")
                 } else {
-                    sender.sendMessage("§6[FP-Scheduler] §cโมดูลยังคงถูกระงับการทำงานเนื่องจากยังไม่พบปลั๊กอิน FakePlayer ในเซิร์ฟเวอร์!")
+                    sender.sendMessage("§6[FP-Scheduler] §cระบบยังคงปิดใช้งานอยู่ (ตรวจสอบ settings.enabled ในไฟล์คอนฟิก)!")
                 }
                 return true
             }
-            sender.sendMessage("§6[FP-Scheduler] §cโมดูลนี้ถูกระงับการทำงานชั่วคราวเนื่องจากไม่พบหรือไม่ได้เปิดใช้งานปลั๊กอิน FakePlayer!")
-            sender.sendMessage("§7(สามารถดาวน์โหลดได้ที่: https://github.com/Pepe-tf/Fake-Player-plugin-2.0)")
-            sender.sendMessage("§7หากติดตั้งแล้ว กรุณาพิมพ์ §e/luminacore reload §7เพื่อเริ่มการตรวจจับและเปิดใช้งานใหม่")
+            sender.sendMessage("§6[FP-Scheduler] §cระบบสเก็ตดูลเลอร์บอทถูกปิดใช้งานอยู่ในขณะนี้ (settings.enabled: false)")
+            sender.sendMessage("§7หากต้องการเปิดใช้งาน กรุณาแก้ไขไฟล์คอนฟิกแล้วพิมพ์ §e/fpscheduler reload")
             return true
         }
 

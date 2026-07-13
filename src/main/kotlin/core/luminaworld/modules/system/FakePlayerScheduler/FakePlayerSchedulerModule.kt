@@ -33,6 +33,8 @@ class FakePlayerSchedulerModule(plugin: LuminaCore) : LuminaModule(plugin, "Fake
     
     private var schedulerTask: ScheduledTask? = null
     var restartRushEnabled = true
+    var isSchedulerActive = false
+        private set
 
     // ตัวแปรช่วงเวลาล็อกอินและล็อกเอาท์ (วินาที)
     var lastJoinTimeMs = 0L
@@ -63,6 +65,10 @@ class FakePlayerSchedulerModule(plugin: LuminaCore) : LuminaModule(plugin, "Fake
     override fun loadConfig() {
         super.loadConfig()
         config?.let {
+            isSchedulerActive = it.getBoolean("settings.enabled", true)
+            // บังคับให้ระบบมองว่าโมดูลถูก Enable เสมอเพื่อนำคำสั่งเข้าสู่เซิร์ฟเวอร์
+            isEnabled = true
+
             namesFilePath = it.getString("settings.names-filepath", "plugins/LuminaCore/system/name-list.yml") ?: "plugins/LuminaCore/system/name-list.yml"
             activeBotsStatePath = it.getString("settings.active-bots-filepath", "plugins/LuminaCore/system/active-bots.yml") ?: "plugins/LuminaCore/system/active-bots.yml"
             
@@ -457,29 +463,12 @@ class FakePlayerSchedulerModule(plugin: LuminaCore) : LuminaModule(plugin, "Fake
         val logoutTime = Date(nowMs + durationSeconds * 1000L)
         botLogoutTimes[name] = formatTime(logoutTime, false)
 
-        val hasPlugin = plugin.server.pluginManager.isPluginEnabled("FakePlayer")
-        if (hasPlugin) {
-            plugin.server.globalRegionScheduler.execute(plugin) {
-                val loc = getSpawnLocation()
-                if (loc != null) {
-                    invokeSpawnBotReflect(name, loc, botRanks[name])
-                } else {
-                    plugin.logger.warning("§c[FakePlayerScheduler] ไม่สามารถระบุตำแหน่งสปอว์นสำหรับบอท $name ได้!")
-                }
-            }
-        } else {
-            plugin.server.globalRegionScheduler.execute(plugin) {
-                val consoleSender = plugin.server.consoleSender
-                val spawnCmd = spawnCommandTemplate.replace("{name}", name)
-                plugin.server.dispatchCommand(consoleSender, spawnCmd)
-
-                val rank = botRanks[name]
-                if (!rank.isNullOrEmpty()) {
-                    plugin.server.globalRegionScheduler.runDelayed(plugin, { _ ->
-                        val rankCmd = rankCommandTemplate.replace("{name}", name).replace("{rank}", rank)
-                        plugin.server.dispatchCommand(consoleSender, rankCmd)
-                    }, 20L)
-                }
+        plugin.server.globalRegionScheduler.execute(plugin) {
+            val loc = getSpawnLocation()
+            if (loc != null) {
+                invokeSpawnBotReflect(name, loc, botRanks[name])
+            } else {
+                plugin.logger.warning("§c[FakePlayerScheduler] ไม่สามารถระบุตำแหน่งสปอว์นสำหรับบอท $name ได้!")
             }
         }
     }
@@ -490,16 +479,8 @@ class FakePlayerSchedulerModule(plugin: LuminaCore) : LuminaModule(plugin, "Fake
         botJoinTimes.remove(name)
         botLogoutTimes.remove(name)
 
-        val hasPlugin = plugin.server.pluginManager.isPluginEnabled("FakePlayer")
-        if (hasPlugin) {
-            plugin.server.globalRegionScheduler.execute(plugin) {
-                invokeDespawnBotReflect(name)
-            }
-        } else {
-            plugin.server.globalRegionScheduler.execute(plugin) {
-                val despawnCmd = despawnCommandTemplate.replace("{name}", name)
-                plugin.server.dispatchCommand(plugin.server.consoleSender, despawnCmd)
-            }
+        plugin.server.globalRegionScheduler.execute(plugin) {
+            invokeDespawnBotReflect(name)
         }
     }
 
@@ -547,16 +528,9 @@ class FakePlayerSchedulerModule(plugin: LuminaCore) : LuminaModule(plugin, "Fake
      * ลบ/เตะบอททั้งหมดของโมดูลออกจากเซิร์ฟเวอร์
      */
     fun resetAllBots() {
-        val hasPlugin = plugin.server.pluginManager.isPluginEnabled("FakePlayer")
         plugin.server.globalRegionScheduler.execute(plugin) {
-            val consoleSender = plugin.server.consoleSender
             for (name in activeBots) {
-                if (hasPlugin) {
-                    invokeDespawnBotReflect(name)
-                } else {
-                    val despawnCmd = despawnCommandTemplate.replace("{name}", name)
-                    plugin.server.dispatchCommand(consoleSender, despawnCmd)
-                }
+                invokeDespawnBotReflect(name)
             }
             activeBots.clear()
             botSessions.clear()
@@ -570,7 +544,7 @@ class FakePlayerSchedulerModule(plugin: LuminaCore) : LuminaModule(plugin, "Fake
      * วงรอบ Reconciliation เพื่อตรวจสอบและปรับสมดุลบอทให้ตรงตามความสมจริง
      */
     private fun runReconciliation() {
-        if (!isEnabled) return
+        if (!isSchedulerActive) return
 
         updateDailySchedule()
 

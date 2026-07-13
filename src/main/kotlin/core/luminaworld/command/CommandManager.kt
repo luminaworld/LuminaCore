@@ -49,12 +49,13 @@ class CommandManager(private val plugin: LuminaCore) {
         commandMap.register(fallbackPrefix, dynamicCommand)
         registeredCommands[name.lowercase()] = dynamicCommand
         plugin.logger.info("§6[CommandManager] §aRegistered dynamic command: /$name" + (if (aliases.isNotEmpty()) " (aliases: ${aliases.joinToString(", ")})" else ""))
+        syncServerCommands()
     }
 
     /**
      * ยกเลิกการลงทะเบียนคำสั่งแบบ Dynamic จาก Bukkit CommandMap
      */
-    fun unregisterCommand(name: String) {
+    fun unregisterCommand(name: String, sync: Boolean = true) {
         val key = name.lowercase()
         val command = registeredCommands.remove(key) ?: return
         val fallbackPrefix = plugin.description.name.lowercase()
@@ -72,6 +73,9 @@ class CommandManager(private val plugin: LuminaCore) {
                 map.remove("$fallbackPrefix:$aliasKey")
             }
             plugin.logger.info("§6[CommandManager] §cUnregistered dynamic command: /$name")
+            if (sync) {
+                syncServerCommands()
+            }
         } else {
             plugin.logger.warning("[CommandManager] Cannot unregister command /$name because knownCommands map is unavailable.")
         }
@@ -83,8 +87,24 @@ class CommandManager(private val plugin: LuminaCore) {
     fun unregisterAll() {
         val keys = registeredCommands.keys.toList()
         for (key in keys) {
-            unregisterCommand(key)
+            unregisterCommand(key, sync = false)
         }
         registeredCommands.clear()
+        syncServerCommands()
+    }
+
+    /**
+     * ซิงก์ระบบคำสั่งไปยังผู้เล่นและ Vanilla command dispatcher
+     */
+    private fun syncServerCommands() {
+        try {
+            val server = Bukkit.getServer()
+            val syncCommandsMethod = server.javaClass.getMethod("syncCommands")
+            syncCommandsMethod.invoke(server)
+        } catch (e: NoSuchMethodException) {
+            // ข้ามสำหรับเวอร์ชันเก่าที่ไม่มี API นี้
+        } catch (e: Exception) {
+            plugin.logger.severe("[CommandManager] Failed to sync commands via reflection: ${e.message}")
+        }
     }
 }

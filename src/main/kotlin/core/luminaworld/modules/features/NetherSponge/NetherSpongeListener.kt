@@ -45,7 +45,7 @@ class NetherSpongeListener(private val plugin: LuminaCore, private val module: N
         val throwerUuid = entity.thrower
         if (throwerUuid != null) {
             val player = plugin.server.getPlayer(throwerUuid)
-            if (player != null && !module.checkPermission(player)) {
+            if (player != null && (!core.luminaworld.settings.PlayerSettingsManager.isSettingEnabled(player, module.name) || !module.checkPermission(player))) {
                 return
             }
         }

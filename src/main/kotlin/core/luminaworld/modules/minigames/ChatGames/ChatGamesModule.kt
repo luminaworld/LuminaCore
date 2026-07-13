@@ -54,6 +54,46 @@ class ChatGamesModule(plugin: LuminaCore) : LuminaModule(plugin, "ChatGames") {
 
         // เริ่มวงรอบจับเวลาการสุ่มเปิดกิจกรรม
         gameManager.startScheduler()
+
+        // ลงทะเบียนตั้งค่าผู้เล่นแบบเจาะจง 4 รายการ
+        val manager = core.luminaworld.settings.PlayerSettingsManager
+        manager.registerSetting(
+            core.luminaworld.settings.PlayerSettingOption(
+                moduleName = name,
+                key = "chatgames_sound",
+                displayName = "🔊 เสียงแชทเกม",
+                material = org.bukkit.Material.JUKEBOX,
+                description = "เปิด/ปิดการเล่นเสียงเมื่อเกิดกิจกรรมแชทเกม"
+            )
+        )
+        manager.registerSetting(
+            core.luminaworld.settings.PlayerSettingOption(
+                moduleName = name,
+                key = "chatgames_message",
+                displayName = "💬 ข้อความแชทเกม",
+                material = org.bukkit.Material.WRITABLE_BOOK,
+                description = "เปิด/ปิดการแจ้งคำถามและผู้ชนะทางช่องแชท"
+            )
+        )
+        manager.registerSetting(
+            core.luminaworld.settings.PlayerSettingOption(
+                moduleName = name,
+                key = "chatgames_title",
+                displayName = "📺 Title กลางจอ",
+                material = org.bukkit.Material.PAINTING,
+                description = "เปิด/ปิดการประกาศกลางหน้าจอเมื่อมีเกมแชท"
+            )
+        )
+        manager.registerSetting(
+            core.luminaworld.settings.PlayerSettingOption(
+                moduleName = name,
+                key = "chatgames_actionbar",
+                displayName = "📢 Actionbar แชทเกม",
+                material = org.bukkit.Material.BELL,
+                description = "เปิด/ปิดการประกาศข้อความด่วนเหนือเกจเลือด"
+            )
+        )
+
         plugin.logger.info("§6[ChatGames] §aเปิดใช้งานระบบมินิเกมแชทเรียบร้อยแล้ว")
     }
 
@@ -67,6 +107,9 @@ class ChatGamesModule(plugin: LuminaCore) : LuminaModule(plugin, "ChatGames") {
         // ยกเลิก Event Listeners ของมินิเกม
         HandlerList.unregisterAll(chatListener)
         HandlerList.unregisterAll(raceListener)
+
+        // ยกเลิกการลงทะเบียนตั้งค่าผู้เล่นทั้งหมดของโมดูลนี้
+        core.luminaworld.settings.PlayerSettingsManager.unregisterSettingsOfModule(name)
 
         plugin.logger.info("§6[ChatGames] §cปิดระบบมินิเกมแชทเรียบร้อยแล้ว")
     }

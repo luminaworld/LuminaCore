@@ -16,6 +16,7 @@ class AnimalOwnerListener(private val plugin: LuminaCore, private val module: An
     fun onPlayerInteractEntity(event: PlayerInteractEntityEvent) {
         if (!module.isEnabled) return
         val player = event.player
+        if (!core.luminaworld.settings.PlayerSettingsManager.isSettingEnabled(player, module.name)) return
 
         // ทำงานเฉพาะคลิกมือหลัก (ป้องกันการยิงเรียกเหตุการณ์เบิ้ลซ้ำในมือหลักและมือรอง)
         if (event.hand != EquipmentSlot.HAND) return

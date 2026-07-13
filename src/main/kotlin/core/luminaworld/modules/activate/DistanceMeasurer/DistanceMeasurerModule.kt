@@ -18,6 +18,17 @@ class DistanceMeasurerModule(plugin: LuminaCore) : LuminaModule(plugin, "Distanc
     override fun onEnable() {
         listener = DistanceMeasurerListener(plugin, this)
         plugin.server.pluginManager.registerEvents(listener!!, plugin)
+
+        val desc = config?.getString("settings.description", "ระบบวัดระยะทางระหว่าง 2 บล็อกในเกม") ?: "ระบบวัดระยะทางระหว่าง 2 บล็อกในเกม"
+        core.luminaworld.settings.PlayerSettingsManager.registerSetting(
+            core.luminaworld.settings.PlayerSettingOption(
+                moduleName = name,
+                key = name,
+                displayName = "ระบบวัดระยะทาง (DistanceMeasurer)",
+                material = org.bukkit.Material.SHEARS,
+                description = desc
+            )
+        )
     }
 
     override fun onDisable() {
@@ -25,10 +36,13 @@ class DistanceMeasurerModule(plugin: LuminaCore) : LuminaModule(plugin, "Distanc
         listener = null
         activePlayers.clear()
         playerPoints.clear()
+
+        core.luminaworld.settings.PlayerSettingsManager.unregisterSettingsOfModule(name)
     }
 
 
     fun isMeasureModeEnabled(player: Player): Boolean {
+        if (!core.luminaworld.settings.PlayerSettingsManager.isSettingEnabled(player, name)) return false
         return activePlayers.contains(player.uniqueId)
     }
 

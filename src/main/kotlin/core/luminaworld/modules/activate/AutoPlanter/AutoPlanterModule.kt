@@ -13,14 +13,28 @@ class AutoPlanterModule(plugin: LuminaCore) : LuminaModule(plugin, "AutoPlanter"
     override fun onEnable() {
         listener = AutoPlanterListener(plugin, this)
         plugin.server.pluginManager.registerEvents(listener!!, plugin)
+
+        val desc = config?.getString("settings.description", "ระบบช่วยปลูกพืชรอบตัวอัตโนมัติ") ?: "ระบบช่วยปลูกพืชรอบตัวอัตโนมัติ"
+        core.luminaworld.settings.PlayerSettingsManager.registerSetting(
+            core.luminaworld.settings.PlayerSettingOption(
+                moduleName = name,
+                key = name,
+                displayName = "ระบบปลูกพืชอัตโนมัติ (AutoPlanter)",
+                material = org.bukkit.Material.WHEAT_SEEDS,
+                description = desc
+            )
+        )
     }
 
     override fun onDisable() {
         listener?.let { HandlerList.unregisterAll(it) }
         listener = null
+
+        core.luminaworld.settings.PlayerSettingsManager.unregisterSettingsOfModule(name)
     }
 
     fun runPlanting(player: Player) {
+        if (!core.luminaworld.settings.PlayerSettingsManager.isSettingEnabled(player, name)) return
         val requireSneak = config?.getBoolean("settings.require-sneak", false) ?: false
         if (requireSneak && !player.isSneaking) return
 

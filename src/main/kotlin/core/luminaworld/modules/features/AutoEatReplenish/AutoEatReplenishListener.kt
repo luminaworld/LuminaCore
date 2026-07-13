@@ -15,6 +15,7 @@ class AutoEatReplenishListener(private val plugin: LuminaCore, private val modul
     fun onItemConsume(event: PlayerItemConsumeEvent) {
         if (!module.isEnabled) return
         val player = event.player
+        if (!core.luminaworld.settings.PlayerSettingsManager.isSettingEnabled(player, module.name)) return
         if (!module.checkPermission(player)) return
 
         val item = event.item

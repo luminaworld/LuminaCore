@@ -28,12 +28,25 @@ class TreeCapitatorModule(plugin: LuminaCore) : LuminaModule(plugin, "TreeCapita
         refreshConfigCache()
         listener = TreeCapitatorListener(plugin, this)
         plugin.server.pluginManager.registerEvents(listener!!, plugin)
+
+        val desc = config?.getString("settings.description", "ระบบตัดไม้ทั้งต้นทีเดียวเมื่อย่อตัว") ?: "ระบบตัดไม้ทั้งต้นทีเดียวเมื่อย่อตัว"
+        core.luminaworld.settings.PlayerSettingsManager.registerSetting(
+            core.luminaworld.settings.PlayerSettingOption(
+                moduleName = name,
+                key = name,
+                displayName = "ระบบตัดไม้ (TreeCapitator)",
+                material = org.bukkit.Material.OAK_LOG,
+                description = desc
+            )
+        )
     }
 
     override fun onDisable() {
         listener?.let { HandlerList.unregisterAll(it) }
         listener = null
         activePlayers.clear()
+
+        core.luminaworld.settings.PlayerSettingsManager.unregisterSettingsOfModule(name)
     }
 
     /**
@@ -52,6 +65,7 @@ class TreeCapitatorModule(plugin: LuminaCore) : LuminaModule(plugin, "TreeCapita
     }
 
     fun isModeEnabled(player: Player): Boolean {
+        if (!core.luminaworld.settings.PlayerSettingsManager.isSettingEnabled(player, name)) return false
         return activePlayers.contains(player.uniqueId)
     }
 

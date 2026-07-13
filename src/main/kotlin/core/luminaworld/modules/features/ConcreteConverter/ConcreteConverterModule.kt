@@ -10,10 +10,23 @@ class ConcreteConverterModule(plugin: LuminaCore) : LuminaModule(plugin, "Concre
     override fun onEnable() {
         listener = ConcreteConverterListener(plugin, this)
         plugin.server.pluginManager.registerEvents(listener!!, plugin)
+
+        val desc = config?.getString("settings.description", "ระบบช่วยแปลงผงคอนกรีตเป็นบล็อกคอนกรีตอัตโนมัติเมื่อโยนลงน้ำ") ?: "ระบบช่วยแปลงผงคอนกรีตเป็นบล็อกคอนกรีตอัตโนมัติเมื่อโยนลงน้ำ"
+        core.luminaworld.settings.PlayerSettingsManager.registerSetting(
+            core.luminaworld.settings.PlayerSettingOption(
+                moduleName = name,
+                key = name,
+                displayName = "ระบบแปลงผงคอนกรีต (ConcreteConverter)",
+                material = org.bukkit.Material.RED_CONCRETE,
+                description = desc
+            )
+        )
     }
 
     override fun onDisable() {
         listener?.let { HandlerList.unregisterAll(it) }
         listener = null
+
+        core.luminaworld.settings.PlayerSettingsManager.unregisterSettingsOfModule(name)
     }
 }

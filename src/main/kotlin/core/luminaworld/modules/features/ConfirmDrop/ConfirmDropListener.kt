@@ -89,6 +89,7 @@ class ConfirmDropListener(private val plugin: LuminaCore, private val module: Co
     fun onPlayerDrop(event: PlayerDropItemEvent) {
         if (!module.isEnabled) return
         val player = event.player
+        if (!core.luminaworld.settings.PlayerSettingsManager.isSettingEnabled(player, module.name)) return
         if (!module.checkPermission(player)) return
 
         val itemDrop = event.itemDrop

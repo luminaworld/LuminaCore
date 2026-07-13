@@ -20,6 +20,17 @@ class AnimalAutoHealModule(plugin: LuminaCore) : LuminaModule(plugin, "AnimalAut
         plugin.server.pluginManager.registerEvents(newListener, plugin)
         this.listener = newListener
         startHealTask()
+
+        val desc = config?.getString("settings.description", "ระบบฟื้นฟูพลังชีวิตสัตว์เลี้ยงรอบตัวอัตโนมัติ") ?: "ระบบฟื้นฟูพลังชีวิตสัตว์เลี้ยงรอบตัวอัตโนมัติ"
+        core.luminaworld.settings.PlayerSettingsManager.registerSetting(
+            core.luminaworld.settings.PlayerSettingOption(
+                moduleName = name,
+                key = name,
+                displayName = "ระบบฮีลสัตว์เลี้ยง (AnimalAutoHeal)",
+                material = org.bukkit.Material.RED_DYE,
+                description = desc
+            )
+        )
     }
 
     override fun onDisable() {
@@ -27,6 +38,8 @@ class AnimalAutoHealModule(plugin: LuminaCore) : LuminaModule(plugin, "AnimalAut
         healTask = null
         listener?.let { HandlerList.unregisterAll(it) }
         listener = null
+
+        core.luminaworld.settings.PlayerSettingsManager.unregisterSettingsOfModule(name)
     }
 
     private fun startHealTask() {
@@ -45,6 +58,7 @@ class AnimalAutoHealModule(plugin: LuminaCore) : LuminaModule(plugin, "AnimalAut
 
     private fun healNearbyAnimals(player: Player) {
         if (!isEnabled) return
+        if (!core.luminaworld.settings.PlayerSettingsManager.isSettingEnabled(player, name)) return
         
         // ตรวจสอบ permission ของผู้เล่นรอบตัว
         if (!checkPermission(player)) return

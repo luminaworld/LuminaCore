@@ -19,4 +19,8 @@ commands:
       - lc
     permission: luminacore.admin
     usage: /<command> [reload]
+  setting:
+    description: ตั้งค่าระบบส่วนตัวของผู้เล่น
+    aliases:
+      - settings
 

@@ -46,3 +46,22 @@ messages:
   module-enabled: "Module %module% enabled."
   module-disabled: "Module %module% is disabled."
 
+# -------------------------------------------------------------
+# ระบบฐานข้อมูลส่วนกลางสำหรับโมดูลย่อย (Central Database Settings)
+# -------------------------------------------------------------
+database:
+  # ประเภทฐานข้อมูล: SQLite หรือ MySQL
+  type: "SQLite"
+  
+  SQLite:
+    filename: "lumina-database"
+    
+  MySQL:
+    host: "localhost"
+    port: 3306
+    database: "minecraft"
+    user: "root"
+    password: """"
+    # พารามิเตอร์การเชื่อมต่อสำหรับ MySQL
+    connection-parameters: "?autoReconnect=true&useSSL=false&useUnicode=true&characterEncoding=UTF-8"
+

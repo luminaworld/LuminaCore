@@ -1,0 +1,108 @@
+# ==========================================
+#          ChatGames - ตั้งค่าของรางวัล
+# ==========================================
+# รูปแบบคำสั่งรางวัลที่รองรับ:
+# [playercmd] - รันคำสั่งในนามผู้ชนะ
+# [consolecmd] - รันคำสั่งจาก Console
+# [playermsg] - ส่งข้อความส่วนตัวหาผู้ชนะ
+# [broadcast] - ประกาศข้อความหาทุกคนในโลกที่เปิดใช้เกมแชท
+# [player_as_op] - รันคำสั่งโดยให้สิทธิ์ OP ชั่วคราวแก่ผู้ชนะ
+#
+# การตั้งค่าโอกาสได้รับรางวัล:
+# ใส่เปอร์เซ็นต์ที่หน้าคำสั่ง เช่น '- 10.0%~ [consolecmd] give %player% diamond 1'
+# หากไม่มีการใส่เปอร์เซ็นต์ข้างต้น จะมีโอกาสได้รับ 100%
+#
+# การเช็คสิทธิ์ (Permission):
+# ใส่ 'has:permission.node' ไว้ท้ายคำสั่ง เช่น '- [consolecmd] give %player% gold_ingot 1 has:vip.reward'
+
+# ของรางวัลสำหรับมินิเกมแต่ละประเภท (1 คือ ลำดับผู้ชนะที่ 1)
+unscramble:
+  rewards:
+    1:
+      reward_1:
+        data:
+        - '[consolecmd] ite give %player% gacha_key 1'
+
+unreverse:
+  rewards:
+    1:
+      reward_1:
+        data:
+          - '[consolecmd] ite give %player% gacha_key 1'
+
+reaction:
+  rewards:
+    1:
+      reward_1:
+        data:
+          - '[consolecmd] ite give %player% gacha_key 1'
+
+guess_the_number:
+  rewards:
+    1:
+      reward_1:
+        data:
+          - '[consolecmd] ite give %player% gacha_key 1'
+
+shoppinglist:
+  rewards:
+    1:
+      reward_1:
+        data:
+          - '[consolecmd] ite give %player% gacha_key 1'
+
+clickable:
+  rewards:
+    1:
+      reward_1:
+        data:
+          - '[consolecmd] ite give %player% gacha_key 1'
+
+fillout:
+  rewards:
+    1:
+      reward_1:
+        data:
+          - '[consolecmd] ite give %player% gacha_key 1'
+
+hoverable:
+  rewards:
+    1:
+      reward_1:
+        data:
+          - '[consolecmd] ite give %player% gacha_key 1'
+
+random:
+  rewards:
+    1:
+      reward_1:
+        data:
+          - '[consolecmd] ite give %player% gacha_key 1'
+
+variable:
+  rewards:
+    1:
+      reward_1:
+        data:
+          - '[consolecmd] ite give %player% gacha_key 1'
+
+math:
+  rewards:
+    1:
+      reward_1:
+        data:
+          - '[consolecmd] ite give %player% gacha_key 1'
+
+trivia:
+  rewards:
+    1:
+      reward_1:
+        data:
+          - '[consolecmd] ite give %player% gacha_key 1'
+
+# ของรางวัลสำหรับ Chat Races (การสุ่มทำภารกิจ)
+races:
+  rewards:
+    reward_1:
+      data:
+        - '[consolecmd] ite give %player% gacha_key 1'

@@ -1,0 +1,213 @@
+# ==========================================
+#          ChatGames - ตั้งค่า Chat Races
+# ==========================================
+enable-races: true
+
+# อนุญาตให้ผู้เล่นในโหมด Creative เข้าร่วมกิจกรรมและนับคะแนนได้
+creative-enabled: true
+
+# 1. hunt: ล่าเอนทิตี (มอนสเตอร์/สัตว์) ตามจำนวนที่กำหนด
+hunt:
+  enable: true
+  timeToComplete_seconds: 90
+  titleMessage: ''
+  subtitleMessage: ''
+  
+  # นับสัตว์/มอนสเตอร์ที่เกิดจากกรงสปอว์น (Spawner) หรือไข่สปอว์น (Spawn Egg)
+  count-spawner-mobs: true
+  
+  # รายชื่อมอนสเตอร์และเงื่อนไข (รูปแบบ: ID_มอนสเตอร์: จำนวนที่ต้องฆ่า)
+  data:
+    ZOMBIE:
+      '3':
+        rewards:
+        - reward_1
+    CREEPER:
+      '3':
+        rewards:
+        - reward_1
+    SKELETON:
+      '3':
+        rewards:
+        - reward_1
+    SPIDER:
+      '3':
+        rewards:
+        - reward_1
+    PIG:
+      '3':
+        rewards:
+        - reward_1
+    SHEEP:
+      '3':
+        rewards:
+        - reward_1
+    COW:
+      '3':
+        rewards:
+        - reward_1
+    CHICKEN:
+      '3':
+        rewards:
+        - reward_1
+    SALMON:
+      '3':
+        rewards:
+        - reward_1
+
+# 2. mine: ขุดบล็อกที่กำหนดให้ครบตามจำนวน
+mine:
+  enable: true
+  timeToComplete_seconds: 60
+  titleMessage: ''
+  subtitleMessage: ''
+  
+  # รายชื่อบล็อกและเงื่อนไข (รูปแบบ: ID_บล็อก: จำนวนที่ต้องขุด)
+  data:
+    STONE:
+      '16':
+        rewards:
+        - reward_1
+    DIRT:
+      '16':
+        rewards:
+        - reward_1
+    GRASS_BLOCK:
+      '16':
+        rewards:
+        - reward_1
+    SAND:
+      '16':
+        rewards:
+        - reward_1
+    NETHERRACK:
+      '16':
+        rewards:
+        - reward_1
+    GRAVEL:
+      '16':
+        rewards:
+        - reward_1
+    DIORITE:
+      '16':
+        rewards:
+        - reward_1
+
+# 3. place: วางบล็อกที่กำหนดให้ครบตามจำนวน
+place:
+  enable: true
+  timeToComplete_seconds: 60
+  titleMessage: ''
+  subtitleMessage: ''
+  
+  # รายชื่อบล็อกและเงื่อนไข (รูปแบบ: ID_บล็อก: จำนวนที่ต้องวาง)
+  data:
+    COBBLESTONE:
+      '16':
+        rewards:
+        - reward_1
+    DIRT:
+      '16':
+        rewards:
+        - reward_1
+    SAND:
+      '16':
+        rewards:
+        - reward_1
+    NETHERRACK:
+      '16':
+        rewards:
+        - reward_1
+    TORCH:
+      '16':
+        rewards:
+        - reward_1
+
+# 4. fish: ตกปลาให้สำเร็จตามจำนวน (ไม่มี data กำหนด คือตกปลาชนิดใดก็ได้ครบ 1 ตัว)
+fish:
+  enable: true
+  timeToComplete_seconds: 120
+  titleMessage: ''
+  subtitleMessage: ''
+
+# 5. eat: กินอาหารที่กำหนดให้ครบตามจำนวน
+eat:
+  enable: true
+  timeToComplete_seconds: 60
+  titleMessage: ''
+  subtitleMessage: ''
+  
+  # รายชื่ออาหารและเงื่อนไข (รูปแบบ: ID_อาหาร: จำนวนที่ต้องกิน)
+  data:
+    COOKED_BEEF:
+      '1':
+        rewards:
+        - reward_1
+    COOKED_CHICKEN:
+      '1':
+        rewards:
+        - reward_1
+    BAKED_POTATO:
+      '1':
+        rewards:
+        - reward_1
+    BREAD:
+      '1':
+        rewards:
+        - reward_1
+    GOLDEN_APPLE:
+      '1':
+        rewards:
+        - reward_1
+
+# 6. craft: คราฟต์ไอเทมที่กำหนดให้ครบตามจำนวน
+craft:
+  enable: true
+  timeToComplete_seconds: 120
+  titleMessage: ''
+  subtitleMessage: ''
+  
+  # รายชื่อไอเทมและเงื่อนไข (รูปแบบ: ID_ไอเทม: จำนวนที่ต้องคราฟต์)
+  data:
+    FURNACE:
+      '1':
+        rewards:
+        - reward_1
+    CHEST:
+      '2':
+        rewards:
+        - reward_1
+    CRAFTING_TABLE:
+      '1':
+        rewards:
+        - reward_1
+    TORCH:
+      '16':
+        rewards:
+        - reward_1
+
+# 7. furnace: เผาไอเทมจากเตาให้สำเร็จและดึงออกมาตามจำนวน
+furnace:
+  enable: true
+  timeToComplete_seconds: 150
+  titleMessage: ''
+  subtitleMessage: ''
+  
+  # รายชื่อผลผลิตจากการเผาและเงื่อนไข (รูปแบบ: ID_ผลผลิต: จำนวนที่ต้องดึง)
+  data:
+    GOLD_INGOT:
+      '3':
+        rewards:
+        - reward_1
+    IRON_INGOT:
+      '3':
+        rewards:
+        - reward_1
+    COOKED_BEEF:
+      '3':
+        rewards:
+        - reward_1
+    COOKED_COD:
+      '3':
+        rewards:
+        - reward_1

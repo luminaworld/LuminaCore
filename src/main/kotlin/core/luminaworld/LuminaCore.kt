@@ -24,6 +24,9 @@ class LuminaCore : JavaPlugin() {
     var commandManager: core.luminaworld.command.CommandManager? = null
         private set
 
+    var databaseService: core.luminaworld.database.DatabaseService? = null
+        private set
+
     val activeActionBarTasks = ConcurrentHashMap<UUID, ScheduledTask>()
     val suspendedPlayers = ConcurrentHashMap.newKeySet<UUID>()
 
@@ -97,6 +100,10 @@ class LuminaCore : JavaPlugin() {
      * เริ่มการทำงานของคอมโพเนนต์หลักในปลั๊กอินหลังจากผ่านการยืนยัน License แล้ว
      */
     private fun startPluginComponents() {
+        // เริ่มระบบฐานข้อมูลส่วนกลาง
+        databaseService = core.luminaworld.database.DatabaseService(this)
+        databaseService?.initialize()
+
         if (!isStandalone) {
             // เริ่มระบบตรวจสอบการอัปเดตแบบ Asynchronous
             core.luminaworld.updater.UpdateChecker.checkForUpdates(this)
@@ -145,6 +152,10 @@ class LuminaCore : JavaPlugin() {
         // ปิดและล้างคำสั่งไดนามิกทั้งหมด
         commandManager?.unregisterAll()
         commandManager = null
+
+        // ปิดระบบฐานข้อมูลกลาง
+        databaseService?.shutdown()
+        databaseService = null
 
         if (!isStandalone) {
             // ยกเลิกการลงทะเบียน Command Executor เพื่อป้องกัน memory leak ในกรณี reload ปลั๊กอิน

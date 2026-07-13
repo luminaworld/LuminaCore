@@ -1,0 +1,528 @@
+unknown_command: '&8[%prefix%&8] &cไม่พบคำสั่งนี้ ลองใหม่อีกครั้ง!'
+config_reloaded: '&8[%prefix%&8] &fโหลดไฟล์คอนฟิกใหม่เรียบร้อยแล้ว!'
+not_enough_permissions: '&8[%prefix%&8] &cคุณไม่มีสิทธิ์เพียงพอที่จะใช้คำสั่งนี้!'
+player_only_command: '&8[%prefix%&8] &cคำสั่งนี้ใช้ได้เฉพาะผู้เล่นเท่านั้น!'
+player_deleted: '&8[%prefix%&8] &cลบข้อมูลผู้เล่น &f%player% &cออกจากฐานข้อมูลแล้ว!'
+player_not_found: '&8[%prefix%&8] &fไม่พบข้อมูลผู้เล่น &c%player%'
+number_not_found_commands: '&8[%prefix%&8] &cไม่พบตัวเลขที่จะใช้กับคำสั่งนี้'
+points_added: '&8[%prefix%&8] &fเพิ่ม &a%amount% &fแต้มให้กับ &c%player%'
+points_removed: '&8[%prefix%&8] &fลบ &a%amount% &fแต้มจาก &c%player%'
+points_set: '&8[%prefix%&8] &fกำหนดแต้มของ &c%player% &fเป็น &a%amount%'
+player_points: '&8[%prefix%&8] &fคุณมี &a%amount% &fแต้ม!'
+in_cooldown: '&8[%prefix%&8] &cคุณยังใช้คำสั่งนี้ไม่ได้ กรุณารอ &e%time_left%วินาที &cก่อนใช้คำสั่งอีกครั้ง'
+type_not_found: '&8[%prefix%&8] &fไม่พบประเภทของวัสดุ/เอนทิตีสำหรับ &c%type%'
+inventory_full: '&8[%prefix%&8] &cกระเป๋าของคุณเต็ม! &fรางวัลถูกดรอปไว้ที่ตำแหน่งของคุณ'
+
+no_winner_placeholder: '---'
+cannot_start_from_disabled: '&8[%prefix%&8] &cคุณไม่สามารถเริ่มเกมแชทจากโลกที่ถูกปิดใช้งานได้!'
+toggle_game: '&8[%prefix%&8] &fคุณได้สลับสถานะ &a%state% &fกิจกรรมแชท!'
+toggle_sound: '&8[%prefix%&8] &fคุณได้สลับสถานะ &a%state% &fเสียงเกมแชท!'
+toggleAllGames: '&8[%prefix%&8] &fคุณได้สลับสถานะ &a%state% &cทุก &fเกมแชท!'
+state-ON: 'เปิด'
+state-OFF: 'ปิด'
+game_started: '&8[%prefix%&8] &aคุณได้เริ่มกิจกรรมแชท %game% ในช่องแชทของคุณ!'
+invalid_arguments: '&8[%prefix%&8] &fเกิดปัญหาขณะตรวจสอบอาร์กิวเมนต์สำหรับคำสั่ง!'
+cant_log_local: '&8[%prefix%&8] &cคุณไม่สามารถดูข้อความบันทึกได้เนื่องจากตัวเลือกนี้ถูกปิดในคอนฟิก!'
+
+logs:
+  no_logs: "&cไม่มีบันทึกหรือเกิดข้อผิดพลาด"
+  header: "&8[%prefix%&8] &eบันทึก &6%amount% &eรายการล่าสุด:"
+  entries:
+    # บันทึกกิจกรรมเกมแชท
+    game:
+      start: "&aเริ่มเกม: &f%game% | &aมีคำตอบ: &f%hasAnswer% | &aคำตอบ: &f%answer%"
+      end: "&aจบเกม: &f%game% | &aมีผู้ชนะ: &f%hasWinner% | &aผู้ชนะ: &f%winners% | &aคำตอบ: &f%answer%"
+
+    # บันทึกกิจกรรมการแข่งในเกม
+    race:
+      start: "&aเริ่มการแข่ง: &f%race% | &aวัสดุ: &f%material% | &aจำนวน: &f%amount%"
+      end: "&aจบการแข่ง: &f%race% | &aมีผู้ชนะ: &f%hasWinner% | &aผู้ชนะ: &f%winner% | &aวัสดุ: &f%material% | &aจำนวน: &f%amount%"
+
+    # บันทึกกิจกรรมการล่า
+    hunt:
+      start: "&aเริ่มการล่า: &f%race% | &aเอนทิตี: &f%entity% | &aจำนวน: &f%amount%"
+      end: "&aจบการล่า: &f%race% | &aมีผู้ชนะ: &f%hasWinner% | &aผู้ชนะ: &f%winner% | &aเอนทิตี: &f%entity% | &aจำนวน: &f%amount%"
+
+# ใช้ <center> เพื่อจัดกึ่งกลางข้อความ
+top:
+  # ปล่อยว่างเพื่อปิดข้อความนั้นๆ
+  header: '&b&m---------&e&lผู้เล่นยอดเยี่ยม&b&m---------'
+  # ตัวคั่นระยะห่าง
+  separators: ''
+  format: '&c%spot%. &f%player% &8| &e&l%points% &7แต้ม'
+  player-stat-format: '&7คุณชนะไปแล้ว &e&l%player_points% &7ครั้ง'
+  total-stat-format: '&7ชนะเกมทั้งหมดทั่วโลก: &6&l%total_wins% &7ครั้ง'
+  footer: '&b&m---------------------------'
+
+  no_data_message: '&8[%prefix%&8] &cยังไม่มีข้อมูล! ชนะเกมแชทเพื่อรับแต้มเลย!'
+
+TypersTop:
+  # ปล่อยว่างเพื่อปิดข้อความนั้นๆ
+  header: '&b&m---------&e&lพิมพ์เร็วที่สุด&b&m---------'
+  separators: ''
+  format: '&c%spot%. &f%player% &8| &e&l%time%&6วินาที'
+  player-stat-format: '&7เวลาที่ทำได้เร็วที่สุดของคุณคือ &e&l%fastest_time%&6วินาที'
+  footer: '&b&m------------------------------'
+
+  no_data_message: '&8[%prefix%&8] &cยังไม่มีข้อมูล! ชนะเกมแชทและเป็นคนที่เร็วที่สุด!'
+  top_disabled_message: '&8[%prefix%&8] &cฟังก์ชันนี้ถูกปิดใช้งานในขณะนี้!'
+
+help_command:
+  - '&7&m-------------------------------------------------'
+  - '&e&l-ChatGames-'
+  - '&6'
+  - '&6&lคำสั่ง:'
+  - '&6'
+  - '&a/chatgames (type) &f- &3เริ่มประเภทกิจกรรมที่ระบุทันที'
+  - '&a/chatgames top &f- &3แสดง 10 อันดับผู้เล่นที่มีแต้มสูงสุด'
+  - '&a/chatgames fastest &f- &3แสดง 10 อันดับผู้เล่นที่ทำเวลาได้เร็วที่สุด'
+  - '&a/chatgames toggle &f- &3เปิดหรือปิดเกมแชทสำหรับตัวคุณเอง'
+  - '&a/chatgames toggleAll &f- &3เปิดหรือปิดเกมแชทสำหรับผู้เล่นทุกคน'
+  - '&a/chatgames togglesound &f- &3เปิดหรือปิดเสียงเกมแชท'
+  - '&a/chatgames reload &f- &3โหลดไฟล์คอนฟิกใหม่'
+  - '&a/chatgames +points <player> <amount> &f- &3เพิ่มแต้มให้กับผู้เล่น'
+  - '&a/chatgames -points <player> <amount> &f- &3ลบแต้มออกจากผู้เล่น'
+  - '&a/chatgames setpoints <player> <amount> &f- &3กำหนดแต้มให้กับผู้เล่น'
+  - '&a/chatgames points &f- &3ดูแต้มของคุณ'
+  - '&a/chatgames logs <amount> &f- &3ดูบันทึกเกม X รายการล่าสุด'
+  - '&6'
+  - '&2&lประเภทเกม:'
+  - '&5unscramble, unreverse, reaction, random, fillout, variable, clickable, math, trivia, hoverable, hunt, mine, place, fish, craft, eat, furnace'
+  - '&7&m-------------------------------------------------'
+
+# ใช้ <center> เพื่อจัดข้อความให้อยู่ตรงกลางแชท
+
+#############################
+##    CHATGAME MESSAGES    ##
+#############################
+waiting_for_other_winners: '&8[%prefix%&8] &aคุณตอบถูก! &fกำลังรอผู้ชนะคนอื่น...'
+wrong_case: '&8[%prefix%&8] &cเกือบถูกแล้ว... ตรวจสอบตัวพิมพ์เล็ก/ใหญ่ให้ดี!'
+  # ตัวแปรแสดงผลที่รองรับ:
+  # %winner_1%, %winner_2% -> ชื่อผู้ชนะตามอันดับ
+  # %time_1%, %time_2% -> เวลาพิมพ์ตอบตามอันดับ
+  # %correct_answer% -> คำตอบที่ถูกต้อง
+  # %points_1% -> คะแนนของอันดับ 1
+unscramble:
+  gameStartAnnouncement:
+    - ''
+    - '<center>&r✓ ✯ %prefix%&r ✯ ✓'
+    - ''
+    - '<center>&fคุณมีเวลา &e%timeToGuess% วินาที &fเพื่อ &dเรียงตัวอักษร&f: `&b%selection%&f` ให้ถูกต้อง'
+    - ''
+  correct_message:
+    - ''
+    - '<center>&r✓ ✯ %prefix% &r✯ ✓'
+    - ''
+    - '<center>&a%winner_1% &7เรียงตัวอักษร `&e%correct_answer%&7` ได้ถูกต้อง (&c%time_1%s&7) และได้รับรางวัล!'
+    - ''
+  time_expired_message:
+    - ''
+    - '<center>&r✓ ✯ %prefix%&r ✯ ✓'
+    - ''
+    - '<center>&fหมดเวลา &e%timeToGuess%s &cแล้ว! &fเกมเรียงตัวอักษรจบลงแล้ว!'
+    - '<center>คำตอบที่ถูกต้องคือ &e%correct_answer%&f!'
+    - ''
+
+unreverse:
+  gameStartAnnouncement:
+    - ''
+    - '<center>&r✓ ✯ %prefix%&r ✯ ✓'
+    - ''
+    - '<center>&fคุณมีเวลา &e%timeToGuess% วินาที &fเพื่อ &dกลับด้านคำ&f: `&b%selection%&f` ให้ถูกต้อง'
+    - ''
+  correct_message:
+    - ''
+    - '<center>&r✓ ✯ %prefix% &r✯ ✓'
+    - ''
+    - '<center>&a%winner_1% &7กลับด้านคำ `&e%correct_answer%&7` ได้เร็วที่สุด (&c%time_1%s&7) และได้รับรางวัล!'
+    - ''
+  time_expired_message:
+    - ''
+    - '<center>&r✓ ✯ %prefix%&r ✯ ✓'
+    - ''
+    - '<center>&fหมดเวลา &e%timeToGuess%s &cแล้ว! &fเกมกลับด้านคำจบลงแล้ว!'
+    - '<center>คำตอบที่ถูกต้องคือ &e%correct_answer%&f!'
+    - ''
+
+reaction:
+  gameStartAnnouncement:
+    - ''
+    - '<center>&r✓ ✯ %prefix%&r ✯ ✓'
+    - ''
+    - '<center>&fคุณมีเวลา &e%timeToGuess% วินาที &fเพื่อ &dพิมพ์คำว่า&f: `&b%selection%&f`'
+    - ''
+  correct_message:
+    - ''
+    - '<center>&r✓ ✯ %prefix% &r✯ ✓'
+    - ''
+    - '<center>&a%winner_1% &7พิมพ์คำว่า `&e%correct_answer%&7` ได้เร็วที่สุด (&c%time_1%s&7) และได้รับรางวัล!'
+    - ''
+  time_expired_message:
+    - ''
+    - '<center>&r✓ ✯ %prefix%&r ✯ ✓'
+    - ''
+    - '<center>&fหมดเวลา &e%timeToGuess%s &cแล้ว! &fเกมพิมพ์เร็วจบลงแล้ว!'
+    - '<center>คำตอบที่ถูกต้องคือ &e%correct_answer%&f!'
+    - ''
+
+guess_the_number:
+  gameStartAnnouncement:
+    - ''
+    - '<center>&r✓ ✯ %prefix%&r ✯ ✓'
+    - ''
+    - '<center>&fคุณมีเวลา &e%timeToGuess% วินาที &fเพื่อ &dทายตัวเลข &fในช่วง:'
+    - '<center>&f`&b%selection%&f`'
+    - ''
+  correct_message:
+    - ''
+    - '<center>&r✓ ✯ %prefix% &r✯ ✓'
+    - ''
+    - '<center>&a%winner_1% &7ทายเลข `&e%correct_answer%&7` ถูกเป็นคนแรก (&c%time_1%s&7) และได้รับรางวัล!'
+    - ''
+  time_expired_message:
+    - ''
+    - '<center>&r✓ ✯ %prefix%&r ✯ ✓'
+    - ''
+    - '<center>&fหมดเวลา &e%timeToGuess%s &cแล้ว! &fเกมทายตัวเลขจบลงแล้ว!'
+    - '<center>คำตอบที่ถูกต้องคือ &e%correct_answer%&f!'
+    - ''
+
+shoppinglist:
+
+  gameStartAnnouncement:
+    - ''
+    - '<center>&r✓ ✯ %prefix%&r ✯ ✓'
+    - ''
+    - '<center>&fคุณมีเวลา &e%timeToMemorize% วินาที &fเพื่อ &dจำ &fรายการของขวัญของซานต้า:'
+    - ''
+    - '<center>&f`&b%selection%&f`'
+    - ''
+  messageAfterMemorized:
+    - ''
+    - '<center>&r✓ ✯ %prefix%&r ✯ ✓'
+    - ''
+    - '<center>&fคุณมีเวลา &e%timeToGuess% วินาที &fเพื่อเขียน &dรายการของขวัญของซานต้า &fให้ถูกต้องตามลำดับ! '
+    - ''
+    - '<center>&fใช้เครื่องหมายจุลภาค (,) คั่นแต่ละรายการ! (เช่น `&bแอปเปิ้ล, กล้วย, ช็อกโกแลต&f`)'
+    - ''
+  correct_message:
+    - ''
+    - '<center>&r✓ ✯ %prefix% &r✯ ✓'
+    - ''
+    - '<center>&a%winner_1% &7เขียนรายการได้ถูกต้องเป็นคนแรกและได้รับรางวัล! (&c%time_1%s&7)'
+    - ''
+    - '<center>&fคำตอบคือ: &f`&b%correct_answer%&f`'
+    - ''
+  time_expired_message:
+    - ''
+    - '<center>&r✓ ✯ %prefix%&r ✯ ✓'
+    - ''
+    - '<center>&fหมดเวลา &e%timeToGuess%s &cแล้ว! &fเกมรายการของขวัญจบลงแล้ว!'
+    - ''
+    - '<center>&fคำตอบที่ถูกต้องคือ: &f`&b%correct_answer%&f`'
+    - ''
+
+clickable:
+  clickableText: '&aคลิกที่นี่!'
+  hoverText: '&eคลิกที่นี่!'
+
+  gameStartAnnouncement:
+    - ''
+    - '<center>&r✓ ✯ %prefix%&r ✯ ✓'
+    - ''
+    - '<center>&fคุณมีเวลา &e%timeToGuess% วินาที &fเพื่อ &dคลิก&f ข้อความ:'
+    - ''
+    - '<center>&b%clickableText%'
+    - ''
+  # ข้อมูลผู้ชนะอันดับแรก
+  correct_message:
+    - ''
+    - '<center>&r✓ ✯ %prefix% &r✯ ✓'
+    - ''
+    - '<center>&a%winner_1% &7คลิกข้อความได้เร็วที่สุด (&c%time_1%s&7) และได้รับรางวัล!'
+    - ''
+  time_expired_message:
+    - ''
+    - '<center>&r✓ ✯ %prefix%&r ✯ ✓'
+    - ''
+    - '<center>&fหมดเวลา &e%timeToGuess%s &cแล้ว! &fเกมคลิกข้อความจบลงแล้ว!'
+    - ''
+
+fillout:
+  gameStartAnnouncement:
+    - ''
+    - '<center>&r✓ ✯ %prefix%&r ✯ ✓'
+    - ''
+    - '<center>&fคุณมีเวลา &e%timeToGuess% วินาที &fเพื่อ &dเติมคำ&f ในช่องว่าง: `&b%selection%&f`'
+    - ''
+  correct_message:
+    - ''
+    - '<center>&r✓ ✯ %prefix% &r✯ ✓'
+    - ''
+    - '<center>&a%winner_1% &7เติมคำว่า `&e%correct_answer%&7` ได้เร็วที่สุด (&c%time_1%s&7) และได้รับรางวัล!'
+    - ''
+  time_expired_message:
+    - ''
+    - '<center>&r✓ ✯ %prefix%&r ✯ ✓'
+    - ''
+    - '<center>&fหมดเวลา &e%timeToGuess%s &cแล้ว! &fเกมเติมคำจบลงแล้ว!'
+    - '<center>คำตอบที่ถูกต้องคือ &e%correct_answer%&f!'
+    - ''
+
+hoverable:
+  hoverableText: '&eเอาเมาส์ชี้ที่นี่!'
+  hoverText: '&b%selection%'
+
+  gameStartAnnouncement:
+    - ''
+    - '<center>&r✓ ✯ %prefix%&r ✯ ✓'
+    - ''
+    - '<center>&fคุณมีเวลา &e%timeToGuess% วินาที &fเพื่อ &dเขียน&f คำที่ซ่อนอยู่ในข้อความ:'
+    - ''
+    - '<center>&b%hoverableText%'
+    - ''
+  correct_message:
+    - ''
+    - '<center>&r✓ ✯ %prefix% &r✯ ✓'
+    - ''
+    - '<center>&a%winner_1% &7เขียนคำว่า `&e%correct_answer%&7` ได้เร็วที่สุด (&c%time_1%s&7) และได้รับรางวัล!'
+    - ''
+  time_expired_message:
+    - ''
+    - '<center>&r✓ ✯ %prefix%&r ✯ ✓'
+    - ''
+    - '<center>&fหมดเวลา &e%timeToGuess%s &cแล้ว! &fเกมนี้จบลงแล้ว!'
+    - '<center>คำตอบที่ถูกต้องคือ &e%correct_answer%&f!'
+    - ''
+
+#In this game, a string of the length specified will be created with random characters
+random:
+  gameStartAnnouncement:
+    - ''
+    - '<center>&r✓ ✯ %prefix%&r ✯ ✓'
+    - ''
+    - '<center>&fคุณมีเวลา &e%timeToGuess% วินาที &fเพื่อ &dพิมพ์ตาม&f: `&b%selection%&f`'
+    - ''
+  correct_message:
+    - ''
+    - '<center>&r✓ ✯ %prefix% &r✯ ✓'
+    - ''
+    - '<center>&a%winner_1% &7พิมพ์ `&e%correct_answer%&7` ได้เร็วที่สุด (&c%time_1%s&7) และได้รับรางวัล!'
+    - ''
+  time_expired_message:
+    - ''
+    - '<center>&r✓ ✯ %prefix%&r ✯ ✓'
+    - ''
+    - '<center>&fหมดเวลา &e%timeToGuess%s &cแล้ว! &fเกมสุ่มตัวอักษรจบลงแล้ว!'
+    - '<center>คำตอบที่ถูกต้องคือ &e%correct_answer%&f!'
+    - ''
+
+math:
+  gameStartAnnouncement:
+    - ''
+    - '<center>&r✓ ✯ %prefix%&r ✯ ✓'
+    - ''
+    - '<center>&fคุณมีเวลา &e%timeToGuess% วินาที &fเพื่อ &dหาคำตอบของ&f: `&b%selection%&f`'
+    - ''
+  #Here, you can also use '%equation%' in the message if you wish to do so
+  correct_message:
+    - ''
+    - '<center>&r✓ ✯ %prefix% &r✯ ✓'
+    - ''
+    - '<center>&a%winner_1% &7ตอบ `&e%correct_answer%&7` ได้เร็วที่สุด (&c%time_1%s&7) และได้รับรางวัล!'
+    - ''
+  time_expired_message:
+    - ''
+    - '<center>&r✓ ✯ %prefix%&r ✯ ✓'
+    - ''
+    - '<center>&fหมดเวลา &e%timeToGuess%s &cแล้ว! &fเกมคณิตศาสตร์จบลงแล้ว!'
+    - '<center>คำตอบที่ถูกต้องคือ &e%correct_answer%&f!'
+    - ''
+
+variable:
+  #This is the format in which they will appear, you may change amount of times %symbol% is repeated in 'line1and2-format' but all variables in line 3 are as they are shown.
+  line1and2-format: '&c%symbol%&f + &c%symbol%&f + &c%symbol%&f = &e'
+  line3-format: '&c%symbol_1%&f + &c%symbol_2%&f + &b%toGet% &f= &e%result%'
+  gameStartAnnouncement:
+    - ''
+    - '<center>&r✓ ✯ %prefix%&r ✯ ✓'
+    - ''
+    - '<center>&fคุณมีเวลา &e%timeToGuess% วินาที &fเพื่อ &dหาค่าของ&f: `&b%symbol%&f`'
+    - ''
+    - '<center>%line_1%'
+    - '<center>%line_2%'
+    - '<center>%line_3%'
+    - ''
+  #Here, you can also use '%equation%' in the message if you wish to do so
+  correct_message:
+    - ''
+    - '<center>&r✓ ✯ %prefix% &r✯ ✓'
+    - ''
+    - '<center>&a%winner_1% &7ตอบ `&e%correct_answer%&7` ได้เร็วที่สุด (&c%time_1%s&7) และได้รับรางวัล!'
+    - ''
+  time_expired_message:
+    - ''
+    - '<center>&r✓ ✯ %prefix%&r ✯ ✓'
+    - ''
+    - '<center>&fหมดเวลา &e%timeToGuess%s &cแล้ว! &fเกมสมการตัวแปรจบลงแล้ว!'
+    - '<center>คำตอบที่ถูกต้องคือ &e%correct_answer%&f!'
+    - ''
+
+trivia:
+  gameStartAnnouncement:
+    - ''
+    - '<center>&r✓ ✯ %prefix%&r ✯ ✓'
+    - ''
+    - '<center>&fคุณมีเวลา &e%timeToGuess% วินาที &fเพื่อ &dตอบคำถาม&f:'
+    - '<center>&f`&b%selection%&f`'
+    - ''
+  correct_message:
+    - ''
+    - '<center>&r✓ ✯ %prefix% &r✯ ✓'
+    - ''
+    - '<center>&a%winner_1% &7ตอบ `&e%correct_answer%&7` ถูกเป็นคนแรก (&c%time_1%s&7) และได้รับรางวัล!'
+    - ''
+  time_expired_message:
+    - ''
+    - '<center>&r✓ ✯ %prefix%&r ✯ ✓'
+    - ''
+    - '<center>&fหมดเวลา &e%timeToGuess%s &cแล้ว! &fเกมคำถามรอบรู้จบลงแล้ว!'
+    - '<center>คำตอบที่ถูกต้องคือ &e%correct_answer%&f!'
+    - ''
+
+#RACES
+#As of now, the races don't support multiple winners as I don't see a reason since they are 'races' or 'player challenges' that the first should get.
+
+#YOU CAN USE %points% TO SHOW THE POINTS FOR THE PLAYER THAT WON.
+
+hunt:
+  gameStartAnnouncement:
+    - ''
+    - '<center>&r✓ ✯ %prefix%&r ✯ ✓'
+    - ''
+    - '<center>&fคุณมีเวลา &e%timeToComplete% วินาที &fเพื่อ &dล่า&f: `&b%amount%&fx &3%value%`'
+    - ''
+  correct_message:
+    - ''
+    - '<center>&r✓ ✯ %prefix% &r✯ ✓'
+    - ''
+    - '<center>&a%winner% &7ล่า `&e%amount%&fx &3%value%&7` เสร็จสิ้น (&c%time%s&7) และได้รับรางวัล!'
+    - ''
+  time_expired_message:
+    - ''
+    - '<center>&r✓ ✯ %prefix%&r ✯ ✓'
+    - ''
+    - '<center>&fหมดเวลา &e%timeToComplete%s &cแล้ว! &fเกมล่ามอนสเตอร์จบลงแล้ว!'
+
+mine:
+  gameStartAnnouncement:
+    - ''
+    - '<center>&r✓ ✯ %prefix%&r ✯ ✓'
+    - ''
+    - '<center>&fคุณมีเวลา &e%timeToComplete% วินาที &fเพื่อ &dขุด&f: `&b%amount%&fx &3%value%`'
+    - ''
+  correct_message:
+    - ''
+    - '<center>&r✓ ✯ %prefix% &r✯ ✓'
+    - ''
+    - '<center>&a%winner% &7ขุด `&e%amount%&fx &3%value%&7` เสร็จสิ้น (&c%time%s&7) และได้รับรางวัล!'
+    - ''
+  time_expired_message:
+    - ''
+    - '<center>&r✓ ✯ %prefix%&r ✯ ✓'
+    - ''
+    - '<center>&fหมดเวลา &e%timeToComplete%s &cแล้ว! &fเกมขุดแร่จบลงแล้ว!'
+
+place:
+  gameStartAnnouncement:
+    - ''
+    - '<center>&r✓ ✯ %prefix%&r ✯ ✓'
+    - ''
+    - '<center>&fคุณมีเวลา &e%timeToComplete% วินาที &fเพื่อ &dวาง&f: `&b%amount%&fx &3%value%`'
+    - ''
+  correct_message:
+    - ''
+    - '<center>&r✓ ✯ %prefix% &r✯ ✓'
+    - ''
+    - '<center>&a%winner% &7วาง `&e%amount%&fx &3%value%&7` เสร็จสิ้น (&c%time%s&7) และได้รับรางวัล!'
+    - ''
+  time_expired_message:
+    - ''
+    - '<center>&r✓ ✯ %prefix%&r ✯ ✓'
+    - ''
+    - '<center>&fหมดเวลา &e%timeToComplete%s &cแล้ว! &fเกมวางบล็อกจบลงแล้ว!'
+
+fish:
+  gameStartAnnouncement:
+    - ''
+    - '<center>&r✓ ✯ %prefix%&r ✯ ✓'
+    - ''
+    - '<center>&fคุณมีเวลา &e%timeToComplete% วินาที &fเพื่อ &dตกปลา&f: `&b%amount%&fx &3%value%`'
+    - ''
+  correct_message:
+    - ''
+    - '<center>&r✓ ✯ %prefix% &r✯ ✓'
+    - ''
+    - '<center>&a%winner% &7ตกปลา `&e%amount%&fx &3%value%&7` เสร็จสิ้น (&c%time%s&7) และได้รับรางวัล!'
+    - ''
+  time_expired_message:
+    - ''
+    - '<center>&r✓ ✯ %prefix%&r ✯ ✓'
+    - ''
+    - '<center>&fหมดเวลา &e%timeToComplete%s &cแล้ว! &fเกมตกปลาจบลงแล้ว!'
+
+eat:
+  gameStartAnnouncement:
+    - ''
+    - '<center>&r✓ ✯ %prefix%&r ✯ ✓'
+    - ''
+    - '<center>&fคุณมีเวลา &e%timeToComplete% วินาที &fเพื่อ &dกิน&f: `&b%amount%&fx &3%value%`'
+    - ''
+  correct_message:
+    - ''
+    - '<center>&r✓ ✯ %prefix% &r✯ ✓'
+    - ''
+    - '<center>&a%winner% &7กิน `&e%amount%&fx &3%value%&7` เสร็จสิ้น (&c%time%s&7) และได้รับรางวัล!'
+    - ''
+  time_expired_message:
+    - ''
+    - '<center>&r✓ ✯ %prefix%&r ✯ ✓'
+    - ''
+    - '<center>&fหมดเวลา &e%timeToComplete%s &cแล้ว! &fเกมกินอาหารจบลงแล้ว!'
+
+craft:
+  gameStartAnnouncement:
+    - ''
+    - '<center>&r✓ ✯ %prefix%&r ✯ ✓'
+    - ''
+    - '<center>&fคุณมีเวลา &e%timeToComplete% วินาที &fเพื่อ &dคราฟต์&f: `&b%amount%&fx &3%value%`'
+    - ''
+  correct_message:
+    - ''
+    - '<center>&r✓ ✯ %prefix% &r✯ ✓'
+    - ''
+    - '<center>&a%winner% &7คราฟต์ `&e%amount%&fx &3%value%&7` เสร็จสิ้น (&c%time%s&7) และได้รับรางวัล!'
+    - ''
+  time_expired_message:
+    - ''
+    - '<center>&r✓ ✯ %prefix%&r ✯ ✓'
+    - ''
+    - '<center>&fหมดเวลา &e%timeToComplete%s &cแล้ว! &fเกมคราฟต์ของจบลงแล้ว!'
+furnace:
+  gameStartAnnouncement:
+    - ''
+    - '<center>&r✓ ✯ %prefix%&r ✯ ✓'
+    - ''
+    - '<center>&fคุณมีเวลา &e%timeToComplete% วินาที &fเพื่อ &dเผา/ปรุง&f: `&b%amount%&fx &3%value%`'
+    - ''
+  correct_message:
+    - ''
+    - '<center>&r✓ ✯ %prefix% &r✯ ✓'
+    - ''
+    - '<center>&a%winner% &7เผา/ปรุง `&e%amount%&fx &3%value%&7` เสร็จสิ้น (&c%time%s&7) และได้รับรางวัล!'
+    - ''
+  time_expired_message:
+    - ''
+    - '<center>&r✓ ✯ %prefix%&r ✯ ✓'
+    - ''
+    - '<center>&fหมดเวลา &e%timeToComplete%s &cแล้ว! &fเกมเผาไอเทมจบลงแล้ว!'

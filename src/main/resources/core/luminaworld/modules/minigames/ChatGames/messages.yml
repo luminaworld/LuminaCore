@@ -109,12 +109,18 @@ unscramble:
     - ''
     - '<center>&fคุณมีเวลา &e%timeToGuess% วินาที &fเพื่อ &dเรียงตัวอักษร&f: `&b%selection%&f` ให้ถูกต้อง'
     - ''
+  gameStart_title_message: '&a&l- CHAT GAMES -'
+  gameStart_subtitle_message: '&fร่วมสนุกพิมพ์ตอบคำถามในแชท!'
+  gameStart_actionbar_message: '&eเริ่มเกมทายคำตอบแล้ว! พิมพ์ตอบรับรางวัล'
   correct_message:
     - ''
     - '<center>&r✓ ✯ %prefix% &r✯ ✓'
     - ''
     - '<center>&a%winner_1% &7เรียงตัวอักษร `&e%correct_answer%&7` ได้ถูกต้อง (&c%time_1%s&7) และได้รับรางวัล!'
     - ''
+  winner_title_message: '&a&lมีผู้ชนะแล้ว!'
+  winner_subtitle_message: '&e%winner_1% &fตอบถูกต้อง!'
+  winner_actionbar_message: '&e%winner_1% &aตอบคำถามถูกต้อง!'
   time_expired_message:
     - ''
     - '<center>&r✓ ✯ %prefix%&r ✯ ✓'
@@ -122,6 +128,9 @@ unscramble:
     - '<center>&fหมดเวลา &e%timeToGuess%s &cแล้ว! &fเกมเรียงตัวอักษรจบลงแล้ว!'
     - '<center>คำตอบที่ถูกต้องคือ &e%correct_answer%&f!'
     - ''
+  timeout_title_message: '&c&lหมดเวลา!'
+  timeout_subtitle_message: '&7ไม่มีผู้ตอบถูกในรอบนี้'
+  timeout_actionbar_message: '&cหมดเวลากิจกรรมแชทในรอบนี้!'
 
 unreverse:
   gameStartAnnouncement:
@@ -130,12 +139,18 @@ unreverse:
     - ''
     - '<center>&fคุณมีเวลา &e%timeToGuess% วินาที &fเพื่อ &dกลับด้านคำ&f: `&b%selection%&f` ให้ถูกต้อง'
     - ''
+  gameStart_title_message: '&a&l- CHAT GAMES -'
+  gameStart_subtitle_message: '&fร่วมสนุกพิมพ์ตอบคำถามในแชท!'
+  gameStart_actionbar_message: '&eเริ่มเกมทายคำตอบแล้ว! พิมพ์ตอบรับรางวัล'
   correct_message:
     - ''
     - '<center>&r✓ ✯ %prefix% &r✯ ✓'
     - ''
     - '<center>&a%winner_1% &7กลับด้านคำ `&e%correct_answer%&7` ได้เร็วที่สุด (&c%time_1%s&7) และได้รับรางวัล!'
     - ''
+  winner_title_message: '&a&lมีผู้ชนะแล้ว!'
+  winner_subtitle_message: '&e%winner_1% &fตอบถูกต้อง!'
+  winner_actionbar_message: '&e%winner_1% &aตอบคำถามถูกต้อง!'
   time_expired_message:
     - ''
     - '<center>&r✓ ✯ %prefix%&r ✯ ✓'
@@ -143,6 +158,10 @@ unreverse:
     - '<center>&fหมดเวลา &e%timeToGuess%s &cแล้ว! &fเกมกลับด้านคำจบลงแล้ว!'
     - '<center>คำตอบที่ถูกต้องคือ &e%correct_answer%&f!'
     - ''
+  timeout_title_message: '&c&lหมดเวลา!'
+  timeout_subtitle_message: '&7ไม่มีผู้ตอบถูกในรอบนี้'
+  timeout_actionbar_message: '&cหมดเวลากิจกรรมแชทในรอบนี้!'
+
 
 reaction:
   gameStartAnnouncement:
@@ -151,12 +170,18 @@ reaction:
     - ''
     - '<center>&fคุณมีเวลา &e%timeToGuess% วินาที &fเพื่อ &dพิมพ์คำว่า&f: `&b%selection%&f`'
     - ''
+  gameStart_title_message: '&a&l- CHAT GAMES -'
+  gameStart_subtitle_message: '&fร่วมสนุกพิมพ์ตอปคำถามในแชท!'
+  gameStart_actionbar_message: '&eเริ่มเกมทายคำตอบแล้ว! พิมพ์ตอบรับรางวัล'
   correct_message:
     - ''
     - '<center>&r✓ ✯ %prefix% &r✯ ✓'
     - ''
     - '<center>&a%winner_1% &7พิมพ์คำว่า `&e%correct_answer%&7` ได้เร็วที่สุด (&c%time_1%s&7) และได้รับรางวัล!'
     - ''
+  winner_title_message: '&a&lมีผู้ชนะแล้ว!'
+  winner_subtitle_message: '&e%winner_1% &fตอบถูกต้อง!'
+  winner_actionbar_message: '&e%winner_1% &aตอบคำถามถูกต้อง!'
   time_expired_message:
     - ''
     - '<center>&r✓ ✯ %prefix%&r ✯ ✓'
@@ -164,6 +189,9 @@ reaction:
     - '<center>&fหมดเวลา &e%timeToGuess%s &cแล้ว! &fเกมพิมพ์เร็วจบลงแล้ว!'
     - '<center>คำตอบที่ถูกต้องคือ &e%correct_answer%&f!'
     - ''
+  timeout_title_message: '&c&lหมดเวลา!'
+  timeout_subtitle_message: '&7ไม่มีผู้ตอบถูกในรอบนี้'
+  timeout_actionbar_message: '&cหมดเวลากิจกรรมแชทในรอบนี้!'
 
 guess_the_number:
   gameStartAnnouncement:
@@ -173,12 +201,18 @@ guess_the_number:
     - '<center>&fคุณมีเวลา &e%timeToGuess% วินาที &fเพื่อ &dทายตัวเลข &fในช่วง:'
     - '<center>&f`&b%selection%&f`'
     - ''
+  gameStart_title_message: '&a&l- CHAT GAMES -'
+  gameStart_subtitle_message: '&fร่วมสนุกพิมพ์ตอปคำถามในแชท!'
+  gameStart_actionbar_message: '&eเริ่มเกมทายคำตอบแล้ว! พิมพ์ตอบรับรางวัล'
   correct_message:
     - ''
     - '<center>&r✓ ✯ %prefix% &r✯ ✓'
     - ''
     - '<center>&a%winner_1% &7ทายเลข `&e%correct_answer%&7` ถูกเป็นคนแรก (&c%time_1%s&7) และได้รับรางวัล!'
     - ''
+  winner_title_message: '&a&lมีผู้ชนะแล้ว!'
+  winner_subtitle_message: '&e%winner_1% &fตอบถูกต้อง!'
+  winner_actionbar_message: '&e%winner_1% &aตอบคำถามถูกต้อง!'
   time_expired_message:
     - ''
     - '<center>&r✓ ✯ %prefix%&r ✯ ✓'
@@ -186,6 +220,9 @@ guess_the_number:
     - '<center>&fหมดเวลา &e%timeToGuess%s &cแล้ว! &fเกมทายตัวเลขจบลงแล้ว!'
     - '<center>คำตอบที่ถูกต้องคือ &e%correct_answer%&f!'
     - ''
+  timeout_title_message: '&c&lหมดเวลา!'
+  timeout_subtitle_message: '&7ไม่มีผู้ตอบถูกในรอบนี้'
+  timeout_actionbar_message: '&cหมดเวลากิจกรรมแชทในรอบนี้!'
 
 shoppinglist:
 
@@ -197,6 +234,9 @@ shoppinglist:
     - ''
     - '<center>&f`&b%selection%&f`'
     - ''
+  gameStart_title_message: '&a&l- CHAT GAMES -'
+  gameStart_subtitle_message: '&fร่วมสนุกพิมพ์ตอปคำถามในแชท!'
+  gameStart_actionbar_message: '&eเริ่มเกมทายคำตอบแล้ว! พิมพ์ตอบรับรางวัล'
   messageAfterMemorized:
     - ''
     - '<center>&r✓ ✯ %prefix%&r ✯ ✓'
@@ -205,6 +245,9 @@ shoppinglist:
     - ''
     - '<center>&fใช้เครื่องหมายจุลภาค (,) คั่นแต่ละรายการ! (เช่น `&bแอปเปิ้ล, กล้วย, ช็อกโกแลต&f`)'
     - ''
+  guessPhase_title_message: '&6&l Santa'''s List '
+  guessPhase_subtitle_message: '&fเขียนรายการของขวัญตามลำดับ!'
+  guessPhase_actionbar_message: '&eพิมพ์รายการคั่นด้วยจุลภาค (,) ในแชท!'
   correct_message:
     - ''
     - '<center>&r✓ ✯ %prefix% &r✯ ✓'
@@ -213,6 +256,9 @@ shoppinglist:
     - ''
     - '<center>&fคำตอบคือ: &f`&b%correct_answer%&f`'
     - ''
+  winner_title_message: '&a&lมีผู้ชนะแล้ว!'
+  winner_subtitle_message: '&e%winner_1% &fตอบถูกต้อง!'
+  winner_actionbar_message: '&e%winner_1% &aตอบคำถามถูกต้อง!'
   time_expired_message:
     - ''
     - '<center>&r✓ ✯ %prefix%&r ✯ ✓'
@@ -221,6 +267,9 @@ shoppinglist:
     - ''
     - '<center>&fคำตอบที่ถูกต้องคือ: &f`&b%correct_answer%&f`'
     - ''
+  timeout_title_message: '&c&lหมดเวลา!'
+  timeout_subtitle_message: '&7ไม่มีผู้ตอบถูกในรอบนี้'
+  timeout_actionbar_message: '&cหมดเวลากิจกรรมแชทในรอบนี้!'
 
 clickable:
   clickableText: '&aคลิกที่นี่!'
@@ -234,6 +283,9 @@ clickable:
     - ''
     - '<center>&b%clickableText%'
     - ''
+  gameStart_title_message: '&a&l- CHAT GAMES -'
+  gameStart_subtitle_message: '&fร่วมสนุกพิมพ์ตอปคำถามในแชท!'
+  gameStart_actionbar_message: '&eเริ่มเกมทายคำตอบแล้ว! พิมพ์ตอบรับรางวัล'
   # ข้อมูลผู้ชนะอันดับแรก
   correct_message:
     - ''
@@ -241,12 +293,18 @@ clickable:
     - ''
     - '<center>&a%winner_1% &7คลิกข้อความได้เร็วที่สุด (&c%time_1%s&7) และได้รับรางวัล!'
     - ''
+  winner_title_message: '&a&lมีผู้ชนะแล้ว!'
+  winner_subtitle_message: '&e%winner_1% &fตอบถูกต้อง!'
+  winner_actionbar_message: '&e%winner_1% &aตอบคำถามถูกต้อง!'
   time_expired_message:
     - ''
     - '<center>&r✓ ✯ %prefix%&r ✯ ✓'
     - ''
     - '<center>&fหมดเวลา &e%timeToGuess%s &cแล้ว! &fเกมคลิกข้อความจบลงแล้ว!'
     - ''
+  timeout_title_message: '&c&lหมดเวลา!'
+  timeout_subtitle_message: '&7ไม่มีผู้ตอบถูกในรอบนี้'
+  timeout_actionbar_message: '&cหมดเวลากิจกรรมแชทในรอบนี้!'
 
 fillout:
   gameStartAnnouncement:
@@ -255,12 +313,18 @@ fillout:
     - ''
     - '<center>&fคุณมีเวลา &e%timeToGuess% วินาที &fเพื่อ &dเติมคำ&f ในช่องว่าง: `&b%selection%&f`'
     - ''
+  gameStart_title_message: '&a&l- CHAT GAMES -'
+  gameStart_subtitle_message: '&fร่วมสนุกพิมพ์ตอปคำถามในแชท!'
+  gameStart_actionbar_message: '&eเริ่มเกมทายคำตอบแล้ว! พิมพ์ตอบรับรางวัล'
   correct_message:
     - ''
     - '<center>&r✓ ✯ %prefix% &r✯ ✓'
     - ''
     - '<center>&a%winner_1% &7เติมคำว่า `&e%correct_answer%&7` ได้เร็วที่สุด (&c%time_1%s&7) และได้รับรางวัล!'
     - ''
+  winner_title_message: '&a&lมีผู้ชนะแล้ว!'
+  winner_subtitle_message: '&e%winner_1% &fตอบถูกต้อง!'
+  winner_actionbar_message: '&e%winner_1% &aตอบคำถามถูกต้อง!'
   time_expired_message:
     - ''
     - '<center>&r✓ ✯ %prefix%&r ✯ ✓'
@@ -268,6 +332,9 @@ fillout:
     - '<center>&fหมดเวลา &e%timeToGuess%s &cแล้ว! &fเกมเติมคำจบลงแล้ว!'
     - '<center>คำตอบที่ถูกต้องคือ &e%correct_answer%&f!'
     - ''
+  timeout_title_message: '&c&lหมดเวลา!'
+  timeout_subtitle_message: '&7ไม่มีผู้ตอบถูกในรอบนี้'
+  timeout_actionbar_message: '&cหมดเวลากิจกรรมแชทในรอบนี้!'
 
 hoverable:
   hoverableText: '&eเอาเมาส์ชี้ที่นี่!'
@@ -281,12 +348,18 @@ hoverable:
     - ''
     - '<center>&b%hoverableText%'
     - ''
+  gameStart_title_message: '&a&l- CHAT GAMES -'
+  gameStart_subtitle_message: '&fร่วมสนุกพิมพ์ตอปคำถามในแชท!'
+  gameStart_actionbar_message: '&eเริ่มเกมทายคำตอบแล้ว! พิมพ์ตอบรับรางวัล'
   correct_message:
     - ''
     - '<center>&r✓ ✯ %prefix% &r✯ ✓'
     - ''
     - '<center>&a%winner_1% &7เขียนคำว่า `&e%correct_answer%&7` ได้เร็วที่สุด (&c%time_1%s&7) และได้รับรางวัล!'
     - ''
+  winner_title_message: '&a&lมีผู้ชนะแล้ว!'
+  winner_subtitle_message: '&e%winner_1% &fตอบถูกต้อง!'
+  winner_actionbar_message: '&e%winner_1% &aตอบคำถามถูกต้อง!'
   time_expired_message:
     - ''
     - '<center>&r✓ ✯ %prefix%&r ✯ ✓'
@@ -294,6 +367,9 @@ hoverable:
     - '<center>&fหมดเวลา &e%timeToGuess%s &cแล้ว! &fเกมนี้จบลงแล้ว!'
     - '<center>คำตอบที่ถูกต้องคือ &e%correct_answer%&f!'
     - ''
+  timeout_title_message: '&c&lหมดเวลา!'
+  timeout_subtitle_message: '&7ไม่มีผู้ตอบถูกในรอบนี้'
+  timeout_actionbar_message: '&cหมดเวลากิจกรรมแชทในรอบนี้!'
 
 #In this game, a string of the length specified will be created with random characters
 random:
@@ -303,12 +379,18 @@ random:
     - ''
     - '<center>&fคุณมีเวลา &e%timeToGuess% วินาที &fเพื่อ &dพิมพ์ตาม&f: `&b%selection%&f`'
     - ''
+  gameStart_title_message: '&a&l- CHAT GAMES -'
+  gameStart_subtitle_message: '&fร่วมสนุกพิมพ์ตอปคำถามในแชท!'
+  gameStart_actionbar_message: '&eเริ่มเกมทายคำตอบแล้ว! พิมพ์ตอบรับรางวัล'
   correct_message:
     - ''
     - '<center>&r✓ ✯ %prefix% &r✯ ✓'
     - ''
     - '<center>&a%winner_1% &7พิมพ์ `&e%correct_answer%&7` ได้เร็วที่สุด (&c%time_1%s&7) และได้รับรางวัล!'
     - ''
+  winner_title_message: '&a&lมีผู้ชนะแล้ว!'
+  winner_subtitle_message: '&e%winner_1% &fตอบถูกต้อง!'
+  winner_actionbar_message: '&e%winner_1% &aตอบคำถามถูกต้อง!'
   time_expired_message:
     - ''
     - '<center>&r✓ ✯ %prefix%&r ✯ ✓'
@@ -316,6 +398,9 @@ random:
     - '<center>&fหมดเวลา &e%timeToGuess%s &cแล้ว! &fเกมสุ่มตัวอักษรจบลงแล้ว!'
     - '<center>คำตอบที่ถูกต้องคือ &e%correct_answer%&f!'
     - ''
+  timeout_title_message: '&c&lหมดเวลา!'
+  timeout_subtitle_message: '&7ไม่มีผู้ตอบถูกในรอบนี้'
+  timeout_actionbar_message: '&cหมดเวลากิจกรรมแชทในรอบนี้!'
 
 math:
   gameStartAnnouncement:
@@ -324,6 +409,9 @@ math:
     - ''
     - '<center>&fคุณมีเวลา &e%timeToGuess% วินาที &fเพื่อ &dหาคำตอบของ&f: `&b%selection%&f`'
     - ''
+  gameStart_title_message: '&a&l- CHAT GAMES -'
+  gameStart_subtitle_message: '&fร่วมสนุกพิมพ์ตอปคำถามในแชท!'
+  gameStart_actionbar_message: '&eเริ่มเกมทายคำตอบแล้ว! พิมพ์ตอบรับรางวัล'
   #Here, you can also use '%equation%' in the message if you wish to do so
   correct_message:
     - ''
@@ -331,6 +419,9 @@ math:
     - ''
     - '<center>&a%winner_1% &7ตอบ `&e%correct_answer%&7` ได้เร็วที่สุด (&c%time_1%s&7) และได้รับรางวัล!'
     - ''
+  winner_title_message: '&a&lมีผู้ชนะแล้ว!'
+  winner_subtitle_message: '&e%winner_1% &fตอบถูกต้อง!'
+  winner_actionbar_message: '&e%winner_1% &aตอบคำถามถูกต้อง!'
   time_expired_message:
     - ''
     - '<center>&r✓ ✯ %prefix%&r ✯ ✓'
@@ -338,6 +429,9 @@ math:
     - '<center>&fหมดเวลา &e%timeToGuess%s &cแล้ว! &fเกมคณิตศาสตร์จบลงแล้ว!'
     - '<center>คำตอบที่ถูกต้องคือ &e%correct_answer%&f!'
     - ''
+  timeout_title_message: '&c&lหมดเวลา!'
+  timeout_subtitle_message: '&7ไม่มีผู้ตอบถูกในรอบนี้'
+  timeout_actionbar_message: '&cหมดเวลากิจกรรมแชทในรอบนี้!'
 
 variable:
   #This is the format in which they will appear, you may change amount of times %symbol% is repeated in 'line1and2-format' but all variables in line 3 are as they are shown.
@@ -353,6 +447,9 @@ variable:
     - '<center>%line_2%'
     - '<center>%line_3%'
     - ''
+  gameStart_title_message: '&a&l- CHAT GAMES -'
+  gameStart_subtitle_message: '&fร่วมสนุกพิมพ์ตอปคำถามในแชท!'
+  gameStart_actionbar_message: '&eเริ่มเกมทายคำตอบแล้ว! พิมพ์ตอบรับรางวัล'
   #Here, you can also use '%equation%' in the message if you wish to do so
   correct_message:
     - ''
@@ -360,6 +457,9 @@ variable:
     - ''
     - '<center>&a%winner_1% &7ตอบ `&e%correct_answer%&7` ได้เร็วที่สุด (&c%time_1%s&7) และได้รับรางวัล!'
     - ''
+  winner_title_message: '&a&lมีผู้ชนะแล้ว!'
+  winner_subtitle_message: '&e%winner_1% &fตอบถูกต้อง!'
+  winner_actionbar_message: '&e%winner_1% &aตอบคำถามถูกต้อง!'
   time_expired_message:
     - ''
     - '<center>&r✓ ✯ %prefix%&r ✯ ✓'
@@ -367,6 +467,9 @@ variable:
     - '<center>&fหมดเวลา &e%timeToGuess%s &cแล้ว! &fเกมสมการตัวแปรจบลงแล้ว!'
     - '<center>คำตอบที่ถูกต้องคือ &e%correct_answer%&f!'
     - ''
+  timeout_title_message: '&c&lหมดเวลา!'
+  timeout_subtitle_message: '&7ไม่มีผู้ตอบถูกในรอบนี้'
+  timeout_actionbar_message: '&cหมดเวลากิจกรรมแชทในรอบนี้!'
 
 trivia:
   gameStartAnnouncement:
@@ -376,12 +479,18 @@ trivia:
     - '<center>&fคุณมีเวลา &e%timeToGuess% วินาที &fเพื่อ &dตอบคำถาม&f:'
     - '<center>&f`&b%selection%&f`'
     - ''
+  gameStart_title_message: '&a&l- CHAT GAMES -'
+  gameStart_subtitle_message: '&fร่วมสนุกพิมพ์ตอปคำถามในแชท!'
+  gameStart_actionbar_message: '&eเริ่มเกมทายคำตอบแล้ว! พิมพ์ตอบรับรางวัล'
   correct_message:
     - ''
     - '<center>&r✓ ✯ %prefix% &r✯ ✓'
     - ''
     - '<center>&a%winner_1% &7ตอบ `&e%correct_answer%&7` ถูกเป็นคนแรก (&c%time_1%s&7) และได้รับรางวัล!'
     - ''
+  winner_title_message: '&a&lมีผู้ชนะแล้ว!'
+  winner_subtitle_message: '&e%winner_1% &fตอบถูกต้อง!'
+  winner_actionbar_message: '&e%winner_1% &aตอบคำถามถูกต้อง!'
   time_expired_message:
     - ''
     - '<center>&r✓ ✯ %prefix%&r ✯ ✓'
@@ -389,6 +498,9 @@ trivia:
     - '<center>&fหมดเวลา &e%timeToGuess%s &cแล้ว! &fเกมคำถามรอบรู้จบลงแล้ว!'
     - '<center>คำตอบที่ถูกต้องคือ &e%correct_answer%&f!'
     - ''
+  timeout_title_message: '&c&lหมดเวลา!'
+  timeout_subtitle_message: '&7ไม่มีผู้ตอบถูกในรอบนี้'
+  timeout_actionbar_message: '&cหมดเวลากิจกรรมแชทในรอบนี้!'
 
 #RACES
 #As of now, the races don't support multiple winners as I don't see a reason since they are 'races' or 'player challenges' that the first should get.
@@ -402,17 +514,26 @@ hunt:
     - ''
     - '<center>&fคุณมีเวลา &e%timeToComplete% วินาที &fเพื่อ &dล่า&f: `&b%amount%&fx &3%value%`'
     - ''
+  gameStart_title_message: '&a&l- RACES STARTED -'
+  gameStart_subtitle_message: '&fเริ่มการแข่งขุด/ล่า/ตกปลา!'
+  gameStart_actionbar_message: '&eทำภารกิจที่ได้รับมอบหมายให้สำเร็จเป็นคนแรก!'
   correct_message:
     - ''
     - '<center>&r✓ ✯ %prefix% &r✯ ✓'
     - ''
     - '<center>&a%winner% &7ล่า `&e%amount%&fx &3%value%&7` เสร็จสิ้น (&c%time%s&7) และได้รับรางวัล!'
     - ''
+  winner_title_message: '&a&lมีผู้ชนะแล้ว!'
+  winner_subtitle_message: '&e%winner% &fทำภารกิจสำเร็จ!'
+  winner_actionbar_message: '&e%winner% &aชนะการแข่งขัน!'
   time_expired_message:
     - ''
     - '<center>&r✓ ✯ %prefix%&r ✯ ✓'
     - ''
     - '<center>&fหมดเวลา &e%timeToComplete%s &cแล้ว! &fเกมล่ามอนสเตอร์จบลงแล้ว!'
+  timeout_title_message: '&c&lหมดเวลา!'
+  timeout_subtitle_message: '&7ไม่มีผู้สำเร็จภารกิจในรอบนี้'
+  timeout_actionbar_message: '&cหมดเวลากิจกรรมการแข่งขันในรอบนี้!'
 
 mine:
   gameStartAnnouncement:
@@ -421,17 +542,26 @@ mine:
     - ''
     - '<center>&fคุณมีเวลา &e%timeToComplete% วินาที &fเพื่อ &dขุด&f: `&b%amount%&fx &3%value%`'
     - ''
+  gameStart_title_message: '&a&l- RACES STARTED -'
+  gameStart_subtitle_message: '&fเริ่มการแข่งขุด/ล่า/ตกปลา!'
+  gameStart_actionbar_message: '&eทำภารกิจที่ได้รับมอบหมายให้สำเร็จเป็นคนแรก!'
   correct_message:
     - ''
     - '<center>&r✓ ✯ %prefix% &r✯ ✓'
     - ''
     - '<center>&a%winner% &7ขุด `&e%amount%&fx &3%value%&7` เสร็จสิ้น (&c%time%s&7) และได้รับรางวัล!'
     - ''
+  winner_title_message: '&a&lมีผู้ชนะแล้ว!'
+  winner_subtitle_message: '&e%winner% &fทำภารกิจสำเร็จ!'
+  winner_actionbar_message: '&e%winner% &aชนะการแข่งขัน!'
   time_expired_message:
     - ''
     - '<center>&r✓ ✯ %prefix%&r ✯ ✓'
     - ''
     - '<center>&fหมดเวลา &e%timeToComplete%s &cแล้ว! &fเกมขุดแร่จบลงแล้ว!'
+  timeout_title_message: '&c&lหมดเวลา!'
+  timeout_subtitle_message: '&7ไม่มีผู้สำเร็จภารกิจในรอบนี้'
+  timeout_actionbar_message: '&cหมดเวลากิจกรรมการแข่งขันในรอบนี้!'
 
 place:
   gameStartAnnouncement:
@@ -440,17 +570,26 @@ place:
     - ''
     - '<center>&fคุณมีเวลา &e%timeToComplete% วินาที &fเพื่อ &dวาง&f: `&b%amount%&fx &3%value%`'
     - ''
+  gameStart_title_message: '&a&l- RACES STARTED -'
+  gameStart_subtitle_message: '&fเริ่มการแข่งขุด/ล่า/ตกปลา!'
+  gameStart_actionbar_message: '&eทำภารกิจที่ได้รับมอบหมายให้สำเร็จเป็นคนแรก!'
   correct_message:
     - ''
     - '<center>&r✓ ✯ %prefix% &r✯ ✓'
     - ''
     - '<center>&a%winner% &7วาง `&e%amount%&fx &3%value%&7` เสร็จสิ้น (&c%time%s&7) และได้รับรางวัล!'
     - ''
+  winner_title_message: '&a&lมีผู้ชนะแล้ว!'
+  winner_subtitle_message: '&e%winner% &fทำภารกิจสำเร็จ!'
+  winner_actionbar_message: '&e%winner% &aชนะการแข่งขัน!'
   time_expired_message:
     - ''
     - '<center>&r✓ ✯ %prefix%&r ✯ ✓'
     - ''
     - '<center>&fหมดเวลา &e%timeToComplete%s &cแล้ว! &fเกมวางบล็อกจบลงแล้ว!'
+  timeout_title_message: '&c&lหมดเวลา!'
+  timeout_subtitle_message: '&7ไม่มีผู้สำเร็จภารกิจในรอบนี้'
+  timeout_actionbar_message: '&cหมดเวลากิจกรรมการแข่งขันในรอบนี้!'
 
 fish:
   gameStartAnnouncement:
@@ -459,17 +598,26 @@ fish:
     - ''
     - '<center>&fคุณมีเวลา &e%timeToComplete% วินาที &fเพื่อ &dตกปลา&f: `&b%amount%&fx &3%value%`'
     - ''
+  gameStart_title_message: '&a&l- RACES STARTED -'
+  gameStart_subtitle_message: '&fเริ่มการแข่งขุด/ล่า/ตกปลา!'
+  gameStart_actionbar_message: '&eทำภารกิจที่ได้รับมอบหมายให้สำเร็จเป็นคนแรก!'
   correct_message:
     - ''
     - '<center>&r✓ ✯ %prefix% &r✯ ✓'
     - ''
     - '<center>&a%winner% &7ตกปลา `&e%amount%&fx &3%value%&7` เสร็จสิ้น (&c%time%s&7) และได้รับรางวัล!'
     - ''
+  winner_title_message: '&a&lมีผู้ชนะแล้ว!'
+  winner_subtitle_message: '&e%winner% &fทำภารกิจสำเร็จ!'
+  winner_actionbar_message: '&e%winner% &aชนะการแข่งขัน!'
   time_expired_message:
     - ''
     - '<center>&r✓ ✯ %prefix%&r ✯ ✓'
     - ''
     - '<center>&fหมดเวลา &e%timeToComplete%s &cแล้ว! &fเกมตกปลาจบลงแล้ว!'
+  timeout_title_message: '&c&lหมดเวลา!'
+  timeout_subtitle_message: '&7ไม่มีผู้สำเร็จภารกิจในรอบนี้'
+  timeout_actionbar_message: '&cหมดเวลากิจกรรมการแข่งขันในรอบนี้!'
 
 eat:
   gameStartAnnouncement:
@@ -478,17 +626,26 @@ eat:
     - ''
     - '<center>&fคุณมีเวลา &e%timeToComplete% วินาที &fเพื่อ &dกิน&f: `&b%amount%&fx &3%value%`'
     - ''
+  gameStart_title_message: '&a&l- RACES STARTED -'
+  gameStart_subtitle_message: '&fเริ่มการแข่งขุด/ล่า/ตกปลา!'
+  gameStart_actionbar_message: '&eทำภารกิจที่ได้รับมอบหมายให้สำเร็จเป็นคนแรก!'
   correct_message:
     - ''
     - '<center>&r✓ ✯ %prefix% &r✯ ✓'
     - ''
     - '<center>&a%winner% &7กิน `&e%amount%&fx &3%value%&7` เสร็จสิ้น (&c%time%s&7) และได้รับรางวัล!'
     - ''
+  winner_title_message: '&a&lมีผู้ชนะแล้ว!'
+  winner_subtitle_message: '&e%winner% &fทำภารกิจสำเร็จ!'
+  winner_actionbar_message: '&e%winner% &aชนะการแข่งขัน!'
   time_expired_message:
     - ''
     - '<center>&r✓ ✯ %prefix%&r ✯ ✓'
     - ''
     - '<center>&fหมดเวลา &e%timeToComplete%s &cแล้ว! &fเกมกินอาหารจบลงแล้ว!'
+  timeout_title_message: '&c&lหมดเวลา!'
+  timeout_subtitle_message: '&7ไม่มีผู้สำเร็จภารกิจในรอบนี้'
+  timeout_actionbar_message: '&cหมดเวลากิจกรรมการแข่งขันในรอบนี้!'
 
 craft:
   gameStartAnnouncement:
@@ -497,16 +654,25 @@ craft:
     - ''
     - '<center>&fคุณมีเวลา &e%timeToComplete% วินาที &fเพื่อ &dคราฟต์&f: `&b%amount%&fx &3%value%`'
     - ''
+  gameStart_title_message: '&a&l- RACES STARTED -'
+  gameStart_subtitle_message: '&fเริ่มการแข่งขุด/ล่า/ตกปลา!'
+  gameStart_actionbar_message: '&eทำภารกิจที่ได้รับมอบหมายให้สำเร็จเป็นคนแรก!'
   correct_message:
     - ''
     - '<center>&r✓ ✯ %prefix% &r✯ ✓'
     - ''
     - '<center>&a%winner% &7คราฟต์ `&e%amount%&fx &3%value%&7` เสร็จสิ้น (&c%time%s&7) และได้รับรางวัล!'
     - ''
+  winner_title_message: '&a&lมีผู้ชนะแล้ว!'
+  winner_subtitle_message: '&e%winner% &fทำภารกิจสำเร็จ!'
+  winner_actionbar_message: '&e%winner% &aชนะการแข่งขัน!'
   time_expired_message:
     - ''
     - '<center>&r✓ ✯ %prefix%&r ✯ ✓'
     - ''
+  timeout_title_message: '&c&lหมดเวลา!'
+  timeout_subtitle_message: '&7ไม่มีผู้สำเร็จภารกิจในรอบนี้'
+  timeout_actionbar_message: '&cหมดเวลากิจกรรมการแข่งขันในรอบนี้!'
     - '<center>&fหมดเวลา &e%timeToComplete%s &cแล้ว! &fเกมคราฟต์ของจบลงแล้ว!'
 furnace:
   gameStartAnnouncement:
@@ -515,14 +681,23 @@ furnace:
     - ''
     - '<center>&fคุณมีเวลา &e%timeToComplete% วินาที &fเพื่อ &dเผา/ปรุง&f: `&b%amount%&fx &3%value%`'
     - ''
+  gameStart_title_message: '&a&l- RACES STARTED -'
+  gameStart_subtitle_message: '&fเริ่มการแข่งขุด/ล่า/ตกปลา!'
+  gameStart_actionbar_message: '&eทำภารกิจที่ได้รับมอบหมายให้สำเร็จเป็นคนแรก!'
   correct_message:
     - ''
     - '<center>&r✓ ✯ %prefix% &r✯ ✓'
     - ''
     - '<center>&a%winner% &7เผา/ปรุง `&e%amount%&fx &3%value%&7` เสร็จสิ้น (&c%time%s&7) และได้รับรางวัล!'
     - ''
+  winner_title_message: '&a&lมีผู้ชนะแล้ว!'
+  winner_subtitle_message: '&e%winner% &fทำภารกิจสำเร็จ!'
+  winner_actionbar_message: '&e%winner% &aชนะการแข่งขัน!'
   time_expired_message:
     - ''
     - '<center>&r✓ ✯ %prefix%&r ✯ ✓'
     - ''
+  timeout_title_message: '&c&lหมดเวลา!'
+  timeout_subtitle_message: '&7ไม่มีผู้สำเร็จภารกิจในรอบนี้'
+  timeout_actionbar_message: '&cหมดเวลากิจกรรมการแข่งขันในรอบนี้!'
     - '<center>&fหมดเวลา &e%timeToComplete%s &cแล้ว! &fเกมเผาไอเทมจบลงแล้ว!'

@@ -1,5 +1,6 @@
 package core.luminaworld.modules.system.FakePlayerScheduler
 
+import org.bukkit.Bukkit
 import org.bukkit.command.Command
 import org.bukkit.command.CommandExecutor
 import org.bukkit.command.CommandSender
@@ -20,9 +21,9 @@ class FakePlayerSchedulerCommand(private val module: FakePlayerSchedulerModule) 
             if (args.isNotEmpty() && (args[0].equals("reload", ignoreCase = true) || args[0].equals("sync", ignoreCase = true))) {
                 module.reload()
                 if (module.isSchedulerActive) {
-                    sender.sendMessage("§6[FP-Scheduler] §aเปิดการทำงานระบบสเก็ตดูลเลอร์บอทสำเร็จหลังรีโหลด!")
+                    sender.sendMessage("§6[FP-Scheduler] §aเปิดการทำงานระบบบอทสำเร็จหลังรีโหลด!")
                 } else {
-                    sender.sendMessage("§6[FP-Scheduler] §cระบบยังคงปิดใช้งานอยู่ (ตรวจสอบ settings.enabled ในไฟล์คอนฟิก)!")
+                    sender.sendMessage("§6[FP-Scheduler] §cระบบยังคงปิดใช้งานอยู่ (ตรวจสอบ settings.enabled ในไฟล์คอนฟิก)")
                 }
                 return true
             }
@@ -38,7 +39,7 @@ class FakePlayerSchedulerCommand(private val module: FakePlayerSchedulerModule) 
                     module.loadYamlDatabase()
                     module.updateDailySchedule()
                     module.syncInitialBots()
-                    sender.sendMessage("§6[FP-Scheduler] §aรีโหลดฐานข้อมูลบอทและสุ่มตารางงานวันใหม่สำเร็จ!")
+                    sender.sendMessage("§6[FP-Scheduler] §aรีโหลดฐานข้อมูลบอทและตารางใหม่สำเร็จ!")
                     return true
                 }
                 "reset" -> {
@@ -54,18 +55,51 @@ class FakePlayerSchedulerCommand(private val module: FakePlayerSchedulerModule) 
                         } else if (value == "off" || value == "false" || value == "disable") {
                             module.restartRushEnabled = false
                         } else {
-                            sender.sendMessage("§6[FP-Scheduler] §cวิธีใช้: /fpscheduler rush [on/off] หรือ /fpscheduler rush เพื่อสลับเปิด/ปิด")
+                            sender.sendMessage("§6[FP-Scheduler] §cวิธีใช้: /fpscheduler rush [on/off]")
                             return true
                         }
                     } else {
                         module.restartRushEnabled = !module.restartRushEnabled
                     }
                     module.saveSettings()
-                    sender.sendMessage("§6[FP-Scheduler] §fโหมดเปิดเซิร์ฟใหม่ (Restart Rush): " + (if (module.restartRushEnabled) "§aเปิดใช้งาน" else "§cปิดใช้งาน"))
+                    sender.sendMessage("§6[FP-Scheduler] §fโหมดช่วงเปิดเซิร์ฟใหม่ (Rush): " + (if (module.restartRushEnabled) "§aเปิดใช้งาน" else "§cปิดใช้งาน"))
+                    return true
+                }
+                "add" -> {
+                    if (args.size < 3) {
+                        sender.sendMessage("§6[FP-Scheduler] §cวิธีใช้: /fpscheduler add [ชื่อบอท] [ยศ]")
+                        return true
+                    }
+                    val name = args[1]
+                    val rank = args[2]
+                    if (!module.botPool.contains(name)) {
+                        module.botPool.add(name)
+                    }
+                    module.botRanks[name] = rank
+                    module.saveDatabase()
+                    sender.sendMessage("§6[FP-Scheduler] §aเพิ่ม/อัปเดตบอท §e$name §7(ยศ: $rank) เรียบร้อย!")
+                    return true
+                }
+                "remove" -> {
+                    if (args.size < 2) {
+                        sender.sendMessage("§6[FP-Scheduler] §cวิธีใช้: /fpscheduler remove [ชื่อบอท]")
+                        return true
+                    }
+                    val name = args[1]
+                    if (!module.botPool.contains(name)) {
+                        sender.sendMessage("§6[FP-Scheduler] §cไม่พบบอท §e$name §cในระบบ")
+                        return true
+                    }
+                    module.botPool.remove(name)
+                    module.botRanks.remove(name)
+                    if (module.activeBots.contains(name)) {
+                        module.despawnBot(name)
+                    }
+                    module.saveDatabase()
+                    sender.sendMessage("§6[FP-Scheduler] §eลบบอท §f$name §eออกจากระบบแล้ว")
                     return true
                 }
                 "status" -> {
-                    val now = Date()
                     val nowMs = System.currentTimeMillis()
                     val calendar = java.util.Calendar.getInstance()
                     val currentHour = calendar.get(java.util.Calendar.HOUR_OF_DAY)
@@ -74,61 +108,58 @@ class FakePlayerSchedulerCommand(private val module: FakePlayerSchedulerModule) 
                     val currentCount = module.activeBots.size
                     val isRush = module.isRestartRushMode()
                     val baseTarget = module.getCurrentBaseTarget()
-                    val currentNoise = module.currentNoise
-
-                    sender.sendMessage("§6§l=== FakePlayer Scheduler Status ===")
-                    sender.sendMessage("§eวันที่สุ่ม (Seed): §f${module.dailySeed}")
-                    sender.sendMessage("§eเป้าหมายชั่วโมงนี้: §a${module.hourlyTargets[currentHour]} ตัว §7(ชั่วโมงถัดไป: ${module.hourlyTargets[(currentHour + 1) % 24]} ตัว)")
                     
-                    val noiseStr = if (currentNoise >= 0) "+$currentNoise" else "$currentNoise"
-                    sender.sendMessage("§eเป้าหมายปัจจุบัน (เฉลี่ยรายนาที): §a$baseTarget §eตัว | รวม Noise ($noiseStr): §a$target §eตัว §7(ปัจจุบันออนไลน์: $currentCount ตัว)")
-                    sender.sendMessage("§eจำนวนบอทในระบบทั้งหมด (Pool): §b${module.botPool.size} ตัว")
-                    
-                    val rushStatus = if (module.restartRushEnabled) {
-                        if (isRush) "§aกำลังทำงาน (บอทเข้าเร็วขึ้นตัวละ 10-30 วิ)"
-                        else "§eเปิดการใช้งานไว้ (แต่ไม่ได้ทำงาน: พ้นช่วง 10 นาทีแรกแล้ว)"
-                    } else {
-                        "§cปิดการใช้งานหลัก"
-                    }
-                    sender.sendMessage("§eโหมดเปิดเซิร์ฟใหม่ (Restart Rush): $rushStatus")
+                    sender.sendMessage("§6§l=== FakePlayer สถานะระบบ ===")
+                    sender.sendMessage("§eเป้าหมายชั่วโมงนี้: §a$baseTarget ตัว §8| §eสุ่มจริง: §a$target ตัว §8| §eออนไลน์: §a$currentCount/$target ตัว")
+                    sender.sendMessage("§eบอททั้งหมด: §b${module.botPool.size} ตัว §8| §eโหมด Rush: " + (if (isRush) "§aเปิดใช้งาน" else "§7ปิดใช้งาน"))
 
-                    // เวลาที่บอทถัดไปจะเข้า
                     val secondsSinceLastJoin = (nowMs - module.lastJoinTimeMs) / 1000.0
                     if (currentCount < target) {
                         val rem = Math.max(0, Math.round(module.joinIntervalSeconds - secondsSinceLastJoin).toInt())
-                        val nextJoinClock = Date(nowMs + rem * 1000L)
-                        val timeStr = if (rem == 0) "§aกำลังเข้าล็อกอิน..." else "§b${module.formatTime(nextJoinClock, true)} §7(ในอีก $rem วินาที)"
-                        sender.sendMessage("§eเวลาที่บอทถัดไปจะเข้า: $timeStr")
-                    } else {
-                        sender.sendMessage("§eเวลาที่บอทถัดไปจะเข้า: §7เป้าหมายเต็มแล้ว (รอเปลี่ยนช่วงเวลาหรือสุ่ม Swap)")
+                        sender.sendMessage("§eคิวถัดไป: §aบอทเข้าในอีก $rem วินาที")
                     }
 
-                    // เวลาที่บอทถัดไปจะออก (เพื่อปรับสมดุล)
                     val secondsSinceLastLeave = (nowMs - module.lastLeaveTimeMs) / 1000.0
                     if (currentCount > target) {
                         val rem = Math.max(0, Math.round(module.leaveIntervalSeconds - secondsSinceLastLeave).toInt())
-                        val nextLeaveClock = Date(nowMs + rem * 1000L)
-                        val timeStr = if (rem == 0) "§cกำลังล็อกเอาท์..." else "§b${module.formatTime(nextLeaveClock, true)} §7(ในอีก $rem วินาที)"
-                        sender.sendMessage("§eเวลาที่บอทถัดไปจะออก (เพื่อปรับสมดุล): $timeStr")
-                    } else {
-                        sender.sendMessage("§eเวลาที่บอทถัดไปจะออก (เพื่อปรับสมดุล): §7จำนวนปกติ (รอหมดอายุขัย)")
+                        sender.sendMessage("§eคิวถัดไป: §cบอทออกในอีก $rem วินาที")
                     }
 
-                    sender.sendMessage("§eบอทที่ออนไลน์อยู่ขณะนี้ (§a$currentCount ตัว§e):")
                     if (currentCount == 0) {
-                        sender.sendMessage(" §7- ไม่มีบอทออนไลน์ในระบบ")
+                        sender.sendMessage("§eรายชื่อบอทที่ออนไลน์:")
+                        sender.sendMessage(" §8- §7ไม่มีบอทออนไลน์ในขณะนี้")
                     } else {
-                        for (name in module.activeBots) {
+                        // ระบบแบ่งหน้า (Pagination) หน้าละ 5 รายชื่อ
+                        val page = if (args.size > 1) args[1].toIntOrNull() ?: 1 else 1
+                        val pageSize = 5
+                        val activeSnapshot = ArrayList(module.activeBots)
+                        val totalPages = Math.max(1, Math.ceil(activeSnapshot.size.toDouble() / pageSize.toDouble()).toInt())
+                        val currentPage = Math.max(1, Math.min(page, totalPages))
+                        
+                        val startIndex = (currentPage - 1) * pageSize
+                        val endIndex = Math.min(startIndex + pageSize, activeSnapshot.size)
+                        
+                        sender.sendMessage("§eรายชื่อบอทที่ออนไลน์ (หน้า $currentPage/$totalPages):")
+                        val subList = activeSnapshot.subList(startIndex, endIndex)
+                        for (name in subList) {
                             val rank = module.botRanks[name] ?: "ไม่มี"
-                            val joinT = module.botJoinTimes[name] ?: "ไม่ระบุ"
-                            val logoutT = module.botLogoutTimes[name] ?: "ไม่ระบุ"
                             val timeLeftSec = module.botSessions[name]?.let {
                                 Math.max(0L, (it - nowMs) / 1000L)
                             } ?: 0L
-                            val minLeft = timeLeftSec / 60
-                            val secLeft = timeLeftSec % 60
-                            val timeStr = "$minLeft นาที $secLeft วินาที"
-                            sender.sendMessage(" §7• §a$name §7(ยศ: §e$rank§7) | เข้า: §b$joinT §7| ออก: §c$logoutT §7(เหลือ: §e$timeStr§7)")
+                            val hours = timeLeftSec / 3600
+                            val minutes = (timeLeftSec % 3600) / 60
+                            val seconds = timeLeftSec % 60
+                            
+                            val timeStr = if (hours > 0) {
+                                "$hours ชั่วโมง $minutes นาที $seconds วินาที"
+                            } else {
+                                "$minutes นาที $seconds วินาที"
+                            }
+                            sender.sendMessage(" §7• §f$name §a[${rank.uppercase()}] §8- §eเหลือเวลา $timeStr")
+                        }
+                        
+                        if (currentPage < totalPages) {
+                            sender.sendMessage("§8» §7พิมพ์ §e/fpscheduler status ${currentPage + 1} §7เพื่อดูหน้าถัดไป")
                         }
                     }
                     return true
@@ -136,12 +167,13 @@ class FakePlayerSchedulerCommand(private val module: FakePlayerSchedulerModule) 
             }
         }
 
-        sender.sendMessage("§6§l=== FakePlayer Scheduler Menu ===")
+        sender.sendMessage("§6§l=== FakePlayer สั่งการระบบ ===")
         sender.sendMessage("§e/fpscheduler status §7- ดูสถานะการสุ่มบอทปัจจุบัน")
-        sender.sendMessage("§e/fpscheduler reload §7- รีโหลดบอทและเริ่มตารางสุ่มใหม่")
-        sender.sendMessage("§e/fpscheduler reset §7- สั่งเตะบอททั้งหมดของสคริปต์ออก")
-        sender.sendMessage("§e/fpscheduler rush [on/off] §7- เปิด/ปิดโหมดเร่งจำนวนบอทหลังเซิร์ฟเปิด")
-        sender.sendMessage("§7บอทออนไลน์: §a${module.activeBots.size} ตัว §7| เป้าหมายปัจจุบัน: §a${module.getCurrentTarget()} ตัว")
+        sender.sendMessage("§e/fpscheduler reload §7- รีโหลดและเริ่มตารางสุ่มใหม่")
+        sender.sendMessage("§e/fpscheduler reset §7- สั่งเตะบอททั้งหมดออก")
+        sender.sendMessage("§e/fpscheduler rush [on/off] §7- เปิด/ปิดเร่งบอทช่วงเปิดเซิร์ฟ")
+        sender.sendMessage("§e/fpscheduler add [ชื่อ] [ยศ] §7- เพิ่มบอทลงระบบ")
+        sender.sendMessage("§e/fpscheduler remove [ชื่อ] §7- ลบบอทออกจากระบบ")
         return true
     }
 
@@ -150,12 +182,19 @@ class FakePlayerSchedulerCommand(private val module: FakePlayerSchedulerModule) 
             return emptyList()
         }
         if (args.size == 1) {
-            val subcommands = listOf("status", "reload", "sync", "reset", "rush")
+            val subcommands = listOf("status", "reload", "sync", "reset", "rush", "add", "remove")
             return subcommands.filter { it.startsWith(args[0].lowercase(Locale.ROOT)) }
         }
-        if (args.size == 2 && args[0].equals("rush", ignoreCase = true)) {
-            val options = listOf("on", "off")
-            return options.filter { it.startsWith(args[1].lowercase(Locale.ROOT)) }
+        if (args.size == 2) {
+            val sub = args[0].lowercase(Locale.ROOT)
+            if (sub == "rush") {
+                val options = listOf("on", "off")
+                return options.filter { it.startsWith(args[1].lowercase(Locale.ROOT)) }
+            }
+            if (sub == "remove") {
+                val search = args[1].lowercase(Locale.ROOT)
+                return module.botPool.filter { it.lowercase(Locale.ROOT).startsWith(search) }
+            }
         }
         return emptyList()
     }

@@ -2,6 +2,11 @@
 #          ChatGames - ตั้งค่าทั่วไป
 # ==========================================
 
+# ตั้งค่าทั่วไปของโมดูลย่อย
+settings:
+  # เปิด/ปิดการทำงานของระบบมินิเกม ChatGames ทั้งหมด (true = เปิด, false = ปิด)
+  enabled: true
+
 # รหัสภาษาสำหรับการแปลชื่อบล็อกและมอนสเตอร์ใน Race (สถิติ)
 lang: en_us
 
@@ -67,9 +72,9 @@ fastest-typers-top: true
 # เสียงเอฟเฟกต์ (ปล่อยว่างเพื่อปิด)
 GameSounds:
   volume: 1.0
-  win: ORB_PICKUP
-  game-start: LEVEL_UP
-  time-expired: VILLAGER_NO
+  win: minecraft:entity.experience_orb.pickup
+  game-start: minecraft:entity.player.levelup
+  time-expired: minecraft:entity.villager.no
   wrong-case: ''
 
 # ==========================================

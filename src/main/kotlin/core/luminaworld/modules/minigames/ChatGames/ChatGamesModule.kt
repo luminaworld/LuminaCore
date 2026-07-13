@@ -13,7 +13,7 @@ class ChatGamesModule(plugin: LuminaCore) : LuminaModule(plugin, "ChatGames") {
     
     private val chatListener = ChatListener(this)
     private val raceListener = RaceListener(this)
-    private val commandExecutor = ChatGamesCommand(this)
+    val commandExecutor = ChatGamesCommand(this)
 
     override fun loadConfig() {
         chatConfig.reload()
@@ -21,6 +21,7 @@ class ChatGamesModule(plugin: LuminaCore) : LuminaModule(plugin, "ChatGames") {
         // กำหนดสถานะเปิดใช้งานตาม settings ใน config
         val enabledInModule = chatConfig.config.getBoolean("settings.enabled", true)
         isEnabled = enabledInModule
+        commandExecutor.allGamesDisabled = !enabledInModule
 
         // โอนย้ายออบเจ็กต์คอนฟิกย่อยให้เป็นคอนฟิกหลักของ LuminaModule
         // เพื่อรองรับฟังก์ชัน checkPermission() และค่าดีฟอลต์อื่นๆ ในเบสคลาส

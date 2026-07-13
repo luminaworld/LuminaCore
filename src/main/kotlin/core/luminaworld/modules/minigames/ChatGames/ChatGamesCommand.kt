@@ -200,6 +200,28 @@ class ChatGamesCommand(private val module: ChatGamesModule) : CommandExecutor, T
                     return true
                 }
                 allGamesDisabled = !allGamesDisabled
+                
+                // บันทึกสถานะลงไฟล์คอนฟิกเพื่อจำไว้ถาวร
+                module.chatConfig.config.set("settings.enabled", !allGamesDisabled)
+                try {
+                    val configFile = java.io.File(module.chatConfig.folder, "config.yml")
+                    module.chatConfig.config.save(configFile)
+                } catch (e: Exception) {
+                    module.plugin.logger.severe("[ChatGames] ไม่สามารถบันทึกสถานะ settings.enabled ลงไฟล์คอนฟิกได้: ${e.message}")
+                }
+                
+                module.isEnabled = !allGamesDisabled
+
+                if (allGamesDisabled) {
+                    module.gameManager.stopScheduler()
+                    // จบกิจกรรมปัจจุบันทันทีเพื่อไม่ให้รบกวนแชท
+                    if (module.gameManager.currentGame != null) {
+                        module.gameManager.endGameTimeout()
+                    }
+                } else {
+                    module.gameManager.startScheduler()
+                }
+
                 val stateMsg = if (!allGamesDisabled) module.chatConfig.getMessage("state-ON", "เปิด") else module.chatConfig.getMessage("state-OFF", "ปิด")
                 val msg = module.chatConfig.getMessage("toggleAllGames")
                     .replace("%state%", stateMsg)

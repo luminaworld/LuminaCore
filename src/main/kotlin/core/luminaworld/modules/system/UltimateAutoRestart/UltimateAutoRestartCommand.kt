@@ -206,14 +206,7 @@ class UltimateAutoRestartCommand(private val module: UltimateAutoRestartModule) 
             }
         }
 
-        sender.sendMessage("§6§l=== UltimateAutoRestart Admin Menu ===")
-        sender.sendMessage("§e/uar status §7- ดูรายละเอียดสถานะและเวลารีสตาร์ท")
-        sender.sendMessage("§e/uar force [วินาที] [เหตุผล] §7- บังคับนับถอยหลังรีสตาร์ท (ขั้นต่ำ 5 วิ)")
-        sender.sendMessage("§e/uar now [วินาที] [เหตุผล] §7- บังคับรีสตาร์ท (นับถอยหลังขั้นต่ำ 5 วิ)")
-        sender.sendMessage("§e/uar delay [วินาที] §7- เลื่อนเวลาการรีสตาร์ทออกไป")
-        sender.sendMessage("§e/uar stop §7- ยกเลิกการรีสตาร์ทที่ตั้งตารางเวลาไว้")
-        sender.sendMessage("§e/uar reload §7- รีโหลดค่าตั้งค่าทั้งหมด")
-        sender.sendMessage("§e/uar debug webhook §7- ทดสอบส่ง Webhook ไปยัง Discord")
+        module.sendFormattedMessageToSender(sender, "COMMAND_HELP", emptyMap())
         return true
     }
 

@@ -45,7 +45,8 @@ class GlowingTwerkListener(private val module: GlowingTwerkModule) : Listener {
         // 1. ตรวจสอบโลกที่อนุญาต
         val allowedWorlds = module.config?.getStringList("settings.allowed-worlds") ?: emptyList()
         if (allowedWorlds.isNotEmpty() && !allowedWorlds.contains(world.name)) {
-            sendMessage(player, "world-disabled", "Glowing Twerk is not allowed in this world!")
+            val msg = module.config?.getString("messages.world-disabled") ?: "%prefix% &cระบบเร่งโตพืชไม่ได้รับอนุญาตให้ใช้ในโลกนี้!"
+            module.sendNotification(player, msg)
             return
         }
 
@@ -61,7 +62,8 @@ class GlowingTwerkListener(private val module: GlowingTwerkModule) : Listener {
 
         // หากไม่มีสิทธิ์ใช้งานเลย
         if (radius == -1) {
-            sendMessage(player, "no-permission", "You do not have permission to use Glowing Twerk!")
+            val msg = module.config?.getString("messages.no-permission") ?: "%prefix% &cคุณไม่มีสิทธิ์ในการใช้งานระบบเร่งโตพืช!"
+            module.sendNotification(player, msg)
             return
         }
 
@@ -72,7 +74,8 @@ class GlowingTwerkListener(private val module: GlowingTwerkModule) : Listener {
         val cooldownMs = (cooldownSec * 1000).toLong()
 
         if (now - lastUse < cooldownMs) {
-            sendMessage(player, "cooldown", "Please wait before using Luminaris power again!")
+            val msg = module.config?.getString("messages.cooldown") ?: "%prefix% &cโปรดรอก่อนใช้พลังเร่งโตพืชอีกครั้ง!"
+            module.sendNotification(player, msg)
             return
         }
 
@@ -174,28 +177,15 @@ class GlowingTwerkListener(private val module: GlowingTwerkModule) : Listener {
                     if (count > 0) {
                         val finalCount = count
                         player.scheduler.execute(module.plugin, {
-                            val msgTemplate = module.config?.getString("messages.success") ?: "%prefix% You grew {count} plants using Luminaris power!"
-                            val prefix = module.plugin.config.getString("settings.prefix", "[LuminaCore]") ?: "[LuminaCore]"
-                            val formatted = msgTemplate.replace("%prefix%", prefix)
-                                .replace("{count}", finalCount.toString())
-                                .replace("&", "§")
+                            val msgTemplate = module.config?.getString("messages.success") ?: "%prefix% &aคุณได้ช่วยเร่งพืชรอบตัวให้เติบโตสำเร็จจำนวน {count} ต้น!"
+                            val formatted = msgTemplate.replace("{count}", finalCount.toString())
                             
                             if (module.config?.getBoolean("settings.chat-messages-enabled", true) == true && msgTemplate.isNotBlank()) {
-                                player.sendMessage(formatted)
+                                module.sendNotification(player, formatted)
                             }
                         }, null, 0)
                     }
                 }
         }
-    }
-
-    private fun sendMessage(player: Player, configPath: String, def: String) {
-        val msgTemplate = module.config?.getString("messages.$configPath") ?: def
-        if (msgTemplate.isBlank()) return
-        if (module.config?.getBoolean("settings.chat-messages-enabled", true) == false) return
-
-        val prefix = module.plugin.config.getString("settings.prefix", "[LuminaCore]") ?: "[LuminaCore]"
-        val formatted = msgTemplate.replace("%prefix%", prefix).replace("&", "§")
-        player.sendMessage(formatted)
     }
 }

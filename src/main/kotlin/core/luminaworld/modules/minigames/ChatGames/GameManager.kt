@@ -800,14 +800,12 @@ class GameManager(private val module: ChatGamesModule) {
         subKey: String,
         placeholders: Map<String, String> = emptyMap()
     ) {
-        if (isRace) {
-            val globalTitleEnabled = module.chatConfig.chatRaces.getBoolean("enable-title", false)
-            val specificTitleEnabled = module.chatConfig.chatRaces.getBoolean("$gameOrRaceType.enable-title", false)
-            if (!globalTitleEnabled || !specificTitleEnabled) {
-                return
-            }
-        }
         val cfg = if (isRace) module.chatConfig.chatRaces else module.chatConfig.config
+        val globalTitleEnabled = cfg.getBoolean("enable-title", false)
+        val specificTitleEnabled = cfg.getBoolean("$gameOrRaceType.enable-title", false)
+        if (!globalTitleEnabled || !specificTitleEnabled) {
+            return
+        }
         val rawTitle = cfg.getString("$gameOrRaceType.$subKey.title", "") ?: ""
         val rawSub = cfg.getString("$gameOrRaceType.$subKey.subtitle", "") ?: ""
         if (rawTitle.isBlank() && rawSub.isBlank()) return

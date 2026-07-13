@@ -1,89 +1,77 @@
-# ==========================================
-#          ChatGames - ตั้งค่าทั่วไป
-# ==========================================
+# =========================================================================
+# ChatGames - การตั้งค่าระบบหลัก (Core Configuration)
+# =========================================================================
 
-# ตั้งค่าทั่วไปของโมดูลย่อย
+# การตั้งค่าระบบแกนกลางของกิจกรรม ChatGames
 settings:
-  # เปิด/ปิดการทำงานของระบบมินิเกม ChatGames ทั้งหมด (true = เปิด, false = ปิด)
   enabled: true
 
-# รหัสภาษาสำหรับการแปลชื่อบล็อกและมอนสเตอร์ใน Race (สถิติ)
-lang: en_us
+# รหัสภาษาสำหรับการแปลชื่อบล็อกและมอนสเตอร์ในการแข่งขัน (Default: en_us)
+lang: 'en_us'
 
-# การส่งข้อมูลเข้า Discord Webhook
+# คำนำหน้าข้อความแสดงในช่องแชท (Prefix)
+prefix: '&x&7&4&F&F&8&3C&x&7&5&F&8&9&5H&x&7&6&F&2&A&6A&x&7&7&E&B&B&8T &x&7&A&D&D&D&CG&x&7&B&D&7&E&DA&x&7&C&D&0&F&FM&x&7&C&D&0&F&FE&x&7&C&D&0&F&FS'
+
+# ชื่อตารางในฐานข้อมูลที่จะใช้เก็บข้อมูลคะแนนและสถิติของผู้เล่น
+table_name: 'chatgames'
+
+# โลกที่ระบบจะไม่อนุญาตให้เริ่มกิจกรรมสุ่มอัตโนมัติ
+disabled-worlds:
+  - example_world
+
+# การควบคุม Log ของระบบ
+log-file: 'game_log.txt'
+log-console: true
+log-local: false
+
+# เงื่อนไขการจัดกิจกรรมสุ่มอัตโนมัติ
+min_players_online: 1
+time_minutes: 3
+allow_starting_from_disabled: true
+cancel-message-when-winning: true
+use-permission-toplay: false
+count-all-players: true
+
+# ระบบสุ่มหน่วงเวลาช่วงกิจกรรมเริ่มรอบถัดไป
+randomDelay:
+  enable: false
+  timeUnit: 'minutes'
+  minimum: 1
+  limit: 25
+
+# ระบบส่งข้อมูลและสถิติขึ้น Discord Webhook
 discord:
-  # ใส่ URL ของ Webhook ที่นี่ (ปล่อยว่างเพื่อปิด)
   webhook-url: ''
   message-content: 'ผลการแข่งขันล่าสุด:'
-  img-url: https://www.spigotmc.org/data/resource_icons/107/107781.jpg?1676494289
-  username: Chat Games
-  title: ผลการแข่ง Chat Games
+  img-url: 'https://www.spigotmc.org/data/resource_icons/107/107781.jpg?1676494289'
+  username: 'Chat Games'
+  title: 'ผลการแข่ง Chat Games'
   description: 'ผู้ชนะคือ:'
   winner-field: '%winner% (%time%)'
   game-field: 'เกม: %game%'
 
-# ชื่อตารางในฐานข้อมูลที่จะเก็บข้อมูลคะแนนและสถิติ
-table_name: chatgames
-
-# โลกที่ไม่อนุญาตให้เริ่มกิจกรรม Chat Games
-disabled-worlds:
-- example_world
-
-# คำนำหน้าข้อความแสดงในแชท (Prefix)
-prefix: '&x&7&4&F&F&8&3C&x&7&5&F&8&9&5H&x&7&6&F&2&A&6A&x&7&7&E&B&B&8T &x&7&A&D&D&D&CG&x&7&B&D&7&E&DA&x&7&C&D&0&F&FM&x&7&C&D&0&F&FE&x&7&C&D&0&F&FS'
-
-# ไฟล์สำหรับบันทึก Log กิจกรรม
-log-file: game_log.txt
-
-# อนุญาตให้พิมพ์ Log ลง Console ของเซิร์ฟเวอร์
-log-console: true
-
-# อนุญาตให้บันทึก Log ลงในไฟล์แบบโลคอล
-log-local: false
-
-# อนุญาตให้ผู้เล่นเริ่มเกมด้วยคำสั่งได้ แม้จะพิมพ์จากโลกที่ถูกแบน
-allow_starting_from_disabled: true
-
-# หากเป็น true ระบบจะลบข้อความคำตอบที่ถูกต้องของผู้เล่นไม่ให้แสดงในช่องแชทหลัก
-cancel-message-when-winning: true
-
-# จำนวนผู้เล่นออนไลน์ขั้นต่ำเพื่อเริ่มกิจกรรมสุ่มอัตโนมัติ
-min_players_online: 1
-
-# ระยะห่างการสุ่มเริ่มเกมใหม่ (นาที) ตั้งเป็น -1 เพื่อปิดระบบอัตโนมัติ
-time_minutes: 3
-
-# ใช้ระบบสุ่มระยะเวลาเริ่มเกมใหม่หลังจบเกมก่อนหน้า (หากเปิดใช้ จะข้ามการตั้งค่า time_minutes)
-randomDelay:
-  enable: false
-  timeUnit: minutes # ตัวเลือก: minutes หรือ seconds
-  minimum: 1
-  limit: 25
-
-# หากตั้งเป็น true ผู้เล่นต้องมีสิทธิ์ chatgames.play จึงจะเห็นและเข้าร่วมกิจกรรมได้
-use-permission-toplay: false
-
-# นับจำนวนผู้เล่นที่ออนไลน์ทั้งหมด (หากเป็น false จะนับเฉพาะผู้เล่นที่มีสิทธิ์เล่น)
-count-all-players: true
-
-# แสดง 10 อันดับผู้เล่นที่พิมพ์เร็วที่สุด (/cg fastest)
-fastest-typers-top: true
-
-# เสียงเอฟเฟกต์ (ปล่อยว่างเพื่อปิด)
+# ระบบเสียงเอฟเฟกต์ภายในกิจกรรม
 GameSounds:
   volume: 1.0
-  win: minecraft:entity.experience_orb.pickup
-  game-start: minecraft:entity.player.levelup
-  time-expired: minecraft:entity.villager.no
+  win: 'minecraft:entity.experience_orb.pickup'
+  game-start: 'minecraft:entity.player.levelup'
+  time-expired: 'minecraft:entity.villager.no'
   wrong-case: ''
 
-# ==========================================
-#          ตั้งค่าประเภทเกม (Mini Games)
-# ==========================================
+# แสดง 10 อันดับผู้เล่นที่พิมพ์คำตอบเร็วที่สุด (/cg fastest)
+fastest-typers-top: true
 
-# 1. unscramble: เรียงตัวอักษรใหม่จากคำที่กำหนด
+# สวิตช์เปิด/ปิดข้อความ Title กลางหน้าจอของกิจกรรมแชททั้งหมดแบบ Global
+enable-title: false
+
+# =========================================================================
+# ChatGames - ตั้งค่าระบบมินิเกมย่อย (Mini Games Settings)
+# =========================================================================
+
+# 1. unscramble: เรียงตัวอักษรใหม่จากคำที่สุ่มส่งมาให้ถูกต้อง
 unscramble:
   enable: true
+  enable-title: false # เปิด/ปิดการแสดงข้อความ Title เฉพาะเกมนี้
   winners: 1
   case-sensitive: true
   timeToGuess_seconds: 20
@@ -103,6 +91,7 @@ unscramble:
 # 2. unreverse: กลับด้านคำศัพท์ที่ส่งมาให้ถูกต้อง
 unreverse:
   enable: true
+  enable-title: false # เปิด/ปิดการแสดงข้อความ Title เฉพาะเกมนี้
   winners: 1
   case-sensitive: true
   timeToGuess_seconds: 20
@@ -119,9 +108,10 @@ unreverse:
     subtitle: '&7ไม่มีผู้ตอบถูกในรอบนี้'
     actionbar: '&cหมดเวลากิจกรรมแชทในรอบนี้!'
 
-# 3. reaction: พิมพ์ข้อความตามที่กำหนดให้เร็วที่สุด
+# 3. reaction: พิมพ์ข้อความตามที่ส่งมาให้เร็วที่สุด
 reaction:
   enable: true
+  enable-title: false # เปิด/ปิดการแสดงข้อความ Title เฉพาะเกมนี้
   winners: 1
   case-sensitive: true
   timeToGuess_seconds: 20
@@ -141,6 +131,7 @@ reaction:
 # 4. guess_the_number: ทายตัวเลขสุ่มในช่วงที่กำหนด
 guess_the_number:
   enable: false
+  enable-title: false # เปิด/ปิดการแสดงข้อความ Title เฉพาะเกมนี้
   winners: 1
   case-sensitive: false
   lower-limit: 1
@@ -162,6 +153,7 @@ guess_the_number:
 # 5. shoppinglist: จำรายการไอเทมในเวลาที่กำหนดและพิมพ์ตอบตามลำดับคั่นด้วยเครื่องหมายจุลภาค (,)
 shoppinglist:
   enable: false
+  enable-title: false # เปิด/ปิดการแสดงข้อความ Title เฉพาะเกมนี้
   winners: 1
   case-sensitive: false
   listLength: 3
@@ -180,13 +172,14 @@ shoppinglist:
     subtitle: '&7ไม่มีผู้ตอบถูกในรอบนี้'
     actionbar: '&cหมดเวลากิจกรรมแชทในรอบนี้!'
   guessPhase:
-    title: "&6&l Santa's List "
+    title: '&6&l Santa's List '
     subtitle: '&fเขียนรายการของขวัญตามลำดับ!'
     actionbar: '&eพิมพ์รายการคั่นด้วยจุลภาค (,) ในแชท!'
 
-# 6. clickable: คลิกที่ลิงก์แชทเพื่อรับชัยชนะ
+# 6. clickable: คลิกที่ลิงก์ในแชทเพื่อรับชัยชนะ
 clickable:
   enable: false
+  enable-title: false # เปิด/ปิดการแสดงข้อความ Title เฉพาะเกมนี้
   winners: 1
   timeToGuess_seconds: 20
   gameStart:
@@ -202,11 +195,12 @@ clickable:
     subtitle: '&7ไม่มีผู้ตอบถูกในรอบนี้'
     actionbar: '&cหมดเวลากิจกรรมแชทในรอบนี้!'
 
-# 7. fillout: เติมตัวอักษรในช่องว่างของคำศัพท์
+# 7. fillout: เติมตัวอักษรในช่องว่างของคำศัพท์ที่สุ่มปิดตาไว้
 fillout:
   enable: true
+  enable-title: false # เปิด/ปิดการแสดงข้อความ Title เฉพาะเกมนี้
   winners: 1
-  difficulty: 30 # เปอร์เซ็นต์ตัวอักษรที่จะซ่อน (1-100)
+  difficulty: 30
   case-sensitive: true
   timeToGuess_seconds: 20
   gameStart:
@@ -222,9 +216,10 @@ fillout:
     subtitle: '&7ไม่มีผู้ตอบถูกในรอบนี้'
     actionbar: '&cหมดเวลากิจกรรมแชทในรอบนี้!'
 
-# 8. hoverable: เอาเมาส์ชี้เพื่อดูคำศัพท์และพิมพ์ตอบ
+# 8. hoverable: เอาเมาส์ชี้ข้อความเพื่อดูคำศัพท์แล้วพิมพ์ตอบ
 hoverable:
   enable: false
+  enable-title: false # เปิด/ปิดการแสดงข้อความ Title เฉพาะเกมนี้
   winners: 1
   case-sensitive: true
   timeToGuess_seconds: 20
@@ -241,14 +236,15 @@ hoverable:
     subtitle: '&7ไม่มีผู้ตอบถูกในรอบนี้'
     actionbar: '&cหมดเวลากิจกรรมแชทในรอบนี้!'
 
-# 9. random: สุ่มตัวอักษรตามยาวและประเภทที่กำหนด
+# 9. random: สุ่มตัวอักษรตามยาวและประเภทคัสตอม
 random:
   enable: true
+  enable-title: false # เปิด/ปิดการแสดงข้อความ Title เฉพาะเกมนี้
   winners: 1
   case-sensitive: true
   timeToGuess_seconds: 20
-  lengthRange: 6-8 # ความยาวสุ่ม
-  character_type: ALPHANUMERIC # ตัวเลือก: ALPHA, ALPHANUMERIC, NUMERIC, SYMBOLIC, LOWERCASE_ALPHA, UPPERCASE_ALPHA, HEXADECIMAL, CUSTOM
+  lengthRange: 6-8
+  character_type: ALPHANUMERIC
   custom_characters: abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789
   gameStart:
     title: '&a&l- CHAT GAMES -'
@@ -266,13 +262,14 @@ random:
 # 10. math: คำนวณสมการเลขคณิตสุ่มตามระดับความยาก
 math:
   enable: true
+  enable-title: false # เปิด/ปิดการแสดงข้อความ Title เฉพาะเกมนี้
   winners: 1
   case-sensitive: false
   timeToGuess_seconds: 60
-  difficulty: 2 # ระดับ: 1(1-9), 2(1-99), 3(1-999) ฯลฯ
+  difficulty: 2
   operators:
   - +
-  - '-'
+  - -
   - x
   - /
   gameStart:
@@ -288,9 +285,10 @@ math:
     subtitle: '&7ไม่มีผู้ตอบถูกในรอบนี้'
     actionbar: '&cหมดเวลากิจกรรมแชทในรอบนี้!'
 
-# 11. variable: หาค่าสมการสัญลักษณ์ (ตัวแปร)
+# 11. variable: หาค่าสมการสัญลักษณ์ (ตัวแปรปริศนา)
 variable:
   enable: true
+  enable-title: false # เปิด/ปิดการแสดงข้อความ Title เฉพาะเกมนี้
   winners: 1
   case-sensitive: false
   timeToGuess_seconds: 60
@@ -318,6 +316,7 @@ variable:
 # 12. trivia: สุ่มคำถามความรู้รอบตัว
 trivia:
   enable: true
+  enable-title: false # เปิด/ปิดการแสดงข้อความ Title เฉพาะเกมนี้
   winners: 1
   case-sensitive: false
   timeToGuess_seconds: 30

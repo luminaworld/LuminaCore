@@ -2,6 +2,7 @@
 #          ChatGames - ตั้งค่า Chat Races
 # ==========================================
 enable-races: true
+enable-title: false # เปิด/ปิดการแสดงข้อความ Title ของการแข่งขันทั้งหมดแบบ Global
 
 # อนุญาตให้ผู้เล่นในโหมด Creative เข้าร่วมกิจกรรมและนับคะแนนได้
 creative-enabled: true
@@ -9,6 +10,7 @@ creative-enabled: true
 # 1. hunt: ล่าเอนทิตี (มอนสเตอร์/สัตว์) ตามจำนวนที่กำหนด
 hunt:
   enable: true
+  enable-title: false # เปิด/ปิดการแสดงข้อความ Title เฉพาะหมวดหมู่นี้
   timeToComplete_seconds: 90
   
   # นับสัตว์/มอนสเตอร์ที่เกิดจากกรงสปอว์น (Spawner) หรือไข่สปอว์น (Spawn Egg)
@@ -68,6 +70,7 @@ hunt:
 # 2. mine: ขุดบล็อกที่กำหนดให้ครบตามจำนวน
 mine:
   enable: true
+  enable-title: false # เปิด/ปิดการแสดงข้อความ Title เฉพาะหมวดหมู่นี้
   timeToComplete_seconds: 60
   
   # รายชื่อบล็อกและเงื่อนไข (รูปแบบ: ID_บล็อก: จำนวนที่ต้องขุด)
@@ -116,6 +119,7 @@ mine:
 # 3. place: วางบล็อกที่กำหนดให้ครบตามจำนวน
 place:
   enable: true
+  enable-title: false # เปิด/ปิดการแสดงข้อความ Title เฉพาะหมวดหมู่นี้
   timeToComplete_seconds: 60
   
   # รายชื่อบล็อกและเงื่อนไข (รูปแบบ: ID_บล็อก: จำนวนที่ต้องวาง)
@@ -156,6 +160,7 @@ place:
 # 4. fish: ตกปลาให้สำเร็จตามจำนวน (ไม่มี data กำหนด คือตกปลาชนิดใดก็ได้ครบ 1 ตัว)
 fish:
   enable: true
+  enable-title: false # เปิด/ปิดการแสดงข้อความ Title เฉพาะหมวดหมู่นี้
   timeToComplete_seconds: 120
   gameStart:
     title: '&a&l- RACES STARTED -'
@@ -173,6 +178,7 @@ fish:
 # 5. eat: กินอาหารที่กำหนดให้ครบตามจำนวน
 eat:
   enable: true
+  enable-title: false # เปิด/ปิดการแสดงข้อความ Title เฉพาะหมวดหมู่นี้
   timeToComplete_seconds: 60
   
   # รายชื่ออาหารและเงื่อนไข (รูปแบบ: ID_อาหาร: จำนวนที่ต้องกิน)
@@ -213,6 +219,7 @@ eat:
 # 6. craft: คราฟต์ไอเทมที่กำหนดให้ครบตามจำนวน
 craft:
   enable: true
+  enable-title: false # เปิด/ปิดการแสดงข้อความ Title เฉพาะหมวดหมู่นี้
   timeToComplete_seconds: 120
   
   # รายชื่อไอเทมและเงื่อนไข (รูปแบบ: ID_ไอเทม: จำนวนที่ต้องคราฟต์)
@@ -249,6 +256,7 @@ craft:
 # 7. furnace: เผาไอเทมจากเตาให้สำเร็จและดึงออกมาตามจำนวน
 furnace:
   enable: true
+  enable-title: false # เปิด/ปิดการแสดงข้อความ Title เฉพาะหมวดหมู่นี้
   timeToComplete_seconds: 150
   
   # รายชื่อผลผลิตจากการเผาและเงื่อนไข (รูปแบบ: ID_ผลผลิต: จำนวนที่ต้องดึง)

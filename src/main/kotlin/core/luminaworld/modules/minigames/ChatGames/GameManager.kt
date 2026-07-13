@@ -647,10 +647,9 @@ class GameManager(private val module: ChatGamesModule) {
             broadcastMessage(formatted)
         }
 
-        val titleText = module.parseToComponent("§a§l- CHAT GAMES -")
-        val subText = module.parseToComponent("§fร่วมสนุกพิมพ์ตอบคำถามในแชท!")
-        broadcastTitle(titleText, subText)
-        broadcastActionBar(module.parseToComponent("§eเริ่มเกมทายคำตอบแล้ว! พิมพ์ตอบรับรางวัล"))
+        // อ่าน title/subtitle/actionbar จาก messages.yml (ค่าว่าง = ไม่แสดง)
+        broadcastTitleFromConfig("$gameType.gameStart_title_message", "$gameType.gameStart_subtitle_message")
+        broadcastActionBarFromConfig("$gameType.gameStart_actionbar_message")
     }
 
     private fun announceShoppingListGuessPhase(timeToGuess: Int) {
@@ -663,10 +662,8 @@ class GameManager(private val module: ChatGamesModule) {
             broadcastMessage(formatted)
         }
 
-        val titleText = module.parseToComponent("§6§l Santa's List ")
-        val subText = module.parseToComponent("§fเขียนรายการของขวัญตามลำดับ!")
-        broadcastTitle(titleText, subText)
-        broadcastActionBar(module.parseToComponent("§eพิมพ์รายการคั่นด้วยจุลภาค (,) ในแชท!"))
+        broadcastTitleFromConfig("shoppinglist.guessPhase_title_message", "shoppinglist.guessPhase_subtitle_message")
+        broadcastActionBarFromConfig("shoppinglist.guessPhase_actionbar_message")
     }
 
     private fun announceRaceStart(raceType: String, amount: Int, value: String, timeToComplete: Int) {
@@ -685,10 +682,8 @@ class GameManager(private val module: ChatGamesModule) {
             broadcastMessage(formatted)
         }
 
-        val titleText = module.parseToComponent("§a§l- RACES STARTED -")
-        val subText = module.parseToComponent("§fเริ่มการแข่งขุด/ล่า/ตกปลา!")
-        broadcastTitle(titleText, subText)
-        broadcastActionBar(module.parseToComponent("§eทำภารกิจที่ได้รับมอบหมายให้สำเร็จเป็นคนแรก!"))
+        broadcastTitleFromConfig("$keyName.gameStart_title_message", "$keyName.gameStart_subtitle_message")
+        broadcastActionBarFromConfig("$keyName.gameStart_actionbar_message")
     }
 
     private fun announceWinner(game: ActiveGame, player: Player, timeTaken: Double) {
@@ -710,10 +705,17 @@ class GameManager(private val module: ChatGamesModule) {
             broadcastMessage(formatted)
         }
 
-        val titleText = module.parseToComponent("§a§lมีผู้ชนะแล้ว!")
-        val subText = module.parseToComponent("§e${player.name} §fตอบถูกต้อง!")
-        broadcastTitle(titleText, subText)
-        broadcastActionBar(module.parseToComponent("§e${player.name} §aตอบคำถามถูกต้อง!"))
+        // อ่าน title/subtitle/actionbar จาก messages.yml แทน hardcode
+        // รองรับ placeholder %winner_1%, %winner%
+        broadcastTitleFromConfig(
+            "${game.type}.winner_title_message",
+            "${game.type}.winner_subtitle_message",
+            mapOf("%winner_1%" to player.name, "%winner%" to player.name, "%time_1%" to timeStr, "%time%" to timeStr)
+        )
+        broadcastActionBarFromConfig(
+            "${game.type}.winner_actionbar_message",
+            mapOf("%winner_1%" to player.name, "%winner%" to player.name, "%time_1%" to timeStr, "%time%" to timeStr)
+        )
     }
 
     private fun announceTimeout(game: ActiveGame) {
@@ -733,10 +735,15 @@ class GameManager(private val module: ChatGamesModule) {
             broadcastMessage(formatted)
         }
 
-        val titleText = module.parseToComponent("§c§lหมดเวลา!")
-        val subText = module.parseToComponent("§7ไม่มีผู้ตอบถูกในรอบนี้")
-        broadcastTitle(titleText, subText)
-        broadcastActionBar(module.parseToComponent("§cหมดเวลากิจกรรมแชทในรอบนี้!"))
+        broadcastTitleFromConfig(
+            "${game.type}.timeout_title_message",
+            "${game.type}.timeout_subtitle_message",
+            mapOf("%timeToGuess%" to timeToGuess, "%timeToComplete%" to timeToGuess, "%correct_answer%" to game.answer)
+        )
+        broadcastActionBarFromConfig(
+            "${game.type}.timeout_actionbar_message",
+            mapOf("%timeToGuess%" to timeToGuess, "%timeToComplete%" to timeToGuess)
+        )
     }
 
     private fun broadcastMessage(msg: String) {
@@ -776,6 +783,46 @@ class GameManager(private val module: ChatGamesModule) {
             if (!core.luminaworld.settings.PlayerSettingsManager.isSettingEnabled(player, "chatgames_actionbar")) continue
             player.sendActionBar(msg)
         }
+    }
+
+    /**
+     * อ่าน title+subtitle จาก messages.yml แล้วแสดงให้ผู้เล่น
+     * ถ้าค่าว่างเปล่าหรือเป็น '' จะไม่แสดงเลย
+     */
+    private fun broadcastTitleFromConfig(
+        titleKey: String,
+        subtitleKey: String,
+        placeholders: Map<String, String> = emptyMap()
+    ) {
+        val rawTitle = module.chatConfig.messages.getString(titleKey, "") ?: ""
+        val rawSub = module.chatConfig.messages.getString(subtitleKey, "") ?: ""
+        if (rawTitle.isBlank() && rawSub.isBlank()) return
+
+        var titleStr = rawTitle
+        var subStr = rawSub
+        placeholders.forEach { (k, v) ->
+            titleStr = titleStr.replace(k, v)
+            subStr = subStr.replace(k, v)
+        }
+
+        val titleComp = module.parseToComponent(titleStr)
+        val subComp = module.parseToComponent(subStr)
+        broadcastTitle(titleComp, subComp)
+    }
+
+    /**
+     * อ่าน actionbar message จาก messages.yml แล้วแสดงให้ผู้เล่น
+     * ถ้าค่าว่างเปล่าหรือเป็น '' จะไม่แสดงเลย
+     */
+    private fun broadcastActionBarFromConfig(
+        key: String,
+        placeholders: Map<String, String> = emptyMap()
+    ) {
+        val raw = module.chatConfig.messages.getString(key, "") ?: ""
+        if (raw.isBlank()) return
+        var msg = raw
+        placeholders.forEach { (k, v) -> msg = msg.replace(k, v) }
+        broadcastActionBar(module.parseToComponent(msg))
     }
 
     /**

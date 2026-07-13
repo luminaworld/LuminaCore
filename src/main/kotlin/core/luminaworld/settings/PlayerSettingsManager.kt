@@ -70,12 +70,20 @@ object PlayerSettingsManager : Listener {
     }
 
     /**
+     * ดึงค่าตั้งค่าดีฟอลต์สำหรับ Setting Key ที่ลงทะเบียนไว้
+     */
+    private fun getDefaultValue(key: String): Boolean {
+        val option = registeredSettings.find { it.key.equals(key, ignoreCase = true) }
+        return option?.defaultValue ?: true
+    }
+
+    /**
      * ตรวจสอบว่าระบบหรือตัวเลือกนั้นๆ ถูกเปิดใช้งานในระดับผู้เล่นรายบุคคลหรือไม่
      */
     fun isSettingEnabled(player: Player, key: String): Boolean {
         val uuid = player.uniqueId
-        val playerSettings = settingsCache[uuid] ?: return true // ดีฟอลต์คือ true
-        return playerSettings[key.lowercase()] ?: true
+        val playerSettings = settingsCache[uuid] ?: return getDefaultValue(key)
+        return playerSettings[key.lowercase()] ?: getDefaultValue(key)
     }
 
     /**

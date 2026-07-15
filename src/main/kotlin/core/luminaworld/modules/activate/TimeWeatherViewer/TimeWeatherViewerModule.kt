@@ -32,6 +32,10 @@ class TimeWeatherViewerModule(plugin: LuminaCore) : LuminaModule(plugin, "TimeWe
         core.luminaworld.settings.PlayerSettingsManager.unregisterSettingsOfModule(name)
     }
 
+    override fun onSneakTrigger(player: Player) {
+        showTimeAndWeather(player)
+    }
+
     fun showTimeAndWeather(player: Player) {
         if (!core.luminaworld.settings.PlayerSettingsManager.isSettingEnabled(player, name)) return
         val world = player.world

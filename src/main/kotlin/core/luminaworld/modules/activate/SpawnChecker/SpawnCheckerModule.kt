@@ -35,6 +35,10 @@ class SpawnCheckerModule(plugin: LuminaCore) : LuminaModule(plugin, "SpawnChecke
         core.luminaworld.settings.PlayerSettingsManager.unregisterSettingsOfModule(name)
     }
 
+    override fun onSneakTrigger(player: Player) {
+        checkSpawnPoints(player)
+    }
+
     fun checkSpawnPoints(player: Player) {
         if (!core.luminaworld.settings.PlayerSettingsManager.isSettingEnabled(player, name)) return
         val radius = config?.getInt("settings.radius", 8) ?: 8

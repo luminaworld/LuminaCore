@@ -33,6 +33,10 @@ class AutoPlanterModule(plugin: LuminaCore) : LuminaModule(plugin, "AutoPlanter"
         core.luminaworld.settings.PlayerSettingsManager.unregisterSettingsOfModule(name)
     }
 
+    override fun onSneakTrigger(player: Player) {
+        runPlanting(player)
+    }
+
     fun runPlanting(player: Player) {
         if (!core.luminaworld.settings.PlayerSettingsManager.isSettingEnabled(player, name)) return
         val requireSneak = config?.getBoolean("settings.require-sneak", false) ?: false

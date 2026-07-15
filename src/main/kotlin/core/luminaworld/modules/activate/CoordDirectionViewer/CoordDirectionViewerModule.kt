@@ -31,6 +31,10 @@ class CoordDirectionViewerModule(plugin: LuminaCore) : LuminaModule(plugin, "Coo
         core.luminaworld.settings.PlayerSettingsManager.unregisterSettingsOfModule(name)
     }
 
+    override fun onSneakTrigger(player: Player) {
+        showCoordinatesAndDirection(player)
+    }
+
     fun showCoordinatesAndDirection(player: Player) {
         if (!core.luminaworld.settings.PlayerSettingsManager.isSettingEnabled(player, name)) return
         val loc = player.location

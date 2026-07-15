@@ -190,5 +190,13 @@ abstract class LuminaModule(val plugin: LuminaCore, val name: String) : Listener
         player.sendMessage(parseToComponent(noPermMsg))
         return false
     }
+
+    /**
+     * เมธอดเรียกใช้เมื่อผู้เล่นกดย่อตัวสะสมครบกำหนดสำหรับโมดูลนี้ (คีย์ลัดย่อตัว)
+     */
+    open fun onSneakTrigger(player: org.bukkit.entity.Player) {
+        // ค่าเริ่มต้นไม่ทำอะไร (ให้คลาสลูกเป็นผู้ override ตามพฤติกรรมเฉพาะตัว)
+    }
 }
+
 

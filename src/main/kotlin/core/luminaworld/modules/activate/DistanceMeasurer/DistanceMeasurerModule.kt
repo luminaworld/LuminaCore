@@ -29,6 +29,14 @@ class DistanceMeasurerModule(plugin: LuminaCore) : LuminaModule(plugin, "Distanc
                 description = desc
             )
         )
+
+        core.luminaworld.settings.PlayerSettingsManager.registerChangeListener(name) { player, enabled ->
+            if (!enabled) {
+                val uuid = player.uniqueId
+                activePlayers.remove(uuid)
+                playerPoints.remove(uuid)
+            }
+        }
     }
 
     override fun onDisable() {
@@ -47,6 +55,7 @@ class DistanceMeasurerModule(plugin: LuminaCore) : LuminaModule(plugin, "Distanc
     }
 
     fun toggleMeasureMode(player: Player) {
+        if (!core.luminaworld.settings.PlayerSettingsManager.isSettingEnabled(player, name)) return
         val uuid = player.uniqueId
         if (activePlayers.contains(uuid)) {
             activePlayers.remove(uuid)

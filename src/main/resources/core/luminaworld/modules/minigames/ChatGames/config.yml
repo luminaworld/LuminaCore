@@ -172,7 +172,7 @@ shoppinglist:
     subtitle: '&7ไม่มีผู้ตอบถูกในรอบนี้'
     actionbar: '&cหมดเวลากิจกรรมแชทในรอบนี้!'
   guessPhase:
-    title: '&6&l Santa's List '
+    title: "&6&l Santa's List "
     subtitle: '&fเขียนรายการของขวัญตามลำดับ!'
     actionbar: '&eพิมพ์รายการคั่นด้วยจุลภาค (,) ในแชท!'
 

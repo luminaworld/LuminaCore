@@ -7,7 +7,7 @@ settings:
   prefix: "[LuminaCore]"
   timezone: "Asia/Bangkok"
   time-format: "dd/MM/yyyy HH:mm:ss"
-  
+
   # คีย์ยืนยันสิทธิ์เครื่องแม่ข่าย (ได้รับจากระบบจัดการคีย์)
   # ฟอร์แมตคีย์: LUM-XXXX-XXXX-XXXX
   license-key: ""
@@ -36,12 +36,12 @@ messages:
   gui-click-to-toggle: "&7คลิกเพื่อเปิด/ปิดสถานะโมดูล"
   gui-status-enabled: "&aสถานะ: เปิดใช้งาน"
   gui-status-disabled: "&cสถานะ: ปิดใช้งาน"
-  
+
   # ข้อความแจ้งเตือนอัปเดตสำหรับแอดมินตอนเข้าเซิร์ฟเวอร์
   update-detected: "%prefix% &aตรวจพบเวอร์ชันใหม่ล่าสุด! &e(%latest_version%)"
   update-current: "%prefix% &7เวอร์ชันปัจจุบันของคุณคือ: &c(v%current_version%)"
   update-download: "%prefix% &aดาวน์โหลดเวอร์ชันใหม่ได้ที่: &b%url%"
-  
+
   # ข้อความแสดงสถานะการโหลดโมดูลใน Console
   module-enabled: "Module %module% enabled."
   module-disabled: "Module %module% is disabled."
@@ -52,16 +52,15 @@ messages:
 database:
   # ประเภทฐานข้อมูล: SQLite หรือ MySQL
   type: "SQLite"
-  
+
   SQLite:
     filename: "lumina-database"
-    
+
   MySQL:
     host: "localhost"
     port: 3306
     database: "minecraft"
     user: "root"
-    password: ""
+    password: "password"
     # พารามิเตอร์การเชื่อมต่อสำหรับ MySQL
     connection-parameters: "?autoReconnect=true&useSSL=false&useUnicode=true&characterEncoding=UTF-8"
-

@@ -32,6 +32,10 @@ class NetherCalculatorModule(plugin: LuminaCore) : LuminaModule(plugin, "NetherC
         core.luminaworld.settings.PlayerSettingsManager.unregisterSettingsOfModule(name)
     }
 
+    override fun onSneakTrigger(player: Player) {
+        calculateCoordinates(player)
+    }
+
     fun calculateCoordinates(player: Player) {
         if (!core.luminaworld.settings.PlayerSettingsManager.isSettingEnabled(player, name)) return
         val loc = player.location

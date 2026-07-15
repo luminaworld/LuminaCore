@@ -91,8 +91,9 @@ class GameManager(private val module: ChatGamesModule) {
         val disabledWorlds = module.chatConfig.config.getStringList("disabled-worlds")
         for (player in Bukkit.getOnlinePlayers()) {
             if (disabledWorlds.contains(player.world.name)) continue
-            // ตรวจสอบความพึงพอใจการเปิดเสียงของผู้เล่น (ถ้าสลับปิดเสียงไว้ใน mutedPlayers)
+            // ตรวจสอบความพึงพอใจการเปิดเสียงของผู้เล่น (ถ้าสลับปิดเสียงไว้ใน mutedPlayers หรือปิดระบบเสียงแชทเกม)
             if (module.commandExecutor.mutedPlayers.contains(player.uniqueId)) continue
+            if (!core.luminaworld.settings.PlayerSettingsManager.isSettingEnabled(player, "chatgames_sound")) continue
 
             val upper = soundKey.uppercase()
             var played = false

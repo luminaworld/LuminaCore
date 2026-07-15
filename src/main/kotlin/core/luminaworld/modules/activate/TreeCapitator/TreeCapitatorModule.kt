@@ -39,6 +39,12 @@ class TreeCapitatorModule(plugin: LuminaCore) : LuminaModule(plugin, "TreeCapita
                 description = desc
             )
         )
+
+        core.luminaworld.settings.PlayerSettingsManager.registerChangeListener(name) { player, enabled ->
+            if (!enabled) {
+                clearPlayer(player)
+            }
+        }
     }
 
     override fun onDisable() {
@@ -64,12 +70,17 @@ class TreeCapitatorModule(plugin: LuminaCore) : LuminaModule(plugin, "TreeCapita
         super.reload()
     }
 
+    override fun onSneakTrigger(player: Player) {
+        toggleMode(player)
+    }
+
     fun isModeEnabled(player: Player): Boolean {
         if (!core.luminaworld.settings.PlayerSettingsManager.isSettingEnabled(player, name)) return false
         return activePlayers.contains(player.uniqueId)
     }
 
     fun toggleMode(player: Player) {
+        if (!core.luminaworld.settings.PlayerSettingsManager.isSettingEnabled(player, name)) return
         val uuid = player.uniqueId
         if (activePlayers.contains(uuid)) {
             clearPlayer(player)

@@ -29,6 +29,33 @@ object PlayerSettingsManager : Listener {
     // Cache เก็บข้อมูลสถานะผู้เล่น: { UUID : { SettingKey : Enabled } }
     private val settingsCache = ConcurrentHashMap<UUID, ConcurrentHashMap<String, Boolean>>()
 
+    // เก็บรายการ Listener เพื่อแจ้งเตือนการเปลี่ยนแปลงของ Setting เมื่อเปิด/ปิดจากส่วนกลาง
+    private val settingChangeListeners = ConcurrentHashMap<String, (Player, Boolean) -> Unit>()
+
+    /**
+     * ลงทะเบียนคอลแบ็กเพื่อรับข้อมูลเมื่อมีผู้เล่นสลับสถานะเปิด/ปิดการตั้งค่า
+     */
+    fun registerChangeListener(key: String, callback: (Player, Boolean) -> Unit) {
+        settingChangeListeners[key.lowercase()] = callback
+    }
+
+    /**
+     * ยกเลิกการลงทะเบียนคอลแบ็ก
+     */
+    fun unregisterChangeListener(key: String) {
+        settingChangeListeners.remove(key.lowercase())
+    }
+
+    /**
+     * ยกเลิกการลงทะเบียนคอลแบ็กทั้งหมดของโมดูลนั้นๆ
+     */
+    fun unregisterChangeListenersOfModule(moduleName: String) {
+        val optionsOfModule = registeredSettings.filter { it.moduleName.equals(moduleName, ignoreCase = true) }
+        for (option in optionsOfModule) {
+            settingChangeListeners.remove(option.key.lowercase())
+        }
+    }
+
     /**
      * เริ่มต้นระบบฐานข้อมูลและลงทะเบียน Event Listener
      */
@@ -66,6 +93,7 @@ object PlayerSettingsManager : Listener {
      * ยกเลิกการลงทะเบียนตัวเลือกการตั้งค่าทั้งหมดของโมดูลนั้นๆ (ตอนโมดูล disable)
      */
     fun unregisterSettingsOfModule(moduleName: String) {
+        unregisterChangeListenersOfModule(moduleName)
         registeredSettings.removeIf { it.moduleName.equals(moduleName, ignoreCase = true) }
     }
 
@@ -93,6 +121,9 @@ object PlayerSettingsManager : Listener {
         val uuid = player.uniqueId
         val playerSettings = settingsCache.getOrPut(uuid) { ConcurrentHashMap() }
         playerSettings[key.lowercase()] = enabled
+
+        // เรียกสัญญาณแจ้งเตือนการเปลี่ยนแปลงไปที่โมดูลย่อยที่ลงทะเบียนคอลแบ็กไว้
+        settingChangeListeners[key.lowercase()]?.invoke(player, enabled)
 
         plugin.databaseService?.runAsync { conn ->
             val dbType = plugin.config.getString("database.type", "SQLite") ?: "SQLite"

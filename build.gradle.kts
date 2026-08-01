@@ -8,12 +8,14 @@ version = "1.2.1"
 repositories {
     mavenCentral()
     maven("https://repo.papermc.io/repository/maven-public/")
+    maven("https://repo.extendedclip.com/content/repositories/placeholderapi/")
 }
 
 dependencies {
     compileOnly("io.papermc.paper:paper-api:26.1.2.build.+")
     compileOnly("org.apache.logging.log4j:log4j-core:2.20.0")
     compileOnly("net.luckperms:api:5.4")
+    compileOnly("me.clip:placeholderapi:2.11.6")
     
     implementation("org.jetbrains.kotlin:kotlin-stdlib:2.3.0")
 }

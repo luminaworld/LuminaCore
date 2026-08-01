@@ -2,6 +2,7 @@ package core.luminaworld
 
 import core.luminaworld.module.ModuleManager
 import core.luminaworld.command.ModuleCommand
+import core.luminaworld.modules.system.Currency.CurrencyService
 import io.papermc.paper.threadedregions.scheduler.ScheduledTask
 import org.bukkit.configuration.file.YamlConfiguration
 import org.bukkit.plugin.java.JavaPlugin
@@ -26,6 +27,13 @@ class LuminaCore : JavaPlugin() {
 
     var databaseService: core.luminaworld.database.DatabaseService? = null
         private set
+
+    /**
+     * API ของระบบสกุลเงิน LuminaCore (ไม่เกี่ยวข้องกับ Vault).
+     * โมดูลอื่นควรเรียก API นี้แทนการเข้าฐานข้อมูลโดยตรง.
+     */
+    var currencyService: CurrencyService? = null
+        internal set
 
     var playerSettingsGUI: core.luminaworld.settings.PlayerSettingsGUI? = null
         private set
@@ -115,6 +123,9 @@ class LuminaCore : JavaPlugin() {
         // เริ่มระบบจัดการคำสั่งแบบไดนามิก
         commandManager = core.luminaworld.command.CommandManager(this)
 
+        // เริ่มระบบตัวแปรส่วนกลางของปลั๊กอิน (PlaceholderAPI Expansion)
+        core.luminaworld.placeholder.LuminaPlaceholderManager.initialize(this)
+
         // เริ่มระบบจัดการโมดูล
         moduleManager = ModuleManager(this)
         moduleManager?.loadModules()
@@ -161,6 +172,9 @@ class LuminaCore : JavaPlugin() {
         // ปิดการทำงานโมดูลย่อยทั้งหมด
         moduleManager?.disableModules()
         moduleManager = null
+
+        // ปิดระบบตัวแปรส่วนกลางของปลั๊กอิน
+        core.luminaworld.placeholder.LuminaPlaceholderManager.shutdown()
 
         // ปิดและล้างคำสั่งไดนามิกทั้งหมด
         commandManager?.unregisterAll()

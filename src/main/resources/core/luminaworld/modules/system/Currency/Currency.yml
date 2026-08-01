@@ -1,0 +1,138 @@
+# ============================================================================
+# LuminaCore Currency (System Module)
+# ============================================================================
+# ระบบสกุลเงินภายใน LuminaCore โดยสมบูรณ์ ไม่ใช่ Vault และไม่กระทบยอด /pay
+# ของปลั๊กอิน Economy อื่น สกุลเงินทุกตัวถูกเก็บในฐานข้อมูลกลาง LuminaCore
+#
+# ไฟล์นี้คือคู่มือการใช้งานด้วย: อ่านคำอธิบายแต่ละตัวเลือกก่อนแก้ไข
+# หลังแก้ไฟล์ใช้ /lc reload เพื่อโหลดสกุลเงินและคำสั่งใหม่
+# ห้ามเปลี่ยน id ของสกุลเงินที่มีการใช้งานแล้ว เพราะยอดเดิมผูกกับ id นั้น
+# ============================================================================
+
+settings:
+  # เปิด/ปิดโมดูล Currency
+  enabled: true
+
+  # จำนวนอันดับที่เก็บใน cache สำหรับ PlaceholderAPI (1 ถึง 100)
+  # เพิ่มค่านี้หากจะเรียก %luminacore_currency_s_top_name_20%
+  leaderboard-cache-size: 10
+
+  # true = โอนได้เฉพาะผู้เล่นที่กำลังออนไลน์ (ค่าเริ่มต้นที่ปลอดภัย)
+  # false = อนุญาตส่งให้ชื่อผู้เล่น offline ได้; ควรใช้เมื่อ user cache เชื่อถือได้
+  require-recipient-online: true
+
+  # ช่วงเวลาอัปเดตอันดับจากฐานข้อมูลเป็นวินาที (ต่ำสุด 10)
+  # Placeholder จะอ่าน cache จึงไม่สร้าง query ทุกครั้งที่ scoreboard refresh
+  leaderboard-refresh-seconds: 60
+
+# ----------------------------------------------------------------------------
+# คำสั่ง
+# ----------------------------------------------------------------------------
+# /lcpay <player> <currency> <amount>
+#   ทางเลือกกลางสำหรับโอนเงิน: /lcpay Steve s 50
+# /lcpay balance <currency>
+# /lcpay balance <player> <currency>
+# /lcpay admin give|take|set <player|-all|-allonline|-allofline> <currency> <amount>
+#   -all       = ผู้เล่นทุกคนที่เซิร์ฟเวอร์รู้จัก (ออนไลน์และออฟไลน์)
+#   -allonline = ผู้เล่นที่ออนไลน์ ณ ขณะสั่ง
+#   -allofline = ผู้เล่นที่ออฟไลน์ ณ ขณะสั่ง (สะกดตามคำสั่งที่รองรับ)
+#   -alloffline ก็ใช้ได้เช่นกัน เพื่อรองรับการสะกด offline แบบมาตรฐาน
+#
+# คำสั่งเฉพาะสกุลเงิน เช่น /spay <player> <amount> เป็นทางเลือกเท่านั้น
+# ตั้ง transfer-command เป็น "" หากต้องการใช้ /lcpay อย่างเดียว
+# command-aliases เป็นชื่อคำสั่งสำรองโดยไม่ใส่เครื่องหมาย /
+# หากชื่อไปชนคำสั่งของเซิร์ฟเวอร์หรือปลั๊กอินอื่น ระบบจะไม่ลงทะเบียนคำสั่งนั้น
+# ----------------------------------------------------------------------------
+
+currencies:
+  s:
+    # id = s ใช้กับ API, ฐานข้อมูล และ PlaceholderAPI; ต้องเป็น a-z, 0-9, _ หรือ -
+    display-name: "S Coin"
+    symbol: "S"
+
+    # ตำแหน่งทศนิยม 0-8 เช่น 2 จะแสดง 12.50 และรับจำนวน 12.50 ได้
+    decimals: 0
+
+    # อนุญาตให้ผู้เล่นโอนให้กันหรือไม่ (แอดมินยัง give/take/set ได้)
+    transferable: true
+    allow-self-transfer: false
+
+    # ขั้นต่ำ/สูงสุดต่อครั้ง ตามรูปแบบ decimals; 0 ที่ maximum-transfer = ไม่จำกัด
+    minimum-transfer: "1"
+    maximum-transfer: "0"
+
+    # ตั้งเป็น "" ถ้าไม่ต้องการคำสั่งเฉพาะสกุลเงิน
+    transfer-command: "spay"
+    command-aliases: ["scoinpay"]
+
+  g:
+    display-name: "G Coin"
+    symbol: "G"
+    decimals: 2
+    transferable: true
+    allow-self-transfer: false
+    minimum-transfer: "0.01"
+    maximum-transfer: "0"
+    transfer-command: "gpay"
+    command-aliases: []
+
+# ----------------------------------------------------------------------------
+# Permission nodes
+# ----------------------------------------------------------------------------
+# luminacore.currency.transfer.<currency-id>  โอนสกุลเงินนั้น เช่น transfer.s
+# luminacore.currency.transfer.*              โอนได้ทุกสกุลเงิน
+# luminacore.currency.balance                 ดูยอดผ่าน /lcpay balance
+# luminacore.currency.admin                   ใช้ give/take/set รวมถึงเป้าหมาย *
+# OP ผ่านทุกสิทธิ์ข้างต้นโดยอัตโนมัติ
+#
+# ตัวอย่างคำสั่งแอดมิน:
+#   /lcpay admin give Steve s 100
+#   /lcpay admin take Steve g 12.50
+#   /lcpay admin set * s 0
+# ----------------------------------------------------------------------------
+
+# ----------------------------------------------------------------------------
+# PlaceholderAPI
+# ----------------------------------------------------------------------------
+# รูปแบบ: %luminacore_currency_<currency-id>_<placeholder>%
+#
+# ยอดของผู้เล่นที่กำลังถูกประมวลผล:
+#   %luminacore_currency_s_balance%       -> 1250          (ไม่มีสัญลักษณ์)
+#   %luminacore_currency_s_formatted%     -> 1,250 S
+#   %luminacore_currency_g_balance%       -> 12.50
+#   %luminacore_currency_g_formatted%     -> 12.50 G
+#
+# ข้อมูลสกุลเงิน:
+#   %luminacore_currency_s_name%          -> S Coin
+#   %luminacore_currency_s_symbol%        -> S
+#   %luminacore_currency_s_transferable%  -> true / false
+#   %luminacore_currency_count%           -> จำนวนสกุลเงินทั้งหมด
+#
+# อันดับ (อันดับเริ่มที่ 1; จำกัดตาม settings.leaderboard-cache-size):
+#   %luminacore_currency_s_top_name_1%      -> ชื่อผู้เล่นอันดับ 1
+#   %luminacore_currency_s_top_balance_1%   -> ยอดอันดับ 1 แบบตัวเลข
+#   %luminacore_currency_s_top_formatted_1% -> ยอดอันดับ 1 พร้อมสัญลักษณ์
+#
+# Placeholder ไม่มี query ฐานข้อมูลตรง ๆ จึงอาจช้ากว่ายอดล่าสุดไม่เกินค่า
+# leaderboard-refresh-seconds สำหรับส่วนอันดับ; ยอดผู้เล่นอัปเดตหลังธุรกรรมสำเร็จทันที
+# ----------------------------------------------------------------------------
+
+messages:
+  players-only: "&cคำสั่งนี้ใช้ได้เฉพาะผู้เล่น"
+  no-permission: "&cคุณไม่มีสิทธิ์ใช้งานคำสั่งนี้"
+  recipient-offline: "&cไม่พบผู้เล่นปลายทางที่ออนไลน์อยู่"
+  unknown-currency: "&cไม่พบสกุลเงินที่ระบุ"
+  invalid-amount: "&cจำนวนเงินไม่ถูกต้อง หรือมีทศนิยมเกินที่กำหนด"
+  insufficient-funds: "&cยอดเงินของคุณไม่เพียงพอ"
+  transfer-disabled: "&cสกุลเงินนี้ไม่อนุญาตให้โอน"
+  self-transfer: "&cไม่สามารถโอนเงินให้ตัวเองได้"
+  transfer-limit: "&cจำนวนเงินอยู่นอกช่วงขั้นต่ำหรือสูงสุดของสกุลเงินนี้"
+  transaction-failed: "&cทำรายการไม่สำเร็จ โปรดลองใหม่อีกครั้ง"
+  transfer-sent: "&aโอน %amount% (%currency%) ให้ %player% สำเร็จ"
+  transfer-received: "&aได้รับ %amount% (%currency%) จาก %player%"
+  balance: "&e%player% มี %amount% (%currency%)"
+  balance-usage: "&eใช้: /lcpay balance <currency> หรือ /lcpay balance <player> <currency>"
+  no-targets: "&eไม่พบผู้เล่นในกลุ่มเป้าหมายที่เลือก"
+  admin-usage: "&eใช้: /lcpay admin <give|take|set> <player|-all|-allonline|-allofline> <currency> <amount>"
+  admin-success: "&a%operation% %amount% (%currency%) ให้ %player% สำเร็จ"
+  help: "&e/lcpay <player> <currency> <amount> &7| &e/lcpay balance <currency> &7| &e/lcpay admin ..."

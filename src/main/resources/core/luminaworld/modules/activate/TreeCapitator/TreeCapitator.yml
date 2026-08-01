@@ -18,7 +18,7 @@ settings:
   cooldown: 3.0
 
   # การตั้งค่าฟีเจอร์การตัดไม้
-  max-blocks: 128
+  max-blocks: 1024
   break-leaves: true
   replant-sapling: true
 

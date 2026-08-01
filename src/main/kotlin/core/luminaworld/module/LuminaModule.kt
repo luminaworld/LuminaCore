@@ -19,6 +19,7 @@ abstract class LuminaModule(val plugin: LuminaCore, val name: String) : Listener
             classPackage.contains(".modules.system") -> "system"
             classPackage.contains(".modules.activate") -> "activate"
             classPackage.contains(".modules.features") -> "features"
+            classPackage.contains(".modules.minigames") -> "minigames"
             else -> ""
         }
         val folder = if (category.isNotEmpty()) File(plugin.dataFolder, category) else plugin.dataFolder
@@ -109,11 +110,18 @@ abstract class LuminaModule(val plugin: LuminaCore, val name: String) : Listener
         // หากผู้เล่นปิดการทำงานของโมดูลนี้ใน settings ส่วนตัว ไม่ต้องส่งแจ้งเตือนใดๆ
         if (!core.luminaworld.settings.PlayerSettingsManager.isSettingEnabled(player, name)) return
 
+        // ป้องกันกรณีที่ข้อความเริ่มต้นเป็นค่าว่าง
+        if (msg.trim().isEmpty()) return
+
         val style = config?.getString("settings.message-style", "CHAT") ?: "CHAT"
         if (style.equals("NONE", ignoreCase = true)) return
         
         val prefix = plugin.config.getString("settings.prefix", "[LuminaCore]") ?: "[LuminaCore]"
         val formattedMsg = msg.replace("%prefix%", prefix)
+
+        // ตรวจสอบหลังจากแทนที่ prefix และล้างสี/แท็กแล้ว หากไม่มีตัวอักษรให้อ่านจริงก็ไม่ต้องส่ง
+        if (stripColor(formattedMsg).isBlank()) return
+
         val component = parseToComponent(formattedMsg)
         
         if (style.equals("ACTIONBAR", ignoreCase = true)) {
@@ -126,6 +134,17 @@ abstract class LuminaModule(val plugin: LuminaCore, val name: String) : Listener
         } else {
             player.sendMessage(component)
         }
+    }
+
+    /**
+     * ล้างรหัสสีของ Minecraft ทั้งแบบ Legacy, Hex และ MiniMessage Tags ออกทั้งหมด
+     * เพื่อตรวจสอบตัวอักษรข้อความที่แท้จริง
+     */
+    private fun stripColor(input: String): String {
+        return input.replace("(?i)[§&][0-9a-fk-orx]".toRegex(), "")
+            .replace("(?i)&#[0-9a-f]{6}".toRegex(), "")
+            .replace("<[^>]+>".toRegex(), "")
+            .trim()
     }
 
     /**

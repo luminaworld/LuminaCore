@@ -1,0 +1,79 @@
+# =========================================================================
+# Capture The Flag (ระบบยึดพื้นที่ / CTF) - Config settings
+# =========================================================================
+#
+# รายการ Placeholder สำหรับใช้ในเซิร์ฟเวอร์ (ต้องการ PlaceholderAPI):
+# - %luminacore_ctf_status_<ชื่อสนาม>%   : แสดงสถานะปัจจุบัน (Idle/Capturing/Grace/Cooldown)
+# - %luminacore_ctf_occupant_<ชื่อสนาม>% : แสดงชื่อผู้ครอบครองล่าสุด (หรือข้อความที่ตั้งเมื่อว่างใน messages.yml)
+# - %luminacore_ctf_time_<ชื่อสนาม>%     : แสดงตัวเลขเวลาดิบที่เหลืออยู่ (เช่น 120 วินาที)
+#
+
+settings:
+  enabled: true
+
+  # คำนำหน้าข้อความของโมดูลนี้ (ใช้แทนตัวแปร %prefix%)
+  prefix: "<gradient:#00FF80:#00FFD8>[CTF] </gradient>"
+
+  # สิทธิ์การเข้าถึงสำหรับผู้เล่นทั่วไปเพื่อเข้าร่วมการยึดพื้นที่
+  use-permission: false
+  permission: "luminacore.minigame.capturetheflag"
+
+  # สิทธิ์สำหรับผู้ดูแลระบบในการจัดการพื้นที่ยึดครองผ่าน GUI และคำสั่ง (/ctf)
+  admin-permission: "luminacore.minigame.ctf.admin"
+
+  # รูปแบบการแสดงเวลาใน Placeholder (RAW = วินาทีดิบ เช่น 120, FORMATTED = นาที:วินาที เช่น 02:00)
+  placeholder-time-format:
+    capturing: "RAW"
+    grace_period: "FORMATTED"
+    cooldown: "FORMATTED"
+
+  # ข้อความแสดงสถานะเมื่อใช้ %luminacore_ctf_status_<zoneName>% และตัวแปรอื่นๆ
+placeholder:
+  status:
+    idle: "&7ไม่มีผู้ยึดครอง"
+    capturing: "&7กำลังถูกยึดครอง &6[&a%elapsed%&7/&a%total%&6]"
+    grace_period: "&7ไม่มีผู้อยู่ในอาณาเขต &6[&a%remaining%&7/&a%total%&6]"
+    cooldown: "&7คูลดาวน์ &6[&a%cooldown%&6]"
+  occupant:
+    none: "&7ไม่มีผู้ครอบครอง"
+
+  # ค่าเริ่มต้นการสร้างพื้นที่ (จะถูกใช้หากไม่ได้ระบุแยกเป็นรายสนาม)
+  default-capture-time: 180 # เวลาสะสมเพื่อยึดครอง (วินาที)
+  default-grace-period: 10 # เวลาผ่อนผันกรณีไม่มีคนยืนในจุด (วินาที)
+  default-cooldown-time: 1800 # เวลาคูลดาวน์หลังจุดโดนยึด (วินาที)
+
+  # การแสดงผลพาทิเคิลขอบเขตพื้นที่ยึดครอง
+  default-particles:
+    enabled: true
+    type: "DUST" # พาทิเคิล เช่น DUST, FLAME, HAPPY_VILLAGER, CRIT
+    density: 0.5 # ระยะห่างพาทิเคิลต่อจุด (ยิ่งน้อยพาทิเคิลยิ่งละเอียดหนาแน่น)
+    size: 1.0 # ขนาดพาทิเคิล (เฉพาะชนิด DUST)
+    color: "#00FF00" # รหัส HEX สีพาทิเคิลในสถานะปกติ
+    render-interval-ticks: 10 # ความถี่การส่งพาทิเคิลแสดงผล (10 ticks = 0.5 วินาที)
+    height-offset: 0.1 # ความสูงในการลอยตัวเหนือระดับขอบล่าง
+    spawn-interval: 0.0 # หน่วงเวลาสปอนพาทิเคิลรอบใหม่ (0.0 = แสดงต่อเนื่อง)
+    duration: 0.0 # ระยะเวลาแสดงผลของพาทิเคิล (0.0 = แสดงต่อเนื่อง)
+
+    # การแสดงผลพาทิเคิลช่วงพื้นที่ติดคูลดาวน์
+    hide-during-cooldown: false
+    cooldown-particle:
+      type: "DUST"
+      size: 0.8
+      color: "#FF0000" # รหัส HEX สีพาทิเคิลในสถานะคูลดาวน์
+
+# การแจ้งเตือนข้อมูลทางแชทของเซิร์ฟเวอร์
+chat-notifications:
+  # แจ้งเมื่อเริ่มยึดพื้นที่
+  started:
+    enabled: true
+    message: "%prefix% &eผู้เล่น &a%player% &eได้เริ่มการยึดพื้นที่ &d%zone% &eแล้ว!"
+
+  # แจ้งเตือนเมื่อยึดพื้นที่สำเร็จและจุดเข้าสู่สถานะคูลดาวน์
+  captured:
+    enabled: true
+    message: "%prefix% &eผู้เล่น &a%player% &eได้ทำการยึดพื้นที่ &d%zone% &eสำเร็จแล้ว! &7(เริ่มนับเวลาคูลดาวน์)"
+
+  # แจ้งเตือนเมื่อจุดยึดพ้นช่วงคูลดาวน์และพร้อมใช้งานอีกครั้ง
+  cooldown-end:
+    enabled: true
+    message: "%prefix% &aพื้นที่ยึด &d%zone% &aพ้นช่วงคูลดาวน์แล้ว สามารถยึดครองได้อีกครั้ง!"

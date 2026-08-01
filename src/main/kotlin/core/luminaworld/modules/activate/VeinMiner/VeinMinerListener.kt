@@ -8,6 +8,7 @@ import org.bukkit.event.EventHandler
 import org.bukkit.event.EventPriority
 import org.bukkit.event.Listener
 import org.bukkit.event.block.BlockBreakEvent
+import org.bukkit.event.block.BlockDropItemEvent
 import java.util.ArrayDeque
 import java.util.Collections
 
@@ -59,6 +60,22 @@ class VeinMinerListener(
         runVeinMiner(player, block, material)
     }
 
+    @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
+    fun onBlockDropItem(event: BlockDropItemEvent) {
+        val block = event.block
+        if (processingBlocks.contains(block) && event.blockState.type == Material.ANCIENT_DEBRIS) {
+            val debrisItems = event.items.filter { it.itemStack.type == Material.ANCIENT_DEBRIS }
+            if (debrisItems.isNotEmpty()) {
+                event.items.removeAll(debrisItems)
+                val firstItem = debrisItems[0]
+                val stack = firstItem.itemStack
+                stack.amount = 1
+                firstItem.itemStack = stack
+                event.items.add(firstItem)
+            }
+        }
+    }
+
     private fun runVeinMiner(player: Player, startBlock: Block, oreType: Material) {
         val maxBlocks = module.maxBlocks
         val itemInHand = player.inventory.itemInMainHand
@@ -92,6 +109,21 @@ class VeinMinerListener(
 
         // ลงมือขุดบล็อกทั้งหมดทีละบล็อก
         for (oreBlock in visitedOres) {
+            val currentItem = player.inventory.itemInMainHand
+            if (!currentItem.type.name.endsWith("_PICKAXE")) {
+                break
+            }
+
+            val meta = currentItem.itemMeta
+            if (meta is org.bukkit.inventory.meta.Damageable) {
+                val maxDurability = currentItem.type.maxDurability
+                val currentDamage = meta.damage
+                val remainingDurability = maxDurability - currentDamage
+                if (remainingDurability <= 1) {
+                    break
+                }
+            }
+
             processingBlocks.add(oreBlock)
             player.breakBlock(oreBlock)
             processingBlocks.remove(oreBlock)

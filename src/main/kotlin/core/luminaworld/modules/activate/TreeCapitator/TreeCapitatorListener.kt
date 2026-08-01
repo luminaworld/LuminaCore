@@ -99,6 +99,21 @@ class TreeCapitatorListener(
 
         // ทำลายบล็อกไม้ทั้งหมด
         for (logBlock in visitedLogs) {
+            val currentItem = player.inventory.itemInMainHand
+            if (!currentItem.type.name.endsWith("_AXE")) {
+                break
+            }
+
+            val meta = currentItem.itemMeta
+            if (meta is org.bukkit.inventory.meta.Damageable) {
+                val maxDurability = currentItem.type.maxDurability
+                val currentDamage = meta.damage
+                val remainingDurability = maxDurability - currentDamage
+                if (remainingDurability <= 1) {
+                    break
+                }
+            }
+
             processingBlocks.add(logBlock)
             player.breakBlock(logBlock)
             processingBlocks.remove(logBlock)
@@ -148,6 +163,21 @@ class TreeCapitatorListener(
         if (breakLeaves && leavesToBreak.isNotEmpty()) {
             for (leafBlock in leavesToBreak) {
                 if (isLeaves(leafBlock.type)) {
+                    val currentItem = player.inventory.itemInMainHand
+                    if (!currentItem.type.name.endsWith("_AXE")) {
+                        break
+                    }
+
+                    val meta = currentItem.itemMeta
+                    if (meta is org.bukkit.inventory.meta.Damageable) {
+                        val maxDurability = currentItem.type.maxDurability
+                        val currentDamage = meta.damage
+                        val remainingDurability = maxDurability - currentDamage
+                        if (remainingDurability <= 1) {
+                            break
+                        }
+                    }
+
                     processingBlocks.add(leafBlock)
                     player.breakBlock(leafBlock)
                     processingBlocks.remove(leafBlock)

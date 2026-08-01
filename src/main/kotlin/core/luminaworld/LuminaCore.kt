@@ -50,7 +50,7 @@ class LuminaCore : JavaPlugin() {
 
     override fun onEnable() {
         instance = this
-        
+
         // ตรวจสอบ Standalone Mode
         val standaloneProps = getResource("standalone.properties")
         if (standaloneProps != null) {
@@ -73,11 +73,11 @@ class LuminaCore : JavaPlugin() {
             updateConfig(File(dataFolder, "config.yml"), "config.yml")
             reloadConfig()
         }
-        
+
         // พิมพ์ข้อความต้อนรับ ASCII Art และรายละเอียดของปลั๊กอิน
         val version = description.version
         val author = "Loma0531"
-        
+
         if (isStandalone) {
             server.consoleSender.sendMessage("§e===================================================")
             server.consoleSender.sendMessage("§a [Lumina-$standaloneModuleName] Standalone Plugin is enabling...")
@@ -119,7 +119,7 @@ class LuminaCore : JavaPlugin() {
             // เริ่มระบบตรวจสอบการอัปเดตแบบ Asynchronous
             core.luminaworld.updater.UpdateChecker.checkForUpdates(this)
         }
-        
+
         // เริ่มระบบจัดการคำสั่งแบบไดนามิก
         commandManager = core.luminaworld.command.CommandManager(this)
 
@@ -164,11 +164,11 @@ class LuminaCore : JavaPlugin() {
         } else {
             logger.info("[LuminaCore] Plugin is disabling...")
         }
-        
+
         // ยกเลิกและล้าง Task ของ ActionBar ทั้งหมด
         activeActionBarTasks.values.forEach { it.cancel() }
         activeActionBarTasks.clear()
-        
+
         // ปิดการทำงานโมดูลย่อยทั้งหมด
         moduleManager?.disableModules()
         moduleManager = null
@@ -214,17 +214,17 @@ class LuminaCore : JavaPlugin() {
             val paperPluginManagerClass = Class.forName("io.papermc.paper.plugin.manager.PaperPluginManagerImpl")
             val getInstanceMethod = paperPluginManagerClass.getMethod("getInstance")
             val pluginManager = getInstanceMethod.invoke(null)
-            
+
             val instanceManagerField = paperPluginManagerClass.getDeclaredField("instanceManager")
             instanceManagerField.isAccessible = true
             val instanceManager = instanceManagerField.get(pluginManager)
-            
+
             // ล้างจาก plugins List
             val pluginsField = instanceManager.javaClass.getDeclaredField("plugins")
             pluginsField.isAccessible = true
             val pluginsList = pluginsField.get(instanceManager) as? MutableList<Any>
             pluginsList?.remove(this)
-            
+
             // ล้างจาก lookupNames Map
             val lookupNamesField = instanceManager.javaClass.getDeclaredField("lookupNames")
             lookupNamesField.isAccessible = true
@@ -255,12 +255,12 @@ class LuminaCore : JavaPlugin() {
     fun updateConfig(configFile: File, resourceName: String) {
         try {
             if (!configFile.exists()) return
-            
+
             val resourceStream = getResource(resourceName) ?: return
             val defaultReader = InputStreamReader(resourceStream, StandardCharsets.UTF_8)
             val defaultConfig = YamlConfiguration.loadConfiguration(defaultReader)
             val currentConfig = YamlConfiguration.loadConfiguration(configFile)
-            
+
             var updated = false
             for (key in defaultConfig.getKeys(true)) {
                 if (!defaultConfig.isConfigurationSection(key)) {
@@ -269,10 +269,24 @@ class LuminaCore : JavaPlugin() {
                         updated = true
                     }
                 }
+
+                // คัดลอกและอัปเดตคอมเมนต์ของคีย์คอนฟิกเพื่อรักษาคอมเมนต์จาก JAR
+                try {
+                    currentConfig.setComments(key, defaultConfig.getComments(key))
+                    currentConfig.setInlineComments(key, defaultConfig.getInlineComments(key))
+                } catch (e: NoSuchMethodError) {
+                    // ข้ามกรณีเซิร์ฟเวอร์รุ่นเก่าไม่มี API ตัวนี้
+                }
             }
-            
+
+            // คัดลอกคอมเมนต์หัวไฟล์
+            try {
+                currentConfig.setComments("", defaultConfig.getComments(""))
+            } catch (e: Exception) {}
+
+            // เซฟคอนฟิกเมื่อมีการเปลี่ยนค่า หรือเพื่อรีเฟรชคอมเมนต์ใหม่
+            currentConfig.save(configFile)
             if (updated) {
-                currentConfig.save(configFile)
                 logger.info("[LuminaCore] Automatically added missing configuration keys to ${configFile.name}")
             }
         } catch (e: Exception) {
@@ -280,4 +294,3 @@ class LuminaCore : JavaPlugin() {
         }
     }
 }
-

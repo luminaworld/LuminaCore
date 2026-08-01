@@ -6,7 +6,11 @@ import java.util.UUID
 
 class ChatGamesDatabase(private val module: ChatGamesModule) {
     private val dbService get() = module.plugin.databaseService
-    private val tableName get() = module.chatConfig.config.getString("table_name", "chatgames") ?: "chatgames"
+    private val tableName get(): String {
+        val prefix = dbService?.tablePrefix ?: "lumina_"
+        val baseName = module.chatConfig.config.getString("table_name", "chatgames") ?: "chatgames"
+        return "$prefix$baseName"
+    }
 
     /**
      * สร้างตารางฐานข้อมูลย่อยของ ChatGames หากยังไม่มี

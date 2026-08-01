@@ -32,6 +32,9 @@ object PlayerSettingsManager : Listener {
     // เก็บรายการ Listener เพื่อแจ้งเตือนการเปลี่ยนแปลงของ Setting เมื่อเปิด/ปิดจากส่วนกลาง
     private val settingChangeListeners = ConcurrentHashMap<String, (Player, Boolean) -> Unit>()
 
+    private val prefix get() = plugin.databaseService?.tablePrefix ?: "lumina_"
+    private val settingsTable get() = "${prefix}player_settings"
+
     /**
      * ลงทะเบียนคอลแบ็กเพื่อรับข้อมูลเมื่อมีผู้เล่นสลับสถานะเปิด/ปิดการตั้งค่า
      */
@@ -66,7 +69,7 @@ object PlayerSettingsManager : Listener {
         // สร้างตารางในฐานข้อมูลแบบ Async
         plugin.databaseService?.runAsync { conn ->
             val sql = """
-                CREATE TABLE IF NOT EXISTS lumina_player_settings (
+                CREATE TABLE IF NOT EXISTS $settingsTable (
                     uuid VARCHAR(36) NOT NULL,
                     setting_key VARCHAR(64) NOT NULL,
                     setting_value VARCHAR(128) NOT NULL,
@@ -129,13 +132,13 @@ object PlayerSettingsManager : Listener {
             val dbType = plugin.config.getString("database.type", "SQLite") ?: "SQLite"
             val finalSql = if (dbType.equals("MySQL", ignoreCase = true)) {
                 """
-                    INSERT INTO lumina_player_settings (uuid, setting_key, setting_value)
+                    INSERT INTO $settingsTable (uuid, setting_key, setting_value)
                     VALUES (?, ?, ?)
                     ON DUPLICATE KEY UPDATE setting_value = VALUES(setting_value);
                 """.trimIndent()
             } else {
                 """
-                    INSERT INTO lumina_player_settings (uuid, setting_key, setting_value)
+                    INSERT INTO $settingsTable (uuid, setting_key, setting_value)
                     VALUES (?, ?, ?)
                     ON CONFLICT(uuid, setting_key) DO UPDATE SET setting_value = excluded.setting_value;
                 """.trimIndent()
@@ -156,7 +159,7 @@ object PlayerSettingsManager : Listener {
         val uuid = player.uniqueId
         
         plugin.databaseService?.runAsync { conn ->
-            val sql = "SELECT setting_key, setting_value FROM lumina_player_settings WHERE uuid = ?;"
+            val sql = "SELECT setting_key, setting_value FROM $settingsTable WHERE uuid = ?;"
             conn.prepareStatement(sql).use { ps ->
                 ps.setString(1, uuid.toString())
                 val rs = ps.executeQuery()

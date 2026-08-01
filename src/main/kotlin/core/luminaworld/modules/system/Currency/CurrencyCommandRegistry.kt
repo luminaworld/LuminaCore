@@ -8,10 +8,12 @@ import org.bukkit.command.CommandMap
 import org.bukkit.command.CommandSender
 import org.bukkit.command.SimpleCommandMap
 import org.bukkit.command.TabCompleter
+import io.papermc.paper.threadedregions.scheduler.ScheduledTask
 
 /** Commands defined by a currency belong to this module, not CommandManager. */
 class CurrencyCommandRegistry(private val plugin: LuminaCore) {
     private val commands = mutableMapOf<String, CurrencyDynamicCommand>()
+    private var syncTask: ScheduledTask? = null
     private val map: CommandMap by lazy {
         val server = Bukkit.getServer()
         val getter = server.javaClass.getDeclaredMethod("getCommandMap")
@@ -28,14 +30,23 @@ class CurrencyCommandRegistry(private val plugin: LuminaCore) {
 
     fun register(name: String, aliases: List<String>, executor: CommandExecutor, completer: TabCompleter): Boolean {
         val normalized = name.lowercase()
-        if (normalized in commands || map.getCommand(normalized) != null || aliases.any { map.getCommand(it.lowercase()) != null }) {
-            plugin.logger.warning("[Currency] Skipped /$name because it conflicts with an existing command or alias.")
+        if (normalized in commands || map.getCommand(normalized) != null) {
+            plugin.logger.warning("[Currency] Skipped /$name because the main command conflicts with an existing command.")
             return false
         }
-        val command = CurrencyDynamicCommand(normalized, aliases, executor, completer)
+        val safeAliases = aliases.filter { alias ->
+            val aliasLower = alias.lowercase()
+            val existing = map.getCommand(aliasLower)
+            if (existing != null) {
+                plugin.logger.warning("[Currency] Alias /$aliasLower for /$name was skipped because it conflicts with an existing command.")
+                false
+            } else {
+                true
+            }
+        }
+        val command = CurrencyDynamicCommand(normalized, safeAliases, executor, completer)
         map.register(plugin.description.name.lowercase(), command)
         commands[normalized] = command
-        sync()
         return true
     }
 
@@ -47,9 +58,17 @@ class CurrencyCommandRegistry(private val plugin: LuminaCore) {
             command.unregister(map)
         }
         commands.clear()
-        sync()
     }
-    private fun sync() = try { Bukkit.getServer().javaClass.getMethod("syncCommands").invoke(Bukkit.getServer()) } catch (_: Exception) { }
+
+    fun sync() {
+        syncTask?.cancel()
+        syncTask = plugin.server.globalRegionScheduler.runDelayed(plugin, { _ ->
+            try {
+                Bukkit.getServer().javaClass.getMethod("syncCommands").invoke(Bukkit.getServer())
+            } catch (_: Exception) { }
+            syncTask = null
+        }, 1L)
+    }
 }
 
 private class CurrencyDynamicCommand(name: String, aliases: List<String>, private val executor: CommandExecutor, private val completer: TabCompleter) : Command(name, "Transfer a LuminaCore currency", "/$name <player> <amount>", aliases) {

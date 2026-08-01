@@ -25,6 +25,4 @@ commands:
     description: ตั้งค่าระบบส่วนตัวของผู้เล่น
     aliases:
       - settings
-  lcpay:
-    description: โอนและจัดการสกุลเงินของ LuminaCore
-    usage: /lcpay <player> <currency> <amount>
+

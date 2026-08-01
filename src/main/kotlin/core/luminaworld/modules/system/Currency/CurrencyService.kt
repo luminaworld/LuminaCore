@@ -49,7 +49,7 @@ class CurrencyService(private val plugin: LuminaCore, private val repository: Cu
         val currency = getCurrency(currencyId) ?: run { callback(CurrencyOperationResult(CurrencyResult.UNKNOWN_CURRENCY)); return }
         val amount = (if (operation == "SET") currency.parseBalance(input) else currency.parseAmount(input))
             ?: run { callback(CurrencyOperationResult(CurrencyResult.INVALID_AMOUNT)); return }
-        repository.change(player, currency.id, amount, operation, actor, reason) { result ->
+        repository.change(player, currency.id, amount, operation, actor, reason, currency.minimumBalance, currency.maximumBalance) { result ->
             if (result.status == CurrencyResult.SUCCESS) {
                 balances[cacheKey(player.uuid, currency.id)] = result.balance
                 refreshLeaderboard(currency.id)
@@ -66,7 +66,7 @@ class CurrencyService(private val plugin: LuminaCore, private val repository: Cu
             from.uuid == to.uuid && !currency.allowSelfTransfer -> { callback(CurrencyOperationResult(CurrencyResult.SELF_TRANSFER)); return }
             amount < currency.minimumTransfer || (currency.maximumTransfer > 0 && amount > currency.maximumTransfer) -> { callback(CurrencyOperationResult(CurrencyResult.LIMIT_EXCEEDED)); return }
         }
-        repository.transfer(from, to, currency.id, amount) { result, targetBalance ->
+        repository.transfer(from, to, currency.id, amount, currency.minimumBalance, currency.maximumBalance) { result, targetBalance ->
             if (result.status == CurrencyResult.SUCCESS) {
                 balances[cacheKey(from.uuid, currency.id)] = result.balance
                 balances[cacheKey(to.uuid, currency.id)] = targetBalance

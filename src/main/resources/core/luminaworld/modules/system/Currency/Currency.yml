@@ -1,138 +1,225 @@
 # ============================================================================
-# LuminaCore Currency (System Module)
+#               LuminaCore Currency Configuration (ระบบสกุลเงินหลัก)
 # ============================================================================
-# ระบบสกุลเงินภายใน LuminaCore โดยสมบูรณ์ ไม่ใช่ Vault และไม่กระทบยอด /pay
-# ของปลั๊กอิน Economy อื่น สกุลเงินทุกตัวถูกเก็บในฐานข้อมูลกลาง LuminaCore
+# ไฟล์นี้ใช้สำหรับตั้งค่าระบบสกุลเงินที่แยกอิสระจากระบบ Vault ของเซิร์ฟเวอร์
+# ทุกธุรกรรมการโอนเงินจะถูกบันทึกและจัดเก็บไว้ในฐานข้อมูลกลางของ LuminaCore
 #
-# ไฟล์นี้คือคู่มือการใช้งานด้วย: อ่านคำอธิบายแต่ละตัวเลือกก่อนแก้ไข
-# หลังแก้ไฟล์ใช้ /lc reload เพื่อโหลดสกุลเงินและคำสั่งใหม่
-# ห้ามเปลี่ยน id ของสกุลเงินที่มีการใช้งานแล้ว เพราะยอดเดิมผูกกับ id นั้น
+# คำสั่งลัดในการอัปเดตค่าหลังจากแก้ไขไฟล์นี้:
+# - ในเกม/คอนโซล: /lc reload (ระบบจะอัปเดตการตั้งค่าและคำสั่งใหม่ทันที)
+#
+# *ข้อควรระวัง: ห้ามเปลี่ยนไอดีหลักของสกุลเงิน (เช่น coin, point) ที่มีผู้ใช้งานแล้ว
+# เนื่องจากข้อมูลกระเป๋าเงินเดิมของผู้เล่นในฐานข้อมูลหลักจะผูกอยู่กับไอดีนั้นๆ
 # ============================================================================
 
+# ----------------------------------------------------------------------------
+# 1. การตั้งค่าระบบทั่วไป (General Settings)
+# ----------------------------------------------------------------------------
 settings:
-  # เปิด/ปิดโมดูล Currency
+  # เปิด/ปิด การใช้งานโมดูล Currency ทั้งหมด (true = เปิด, false = ปิด)
   enabled: true
 
-  # จำนวนอันดับที่เก็บใน cache สำหรับ PlaceholderAPI (1 ถึง 100)
-  # เพิ่มค่านี้หากจะเรียก %luminacore_currency_s_top_name_20%
-  leaderboard-cache-size: 10
-
-  # true = โอนได้เฉพาะผู้เล่นที่กำลังออนไลน์ (ค่าเริ่มต้นที่ปลอดภัย)
-  # false = อนุญาตส่งให้ชื่อผู้เล่น offline ได้; ควรใช้เมื่อ user cache เชื่อถือได้
+  # true  = ผู้รับปลายทางต้องออนไลน์อยู่ในเซิร์ฟเวอร์เท่านั้นจึงจะโอนเงินให้ได้ (แนะนำ)
+  # false = อนุญาตให้โอนเงินหาผู้เล่นที่ออฟไลน์อยู่ได้ (ระบบจะอัปเดตยอดหลังผู้เล่นออนไลน์)
   require-recipient-online: true
 
-  # ช่วงเวลาอัปเดตอันดับจากฐานข้อมูลเป็นวินาที (ต่ำสุด 10)
-  # Placeholder จะอ่าน cache จึงไม่สร้าง query ทุกครั้งที่ scoreboard refresh
-  leaderboard-refresh-seconds: 60
+  # คำสั่งย่อสำหรับตารางอันดับ (Leaderboard Command Aliases)
+  leaderboard-command-aliases:
+    - "baltop"
+    - "moneytop"
+
+  # --- ระบบแจ้งเตือนการทำธุรกรรม (Transaction Notifications) ---
+  # ประเภทการแจ้งเตือนที่รองรับ:
+  # - CHAT       : แสดงในช่องแชทปกติของเกม
+  # - ACTION_BAR : แสดงบนแถบ Action Bar (เหนือช่องไอเทมด่วน)
+  # - NONE       : ปิดการแจ้งเตือน ไม่ส่งข้อความใดๆ ให้ผู้เล่น
+  notifications:
+    # เมื่อผู้เล่นโอนเงินกันเอง (เช่น /lcpay)
+    player-transfer:
+      sender: "CHAT"
+      receiver: "CHAT"
+      
+    # เมื่อ Admin ที่เป็นผู้เล่นในเกมใช้คำสั่งจัดการเงิน (เช่น /currencyadmin)
+    admin-action:
+      target: "CHAT"
+      
+    # เมื่อระบบผ่าน Console หรือปลั๊กอินอื่นใช้คำสั่งจัดการเงิน
+    console-action:
+      target: "ACTION_BAR"
 
 # ----------------------------------------------------------------------------
-# คำสั่ง
+# 2. การตั้งค่าสกุลเงิน (Currencies Definition)
 # ----------------------------------------------------------------------------
-# /lcpay <player> <currency> <amount>
-#   ทางเลือกกลางสำหรับโอนเงิน: /lcpay Steve s 50
-# /lcpay balance <currency>
-# /lcpay balance <player> <currency>
-# /lcpay admin give|take|set <player|-all|-allonline|-allofline> <currency> <amount>
-#   -all       = ผู้เล่นทุกคนที่เซิร์ฟเวอร์รู้จัก (ออนไลน์และออฟไลน์)
-#   -allonline = ผู้เล่นที่ออนไลน์ ณ ขณะสั่ง
-#   -allofline = ผู้เล่นที่ออฟไลน์ ณ ขณะสั่ง (สะกดตามคำสั่งที่รองรับ)
-#   -alloffline ก็ใช้ได้เช่นกัน เพื่อรองรับการสะกด offline แบบมาตรฐาน
-#
-# คำสั่งเฉพาะสกุลเงิน เช่น /spay <player> <amount> เป็นทางเลือกเท่านั้น
-# ตั้ง transfer-command เป็น "" หากต้องการใช้ /lcpay อย่างเดียว
-# command-aliases เป็นชื่อคำสั่งสำรองโดยไม่ใส่เครื่องหมาย /
-# หากชื่อไปชนคำสั่งของเซิร์ฟเวอร์หรือปลั๊กอินอื่น ระบบจะไม่ลงทะเบียนคำสั่งนั้น
+# สามารถเพิ่มสกุลเงินใหม่ได้โดยสร้างไอดีใหม่ขึ้นมา (เช่น coin, point, token)
+# *เงื่อนไขไอดี: ภาษาอังกฤษตัวพิมพ์เล็ก, ตัวเลข, _ หรือ - เท่านั้น (ความยาว 1-32 ตัวอักษร)
 # ----------------------------------------------------------------------------
-
 currencies:
-  s:
-    # id = s ใช้กับ API, ฐานข้อมูล และ PlaceholderAPI; ต้องเป็น a-z, 0-9, _ หรือ -
-    display-name: "S Coin"
-    symbol: "S"
+  # ==================== ตัวอย่างที่ 1: สกุลเงิน Coin ====================
+  coin:
+    # ชื่อแสดงผลและสัญลักษณ์ของสกุลเงิน
+    display-name: "Coin"
+    symbol: "Coin"
 
-    # ตำแหน่งทศนิยม 0-8 เช่น 2 จะแสดง 12.50 และรับจำนวน 12.50 ได้
+    # จำนวนหลักทศนิยมที่รองรับ (0 ถึง 8)
+    # หากระบุเป็น 0 ยอดเงินจะเป็นจำนวนเต็มทั้งหมด (เช่น 100 Coin)
     decimals: 0
 
-    # อนุญาตให้ผู้เล่นโอนให้กันหรือไม่ (แอดมินยัง give/take/set ได้)
+    # true = อนุญาตให้ผู้เล่นโอนสกุลเงินนี้ให้กันได้, false = โอนไม่ได้ (เฉพาะแอดมินที่โอน/แจกได้)
     transferable: true
+
+    # ป้องกันไม่ให้ผู้เล่นพิมพ์โอนเงินให้ตัวเอง
     allow-self-transfer: false
 
-    # ขั้นต่ำ/สูงสุดต่อครั้ง ตามรูปแบบ decimals; 0 ที่ maximum-transfer = ไม่จำกัด
+    # ข้อจำกัดในการโอนเงินต่อครั้ง ("0" = ไม่จำกัด)
     minimum-transfer: "1"
     maximum-transfer: "0"
 
-    # ตั้งเป็น "" ถ้าไม่ต้องการคำสั่งเฉพาะสกุลเงิน
-    transfer-command: "spay"
-    command-aliases: ["scoinpay"]
+    # ลิมิตยอดเงินคงเหลือสูงสุดและต่ำสุดในกระเป๋าเงิน ("0" = ไม่จำกัด)
+    minimum-balance: "0"
+    maximum-balance: "1000000000"
 
-  g:
-    display-name: "G Coin"
-    symbol: "G"
+    # คำสั่งโอนเงินด่วนโดยเฉพาะสำหรับสกุลเงินนี้ (ตั้งเป็น "" หรือลบออกเพื่อยกเลิก)
+    # เช่น พิมพ์ /cpay Loma0531 100 จะเป็นการโอน coin ให้ Loma0531 ทันที
+    transfer-command: "cpay"
+    command-aliases:
+      - "coinpay"
+
+    # --- ระบบ Permissions แบบละเอียดแยกสกุลเงิน ---
+    # สิทธิ์การโอนเงิน (หากตั้งเป็น "" หรือเว้นว่าง = โอนได้ทุกคนโดยไม่ต้องมีสิทธิ์)
+    permission-transfer: "luminacore.currency.coin.transfer"
+    permission-transfer-require: true
+
+    # สิทธิ์ในการรับเงินโอน (หากตั้งเป็น "" หรือเว้นว่าง = รับได้ทุกคนโดยไม่ต้องมีสิทธิ์)
+    permission-receive: "luminacore.currency.coin.receive"
+    permission-receive-require: true
+
+    # สิทธิ์ในการดูยอดเงินตนเอง (หากตั้งเป็น "" หรือเว้นว่าง = ดูได้ทุกคน)
+    permission-balance: ""
+    permission-balance-require: false
+
+    # สิทธิ์ในการดูยอดเงินผู้อื่น (หากตั้งเป็น "" หรือเว้นว่าง = ดูได้ทุกคน)
+    permission-balance-other: "luminacore.currency.coin.balance.other"
+    permission-balance-other-require: true
+
+    # สิทธิ์ในการเปิดดูตารางอันดับมหาเศรษฐี (หากเป็น "" หรือเว้นว่าง = ดูได้ทุกคน)
+    permission-leaderboard: "luminacore.currency.coin.leaderboard"
+    # true = บังคับว่าต้องมีสิทธิ์ด้านบนเพื่อดูบอร์ดคะแนน, false = ไม่บังคับใช้
+    permission-leaderboard-require: true
+
+    # รูปแบบการแสดงผลของจำนวนเงินและสัญลักษณ์สกุลเงิน
+    # คำหลักที่รองรับ: [money] (แสดงแบบเต็ม 1,500), [money_abbreviate] (แสดงตัวย่อ เช่น 1.5k), [symbol] (สัญลักษณ์)
+    placing: "[money_abbreviate] [symbol]"
+
+  # ==================== ตัวอย่างที่ 2: สกุลเงิน Point ====================
+  point:
+    # ชื่อแสดงผลและสัญลักษณ์ของสกุลเงิน
+    display-name: "Point"
+    symbol: "P"
+
+    # จำนวนทศนิยมที่รองรับ (เช่น 2 หลัก จะทำให้เงินมีค่า เช่น 10.50 P)
     decimals: 2
+
+    # การโอนเงินระหว่างผู้เล่นและการโอนหาตัวเอง
     transferable: true
     allow-self-transfer: false
-    minimum-transfer: "0.01"
-    maximum-transfer: "0"
-    transfer-command: "gpay"
+
+    # ข้อจำกัดในการโอนเงินต่อครั้ง
+    minimum-transfer: "0.1"
+    maximum-transfer: "10000"
+
+    # ลิมิตยอดเงินคงเหลือสูงสุดและต่ำสุดในกระเป๋าเงิน ("0" = ไม่จำกัด)
+    minimum-balance: "0"
+    maximum-balance: "0"
+
+    # คำสั่งโอนเงินด่วนเฉพาะสกุลเงิน Point
+    transfer-command: "pointpay"
     command-aliases: []
 
-# ----------------------------------------------------------------------------
-# Permission nodes
-# ----------------------------------------------------------------------------
-# luminacore.currency.transfer.<currency-id>  โอนสกุลเงินนั้น เช่น transfer.s
-# luminacore.currency.transfer.*              โอนได้ทุกสกุลเงิน
-# luminacore.currency.balance                 ดูยอดผ่าน /lcpay balance
-# luminacore.currency.admin                   ใช้ give/take/set รวมถึงเป้าหมาย *
-# OP ผ่านทุกสิทธิ์ข้างต้นโดยอัตโนมัติ
-#
-# ตัวอย่างคำสั่งแอดมิน:
-#   /lcpay admin give Steve s 100
-#   /lcpay admin take Steve g 12.50
-#   /lcpay admin set * s 0
-# ----------------------------------------------------------------------------
+    # --- การกำหนดระบบ Permission เฉพาะของ Point ---
+    permission-transfer: "luminacore.currency.point.transfer"
+    permission-transfer-require: false
+
+    permission-receive: ""
+    permission-receive-require: false
+
+    permission-balance: ""
+    permission-balance-require: false
+
+    permission-balance-other: "luminacore.currency.point.balance.other"
+    permission-balance-other-require: false
+
+    # สิทธิ์ในการเปิดดูตารางอันดับมหาเศรษฐี
+    permission-leaderboard: "luminacore.currency.point.leaderboard"
+    permission-leaderboard-require: false
+
+    # รูปแบบการแสดงผล (เช่น 1,500.00 P)
+    placing: "[money] [symbol]"
 
 # ----------------------------------------------------------------------------
-# PlaceholderAPI
+# 3. ข้อความแจ้งเตือนของระบบ (Messages Configuration)
 # ----------------------------------------------------------------------------
-# รูปแบบ: %luminacore_currency_<currency-id>_<placeholder>%
-#
-# ยอดของผู้เล่นที่กำลังถูกประมวลผล:
-#   %luminacore_currency_s_balance%       -> 1250          (ไม่มีสัญลักษณ์)
-#   %luminacore_currency_s_formatted%     -> 1,250 S
-#   %luminacore_currency_g_balance%       -> 12.50
-#   %luminacore_currency_g_formatted%     -> 12.50 G
-#
-# ข้อมูลสกุลเงิน:
-#   %luminacore_currency_s_name%          -> S Coin
-#   %luminacore_currency_s_symbol%        -> S
-#   %luminacore_currency_s_transferable%  -> true / false
-#   %luminacore_currency_count%           -> จำนวนสกุลเงินทั้งหมด
-#
-# อันดับ (อันดับเริ่มที่ 1; จำกัดตาม settings.leaderboard-cache-size):
-#   %luminacore_currency_s_top_name_1%      -> ชื่อผู้เล่นอันดับ 1
-#   %luminacore_currency_s_top_balance_1%   -> ยอดอันดับ 1 แบบตัวเลข
-#   %luminacore_currency_s_top_formatted_1% -> ยอดอันดับ 1 พร้อมสัญลักษณ์
-#
-# Placeholder ไม่มี query ฐานข้อมูลตรง ๆ จึงอาจช้ากว่ายอดล่าสุดไม่เกินค่า
-# leaderboard-refresh-seconds สำหรับส่วนอันดับ; ยอดผู้เล่นอัปเดตหลังธุรกรรมสำเร็จทันที
+# รองรับรหัสสีตกแต่งและตัวแปรไดนามิกต่างๆ ตามบริบท
 # ----------------------------------------------------------------------------
-
 messages:
-  players-only: "&cคำสั่งนี้ใช้ได้เฉพาะผู้เล่น"
+  players-only: "&cคำสั่งนี้ใช้ได้เฉพาะผู้เล่นภายในเซิร์ฟเวอร์เท่านั้น"
   no-permission: "&cคุณไม่มีสิทธิ์ใช้งานคำสั่งนี้"
-  recipient-offline: "&cไม่พบผู้เล่นปลายทางที่ออนไลน์อยู่"
-  unknown-currency: "&cไม่พบสกุลเงินที่ระบุ"
-  invalid-amount: "&cจำนวนเงินไม่ถูกต้อง หรือมีทศนิยมเกินที่กำหนด"
-  insufficient-funds: "&cยอดเงินของคุณไม่เพียงพอ"
-  transfer-disabled: "&cสกุลเงินนี้ไม่อนุญาตให้โอน"
-  self-transfer: "&cไม่สามารถโอนเงินให้ตัวเองได้"
-  transfer-limit: "&cจำนวนเงินอยู่นอกช่วงขั้นต่ำหรือสูงสุดของสกุลเงินนี้"
-  transaction-failed: "&cทำรายการไม่สำเร็จ โปรดลองใหม่อีกครั้ง"
-  transfer-sent: "&aโอน %amount% (%currency%) ให้ %player% สำเร็จ"
-  transfer-received: "&aได้รับ %amount% (%currency%) จาก %player%"
-  balance: "&e%player% มี %amount% (%currency%)"
-  balance-usage: "&eใช้: /lcpay balance <currency> หรือ /lcpay balance <player> <currency>"
-  no-targets: "&eไม่พบผู้เล่นในกลุ่มเป้าหมายที่เลือก"
-  admin-usage: "&eใช้: /lcpay admin <give|take|set> <player|-all|-allonline|-allofline> <currency> <amount>"
-  admin-success: "&a%operation% %amount% (%currency%) ให้ %player% สำเร็จ"
-  help: "&e/lcpay <player> <currency> <amount> &7| &e/lcpay balance <currency> &7| &e/lcpay admin ..."
+  recipient-no-permission: "&cผู้เล่น %player% ไม่มีสิทธิ์รับยอดเงินสกุลเงินนี้"
+  recipient-offline: "&cไม่พบผู้เล่นปลายทาง หรือผู้เล่นดังกล่าวไม่ได้ออนไลน์อยู่"
+  unknown-currency: "&cไม่พบสกุลเงินที่คุณระบุในระบบ"
+  invalid-amount: "&cจำนวนเงินไม่ถูกต้อง หรือมีจำนวนทศนิยมเกินค่าที่กำหนด"
+  insufficient-funds: "&cยอดเงินของคุณไม่เพียงพอสำหรับการทำรายการ"
+  transfer-disabled: "&cสกุลเงินนี้ถูกปิดการโอนระหว่างผู้เล่นชั่วคราว"
+  self-transfer: "&cคุณไม่สามารถโอนเงินให้ตนเองได้"
+  transfer-limit: "&cจำนวนเงินที่จะโอนอยู่นอกช่วงขั้นต่ำหรือสูงสุดที่กำหนดไว้"
+  transaction-failed: "&cการทำธุรกรรมล้มเหลว กรุณาติดต่อทีมงานหรือลองใหม่อีกครั้ง"
+  transfer-sent: "&aโอนเงินสกุล %currency% จำนวน %amount% ให้กับ %player% สำเร็จแล้ว"
+  transfer-received: "&aคุณได้รับเงินสกุล %currency% จำนวน %amount% จากผู้เล่น %player%"
+  balance: "&eผู้เล่น %player% มียอดเงินในระบบจำนวน %amount%"
+  balance-usage: "&eรูปแบบการใช้งาน: /%balance_cmd% <สกุลเงิน> หรือ /%balance_cmd% <ชื่อผู้เล่น> <สกุลเงิน>"
+  no-targets: "&cไม่พบเป้าหมายผู้เล่นตามที่ระบบค้นหา"
+  admin-usage: "&eรูปแบบ: /%admin_cmd% <give|take|set> <ชื่อผู้เล่น|-all|-allonline|-alloffline> <สกุลเงิน> <จำนวน>"
+  admin-success: "&aดำเนินการ %operation% เงินจำนวน %amount% ให้กับ %player% เรียบร้อยแล้ว"
+  admin-success-bulk: "&aดำเนินการ %operation% เงินจำนวน %amount% ให้กับผู้เล่นจำนวน %count% คน สำเร็จเรียบร้อยแล้ว"
+  transaction-failed-bulk: "&cการทำธุรกรรมล้มเหลวสำหรับผู้เล่นจำนวน %count% คน"
+  help: "&e/%pay_cmd% <ชื่อผู้เล่น> <สกุลเงิน> <จำนวน>"
+  balance-limit-exceeded: "&cไม่สามารถทำรายการได้ เนื่องจากยอดเงินคงเหลือจะอยู่นอกขอบเขตจำกัดสูงสุดหรือต่ำสุดที่กำหนดไว้"
+
+  # --- ข้อความแจ้งเตือนเมื่อ Admin จัดการเงินส่งถึงผู้เล่น ---
+  # ตัวอย่างการแสดงผลสำหรับผู้เล่นปลายทาง:
+  # - เมื่อถูกดำเนินการโดยแอดมินในเกม (เช่น Loma0531): "คุณได้รับเงินสกุล Coin จำนวน 1,000 Coin จากผู้ดูแลระบบ (Loma0531)"
+  # - เมื่อถูกดำเนินการโดย Rcon / Console: "คุณได้รับเงินสกุล Coin จำนวน 1,000 Coin จากผู้ดูแลระบบ (Console)"
+  admin-give-received: "&aคุณได้รับเงินสกุล %currency% จำนวน %amount% จากผู้ดูแลระบบ (%admin%)"
+  admin-take-received: "&cคุณถูกหักเงินสกุล %currency% จำนวน %amount% โดยผู้ดูแลระบบ (%admin%)"
+  admin-set-received: "&eยอดเงิน %currency% ของคุณถูกตั้งค่าเป็น %amount% โดยผู้ดูแลระบบ (%admin%)"
+
+  # --- ข้อความแสดงตารางอันดับ (Leaderboard) ---
+  leaderboard-header: "&6=== อันดับผู้เล่นที่มี %currency% สูงสุด %limit% อันดับแรก ==="
+  leaderboard-format: "&e%index%. &f%player% &7- &a%amount%"
+  leaderboard-empty: "&cไม่มีข้อมูลการจัดอันดับสำหรับสกุลเงินนี้"
+
+# ----------------------------------------------------------------------------
+# 4. คู่มือการใช้งาน PlaceholderAPI (Documentation)
+# ----------------------------------------------------------------------------
+# สามารถนำตัวแทนค่าเหล่านี้ไปใช้ในปลั๊กอินแสดงผลอื่นๆ (เช่น Scoreboard, Tablist)
+# รูปแบบสากล: %luminacore_currency_<ไอดีสกุลเงิน>_<ค่าที่ต้องการดึง>%
+#
+# รายชื่อ Placeholders ที่รองรับ:
+#
+# 1. ยอดคงเหลือของผู้เล่น (Real-time):
+#    - %luminacore_currency_<ไอดีสกุลเงิน>_balance%   -> แสดงยอดเงินดิบ เช่น 1500
+#    - %luminacore_currency_<ไอดีสกุลเงิน>_formatted% -> แสดงแบบจัดรูปแบบ เช่น 1.5k Coin
+#    - %luminacore_currency_<ไอดีสกุลเงิน>_short%     -> แสดงแบบย่อไม่มีสัญลักษณ์ เช่น 1.5k
+#
+# 2. ข้อมูลเบื้องต้นของสกุลเงิน:
+#    - %luminacore_currency_<ไอดีสกุลเงิน>_name%          -> ชื่อของสกุลเงิน เช่น Coin
+#    - %luminacore_currency_<ไอดีสกุลเงิน>_symbol%        -> สัญลักษณ์ของสกุลเงิน เช่น P
+#    - %luminacore_currency_<ไอดีสกุลเงิน>_transferable%  -> สถานะการโอนเงิน (true / false)
+#    - %luminacore_currency_count%                        -> จำนวนชนิดสกุลเงินทั้งหมดในระบบ
+#
+# 3. ข้อมูลจัดอันดับมหาเศรษฐี (Leaderboard) (อัปเดตตามระยะเวลาแคช):
+#    - %luminacore_currency_<ไอดีสกุลเงิน>_top_name_<อันดับ>%      -> ชื่อผู้เล่นตามอันดับ เช่น Loma0531
+#    - %luminacore_currency_<ไอดีสกุลเงิน>_top_balance_<อันดับ>%   -> ยอดเงินดิบของอันดับ เช่น 50000
+#    - %luminacore_currency_<ไอดีสกุลเงิน>_top_formatted_<อันดับ>% -> ยอดจัดรูปแบบของอันดับ เช่น 50k Coin
+#    - %luminacore_currency_<ไอดีสกุลเงิน>_top_short_<อันดับ>%     -> ยอดจัดรูปแบบย่อไม่มีสัญลักษณ์ เช่น 50k
+#
+# *หมายเหตุ: อันดับเริ่มต้นที่ 1 และรองรับสูงสุดตามที่ตั้งค่าใน leaderboard-cache-size
+# ----------------------------------------------------------------------------

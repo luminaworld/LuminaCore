@@ -256,7 +256,38 @@ class LuminaCore : JavaPlugin() {
         try {
             if (!configFile.exists()) return
 
+            // ตรวจสอบตัวเลือกการอัปเดตคอนฟิกอัตโนมัติจาก config.yml ของเซิร์ฟเวอร์
+            val mainConfigFile = File(dataFolder, "config.yml")
+            var autoUpdateEnabled = true
+            var updateMode = "MERGE"
+
+            if (mainConfigFile.exists()) {
+                val mainConfig = YamlConfiguration.loadConfiguration(mainConfigFile)
+                autoUpdateEnabled = mainConfig.getBoolean("config-update.enabled", true)
+                updateMode = mainConfig.getString("config-update.mode", "MERGE")?.uppercase() ?: "MERGE"
+            }
+
+            if (!autoUpdateEnabled || updateMode == "NONE") {
+                return
+            }
+
             val resourceStream = getResource(resourceName) ?: return
+
+            // โหมดเขียนทับไฟล์คอนฟิกเดิมทั้งหมด (WRITE_OVER)
+            if (updateMode == "WRITE_OVER") {
+                try {
+                    configFile.outputStream().use { output ->
+                        resourceStream.copyTo(output)
+                    }
+                    resourceStream.close()
+                    logger.info("[LuminaCore] Config file ${configFile.name} has been overwritten (WRITE_OVER mode).")
+                } catch (e: Exception) {
+                    logger.severe("[LuminaCore] Failed to overwrite config ${configFile.name}: ${e.message}")
+                }
+                return
+            }
+
+            // โหมดผสานคีย์ตั้งค่าเฉพาะส่วนต่างที่มาใหม่ (MERGE)
             val defaultReader = InputStreamReader(resourceStream, StandardCharsets.UTF_8)
             val defaultConfig = YamlConfiguration.loadConfiguration(defaultReader)
             val currentConfig = YamlConfiguration.loadConfiguration(configFile)
@@ -272,8 +303,10 @@ class LuminaCore : JavaPlugin() {
 
                 // คัดลอกและอัปเดตคอมเมนต์ของคีย์คอนฟิกเพื่อรักษาคอมเมนต์จาก JAR
                 try {
-                    currentConfig.setComments(key, defaultConfig.getComments(key))
-                    currentConfig.setInlineComments(key, defaultConfig.getInlineComments(key))
+                    if (currentConfig.contains(key)) {
+                        currentConfig.setComments(key, defaultConfig.getComments(key))
+                        currentConfig.setInlineComments(key, defaultConfig.getInlineComments(key))
+                    }
                 } catch (e: NoSuchMethodError) {
                     // ข้ามกรณีเซิร์ฟเวอร์รุ่นเก่าไม่มี API ตัวนี้
                 }

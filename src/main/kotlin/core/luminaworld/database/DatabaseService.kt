@@ -18,6 +18,9 @@ class DatabaseService(private val plugin: LuminaCore) {
     private var mysqlUser = "root"
     private var mysqlPassword = ""
     private var mysqlParameters = "?autoReconnect=true&useSSL=false&useUnicode=true&characterEncoding=UTF-8"
+    
+    // คำนำหน้าตารางฐานข้อมูล
+    var tablePrefix = "lumina_"
 
     // ค่าคอนฟิก SQLite
     private var sqliteFilename = "lumina-database"
@@ -38,6 +41,7 @@ class DatabaseService(private val plugin: LuminaCore) {
         mysqlPassword = config.getString("database.MySQL.password", "") ?: ""
         mysqlParameters = config.getString("database.MySQL.connection-parameters", "?autoReconnect=true&useSSL=false&useUnicode=true&characterEncoding=UTF-8")
             ?: "?autoReconnect=true&useSSL=false&useUnicode=true&characterEncoding=UTF-8"
+        tablePrefix = config.getString("database.MySQL.table-prefix", "lumina_") ?: "lumina_"
 
         try {
             val conn = getConnection()

@@ -2,7 +2,7 @@
 
 <p align="center">
   <strong>ปลั๊กอินแกนกลางอเนกประสงค์แบบโมดูลาร์ (All-in-One Modular Core Plugin)</strong><br>
-  พัฒนาด้วยภาษา Kotlin สำหรับเซิร์ฟเวอร์ Minecraft แพลตฟอร์ม Paper และ Purpur (เวอร์ชัน 1.21+)
+  พัฒนาด้วยภาษา Kotlin สำหรับเซิร์ฟเวอร์ Minecraft แพลตฟอร์ม Paper, Purpur และ <strong>Folia</strong> (เวอร์ชัน 1.21+)
 </p>
 
 ---
@@ -10,9 +10,14 @@
 ## สรุปภาพรวมและจุดเด่นของระบบ (System Overview)
 
 - **สถาปัตยกรรมโมดูลาร์ (Modular Architecture)**: รวบรวมระบบการทำงานมากกว่า **32 โมดูลย่อย** ไว้ในปลั๊กอินเดียว สามารถเปิด-ปิด หรือปรับแต่งการทำงานแต่ละโมดูลได้อย่างอิสระผ่านเมนูส่วนติดต่อผู้ใช้ (GUI) หรือไฟล์การตั้งค่า
-- **ประสิทธิภาพและความปลอดภัยระดับสูง (Performance & Anti-Exploit Framework)**:
+- **รองรับ Folia และการจัดการทรัพยากรระดับสูง (Folia & Thread-Safe Architecture)**:
+  - รองรับการทำงานบนแพลตฟอร์ม **Folia** (Regionized Multi-Threading) อย่างสมบูรณ์ โดยใช้ RegionScheduler, GlobalRegionScheduler และ AsyncScheduler อย่างถูกต้อง
   - พัฒนาด้วยภาษา Kotlin และระบบการจัดการงานแบบ Asynchronous เพื่อป้องกันการเกิด Blocking บน Main Thread
-  - **LuminaGUI**: โครงสร้างจัดการส่วนต่อประสานผู้ใช้ (GUI Framework) ส่วนกลาง พร้อมระบบป้องกันการปั๊มไอเทมและช่องโหว่การจัดการช่องเก็บของ (Anti-Duplication & Inventory Exploit Protection)
+- **รองรับการจัดการปลั๊กอินแบบไดนามิกผ่าน PlugManX (PlugManX Full Compatibility)**:
+  - ออกแบบวงจรการทำงาน (Lifecycle) ให้สามารถ Load, Unload, และ Reload ปลั๊กอินผ่าน **PlugManX** ได้อย่างสมบูรณ์แบบ ไร้ปัญหา Memory Leak
+  - มีระบบ Dynamic Command Management ที่ช่วยถอนการลงทะเบียนคำสั่งและ Alias ออกจาก Bukkit CommandMap, KnownCommands และ Brigadier Root Node พร้อมสั่งซิงก์คำสั่งใหม่อย่างหมดจด
+- **โครงสร้างความปลอดภัยและส่วนติดต่อผู้ใช้ (GUI & Anti-Exploit Framework)**:
+  - **LuminaGUI**: โครงสร้างจัดการส่วนต่อประสานผู้ใช้ส่วนกลาง พร้อมระบบป้องกันการปั๊มไอเทมและช่องโหว่การจัดการช่องเก็บของ (Anti-Duplication & Inventory Exploit Protection)
   - **PacketBlockBreaker**: ระบบกระจายคิวการทำลายบล็อกตามลำดับ Tick (Staggered Queue) ช่วยลดภาระการประมวลผลของเซิร์ฟเวอร์ รองรับการเชื่อมต่อกับปลั๊กอินระบบอาชีพ **Jobs Reborn** และบันทึกสถิติผู้เล่น (Vanilla Statistics) ครบถ้วน
 - **ระบบเศรษฐกิจและตลาดกลาง (Universal Economy & Market System)**:
   - **EconomyBridge**: ตัวกลางเชื่อมต่อระบบการเงิน รองรับทั้ง Vault, Vanilla Experience และระบบ Lumina Multi-Currency

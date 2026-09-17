@@ -1,0 +1,50 @@
+pages:
+  page1:
+    gui-rows: 6
+    items:
+      '1':
+        material: DIAMOND_SWORD
+        name: '&b&lดาบศักดิ์สิทธิ์ผู้พิชิต'
+        lore:
+        - '&7อาวุธระดับตำนานสำหรับนักรบผู้กล้า'
+        - '&aราคาซื้อคุ้มค่าพร้อมออกศึก!'
+        enchantments:
+        - SHARPNESS:5
+        - UNBREAKING:3
+        - FIRE_ASPECT:2
+        - MENDING
+        buy: 110.86
+        sell: 27.72
+      '2':
+        material: DIAMOND_HOE
+        name: '&e&lเคียวปีศาจเก็บเกี่ยววิญญาณ'
+        lore:
+        - '&7มีโมเดล 3D พิเศษเมื่อใช้งาน Resource Pack'
+        CustomModelData: 101
+        buy: 111.47
+        sell: 27.87
+      '3':
+        material: POTION
+        displayname: '&d&lยาเพิ่มพลังกายขั้นสุดยอด'
+        name: '&d&lยาเพิ่มพลังกายขั้นสุดยอด'
+        buy: 3161.2
+        potiontypes:
+        - long_strength
+        - long_regeneration
+        sell: 790.3
+      '4':
+        material: NETHERITE_UPGRADE_SMITHING_TEMPLATE
+        name: '&c&l[คลิกเพื่อซื้อ] คำสั่งเสกดาบมหาเทพ NBT'
+        lore:
+        - '&7เมื่อซื้อแล้วระบบจะรันคำสั่งมอบดาบพิเศษ'
+        - '&7ที่มี NBT แท้และลอร์เฉพาะตัวให้คุณทันที'
+        commands:
+        - minecraft:give %player% netherite_sword{display:{Name:'"§e§lดาบมหาเทพเจ้าสายฟ้า"',Lore:['"§7เสกจากคำสั่งระบบร้านค้า"']},Enchantments:[{id:sharpness,lvl:10}]}
+          1
+        buy: 15000.0
+      '5':
+        material: STONE
+        name: '&6&lหินวิเศษ NBT'
+        NBTData: '{display:{Name:''"§6§lหินวิเศษ NBT"''},CustomModelData:999}'
+        buy: 1.5
+        sell: 0.15

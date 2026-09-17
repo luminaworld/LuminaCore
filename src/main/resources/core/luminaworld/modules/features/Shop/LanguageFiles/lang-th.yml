@@ -1,0 +1,64 @@
+# =====================================================================
+#                 LuminaShop - Language File (Thai / th)
+# =====================================================================
+
+# 1. ข้อความแจ้งเตือนระบบ (Messages)
+no-permission: "&cคุณไม่มีสิทธิ์ในการดำเนินการนี้"
+config-reloaded: "&aรีโหลดระบบร้านค้าและข้อมูลการตั้งค่าเสร็จสิ้นแล้ว!"
+cannot-buy-this-item: "&cไอเทมนี้ไม่เปิดขายในร้านค้า"
+insufficient-funds: "&cคุณมีเงินในบัญชีไม่เพียงพอสำหรับการทำธุรกรรมนี้"
+not-enough-space-inside-inventory: "&cช่องเก็บของของคุณเต็ม ไม่สามารถรับสินค้าได้"
+bought-item-successfully: "&aซื้อของสำเร็จ &e%amount%x %item% &aในราคา &e%price%"
+cannot-sell-this-item: "&cไอเทมนี้ไม่รับซื้อในร้านค้า"
+not-enough-items-to-sell: "&cคุณไม่มีไอเทมเพียงพอในช่องเก็บของสำหรับการขาย"
+sold-item-successfully: "&aขายของสำเร็จ &e%amount%x %item% &aได้รับเงิน &e%price%"
+items-sold-successfully: "&aขายไอเทมสำเร็จ &e%amount% ชิ้น &aได้รับเงินรวม &e%price%"
+no-item-in-hand: "&cคุณไม่มีไอเทมในมือหลักเพื่อทำรายการขาย"
+no-sellable-items: "&cไม่พบไอเทมที่สามารถขายเข้าร้านค้าได้ในกระเป๋าของคุณ"
+
+# 2. หัวข้อหน้าต่าง GUI (GUI Titles)
+inventory-main-shop-title: "&8ร้านค้าเซิร์ฟเวอร์"
+inventory-category-title: "&8หมวดหมู่: %section%"
+inventory-sellgui-title: "&8โยนไอเทมเพื่อขายทั้งหมด"
+inventory-howmuchbuy-title: "&8ซื้อ: %item%"
+inventory-howmuchsell-title: "&8ขาย: %item%"
+sellgui-star-button: "&a&lSellGUI"
+sellgui-star-lore-1: "&6วางไอเทมที่ต้องการขายลงในเมนูนี้"
+sellgui-star-lore-2: "&6เมื่อปิดหน้าต่าง ไอเทมจะถูกขายทั้งหมดโดยอัตโนมัติ"
+sellgui-star-lore-3: "&eไอเทมที่ไม่สามารถขายได้"
+sellgui-star-lore-4: "&eจะถูกคืนกลับเข้ากระเป๋าของคุณ"
+
+
+# 3. ข้อความ Lore และราคา (Lore & Pricing Displays)
+buy-price: "&7ราคาซื้อ: &a%price%"
+buy-price-increase: "&7ราคาซื้อ: &a%price% &8(&c▲%percent%%&8)"
+buy-price-decrease: "&7ราคาซื้อ: &a%price% &8(&a▼%percent%%&8)"
+cannot-buy-this-item-lore: "&7ราคาซื้อ: &cซื้อไม่ได้"
+
+sell-price: "&7ราคาขาย: &e%price%"
+sell-price-increase: "&7ราคาขาย: &e%price% &8(&a▲%percent%%&8)"
+sell-price-decrease: "&7ราคาขาย: &e%price% &8(&c▼%percent%%&8)"
+cannot-sell-this-item-lore: "&7ราคาขาย: &cขายไม่ได้"
+
+# 4. ปุ่มและองค์ประกอบในหน้าต่างธุรกรรม (Transaction Screen Elements)
+confirm-buy-button: "&aยืนยันการสั่งซื้อ"
+confirm-sell-button: "&aยืนยันการขาย"
+transaction-amount-lore: "&7จำนวน: &e%amount% &7ชิ้น"
+transaction-total-price-lore: "&7ราคารวม: &a%price%"
+click-to-confirm-lore: "&eคลิกเพื่อยืนยันทำรายการ"
+
+decrease-amount-button: "&c%amount% ชิ้น"
+increase-amount-button: "&a+%amount% ชิ้น"
+selected-amount-lore: "&7จำนวนที่เลือก: &e%amount% &7ชิ้น"
+
+buy-stacks-button: "&eซื้อแบบ Stack (%stacks% กอง)"
+sell-stacks-button: "&eขายแบบ Stack (%stacks% กอง)"
+stack-amount-lore: "&7จำนวน: &e%stacks% &7กอง &8(%total% ชิ้น)"
+stack-total-price-lore: "&7ราคารวม: &a%price%"
+click-to-confirm-stack-lore: "&eคลิกเพื่อทำรายการ %stacks% กอง (%total% ชิ้น)"
+
+# 5. ปุ่มนำทาง (Navigation Buttons)
+back-button: "&cย้อนกลับ"
+back-to-main-menu: "&cกลับเมนูหลัก"
+previous-page: "&eย้อนกลับไปหน้า %page%"
+next-page: "&eหน้าถัดไป %page%"

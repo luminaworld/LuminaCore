@@ -1,0 +1,64 @@
+# =====================================================================
+#                LuminaShop - Language File (English / en)
+# =====================================================================
+
+# 1. System Notification Messages
+no-permission: "&cYou do not have permission to perform this action."
+config-reloaded: "&aShop configuration and settings successfully reloaded!"
+cannot-buy-this-item: "&cThis item is not available for purchase."
+insufficient-funds: "&cYou do not have enough money to complete this transaction."
+not-enough-space-inside-inventory: "&cYour inventory is full. Cannot receive items."
+bought-item-successfully: "&aSuccessfully purchased &e%amount%x %item% &afor &e%price%"
+cannot-sell-this-item: "&cThis item cannot be sold to the shop."
+not-enough-items-to-sell: "&cYou do not have enough items in your inventory to sell."
+sold-item-successfully: "&aSuccessfully sold &e%amount%x %item% &afor &e%price%"
+items-sold-successfully: "&aSuccessfully sold &e%amount% items &afor a total of &e%price%"
+no-item-in-hand: "&cYou are not holding any item in your main hand to sell."
+no-sellable-items: "&cNo sellable items were found in your inventory."
+
+# 2. GUI Window Titles
+inventory-main-shop-title: "&8Server Shop"
+inventory-category-title: "&8Category: %section%"
+inventory-sellgui-title: "&8Drop items to sell all"
+inventory-howmuchbuy-title: "&8Buying: %item%"
+inventory-howmuchsell-title: "&8Selling: %item%"
+sellgui-star-button: "&a&lSellGUI"
+sellgui-star-lore-1: "&6Drop items in to sell"
+sellgui-star-lore-2: "&6Upon closing, everything will be sold."
+sellgui-star-lore-3: "&eItems that couldn't be sold"
+sellgui-star-lore-4: "&ewill be given back to you."
+
+
+# 3. Lore & Pricing Displays
+buy-price: "&7Buy price: &a%price%"
+buy-price-increase: "&7Buy price: &a%price% &8(&c▲%percent%%&8)"
+buy-price-decrease: "&7Buy price: &a%price% &8(&a▼%percent%%&8)"
+cannot-buy-this-item-lore: "&7Buy price: &cCannot buy"
+
+sell-price: "&7Sell price: &e%price%"
+sell-price-increase: "&7Sell price: &e%price% &8(&a▲%percent%%&8)"
+sell-price-decrease: "&7Sell price: &e%price% &8(&c▼%percent%%&8)"
+cannot-sell-this-item-lore: "&7Sell price: &cCannot sell"
+
+# 4. Transaction Screen Elements
+confirm-buy-button: "&aConfirm Purchase"
+confirm-sell-button: "&aConfirm Sale"
+transaction-amount-lore: "&7Amount: &e%amount% &7items"
+transaction-total-price-lore: "&7Total price: &a%price%"
+click-to-confirm-lore: "&eClick to confirm transaction"
+
+decrease-amount-button: "&c%amount% items"
+increase-amount-button: "&a+%amount% items"
+selected-amount-lore: "&7Selected amount: &e%amount% &7items"
+
+buy-stacks-button: "&eBuy Stacks (%stacks% stacks)"
+sell-stacks-button: "&eSell Stacks (%stacks% stacks)"
+stack-amount-lore: "&7Amount: &e%stacks% &7stacks &8(%total% items)"
+stack-total-price-lore: "&7Total price: &a%price%"
+click-to-confirm-stack-lore: "&eClick to execute %stacks% stacks (%total% items)"
+
+# 5. Navigation Buttons
+back-button: "&cBack"
+back-to-main-menu: "&cMain Menu"
+previous-page: "&eBack to page %page%"
+next-page: "&eNext page %page%"

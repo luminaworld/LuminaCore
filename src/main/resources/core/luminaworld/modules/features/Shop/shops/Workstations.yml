@@ -1,0 +1,52 @@
+pages:
+  page1:
+    gui-rows: 6
+    items:
+      '1':
+        material: BARREL
+        buy: 24.51
+        sell: 2.05
+      '2':
+        material: BLAST_FURNACE
+        buy: 111.9
+        sell: 9.33
+      '3':
+        material: BREWING_STAND
+        buy: 22.2
+        sell: 1.85
+      '4':
+        material: CARTOGRAPHY_TABLE
+        buy: 14.58
+        sell: 1.22
+      '5':
+        material: COMPOSTER
+        buy: 12.78
+        sell: 1.07
+      '6':
+        material: FLETCHING_TABLE
+        buy: 26.52
+        sell: 2.21
+      '7':
+        material: GRINDSTONE
+        buy: 11.79
+        sell: 0.99
+      '8':
+        material: LECTERN
+        buy: 106.53
+        sell: 8.88
+      '9':
+        material: LOOM
+        buy: 51.06
+        sell: 4.26
+      '10':
+        material: SMITHING_TABLE
+        buy: 48.63
+        sell: 4.06
+      '11':
+        material: SMOKER
+        buy: 55.8
+        sell: 4.65
+      '12':
+        material: STONECUTTER
+        buy: 24.12
+        sell: 2.01

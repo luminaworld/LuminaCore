@@ -1,0 +1,96 @@
+pages:
+  page1:
+    gui-rows: 6
+    items:
+      '1':
+        material: AMETHYST_BLOCK
+        buy: -1
+        sell: 1.38
+      '2':
+        material: AMETHYST_SHARD
+        buy: -1
+        sell: 0.33
+      '3':
+        material: ANCIENT_DEBRIS
+        buy: -1
+        sell: 35.0
+      '4':
+        material: COAL
+        buy: -1
+        sell: 1.32
+      '5':
+        material: COAL_BLOCK
+        buy: -1
+        sell: 12.41
+      '6':
+        material: COPPER_BLOCK
+        buy: -1
+        sell: 0.97
+      '7':
+        material: COPPER_INGOT
+        buy: -1
+        sell: 0.23
+      '8':
+        material: DIAMOND
+        buy: -1
+        sell: 13.13
+      '9':
+        material: DIAMOND_BLOCK
+        buy: -1
+        sell: 124.04
+      '10':
+        material: EMERALD
+        buy: -1
+        sell: 9.85
+      '11':
+        material: EMERALD_BLOCK
+        buy: -1
+        sell: 93.03
+      '12':
+        material: GOLD_BLOCK
+        buy: -1
+        sell: 19.54
+      '13':
+        material: GOLD_INGOT
+        buy: -1
+        sell: 2.07
+      '14':
+        material: IRON_BLOCK
+        buy: -1
+        sell: 13.03
+      '15':
+        material: IRON_INGOT
+        buy: -1
+        sell: 1.38
+      '16':
+        material: LAPIS_BLOCK
+        buy: -1
+        sell: 17.06
+      '17':
+        material: LAPIS_LAZULI
+        buy: -1
+        sell: 1.81
+      '18':
+        material: NETHERITE_BLOCK
+        buy: -1
+        sell: 1400.0
+      '19':
+        material: NETHERITE_INGOT
+        buy: -1
+        sell: 150.0
+      '20':
+        material: QUARTZ
+        buy: -1
+        sell: 2.07
+      '21':
+        material: QUARTZ_BLOCK
+        buy: -1
+        sell: 8.69
+      '22':
+        material: REDSTONE
+        buy: -1
+        sell: 0.88
+      '23':
+        material: REDSTONE_BLOCK
+        buy: -1
+        sell: 8.27

@@ -1,0 +1,304 @@
+# =====================================================================
+#                 LuminaCore - ระบบร้านค้า (Comprehensive Shop Config)
+# =====================================================================
+# คอนฟิกนี้ควบคุมการทำงานและพฤติกรรมทั้งหมดของโมดูลร้านค้า (Shop Module)
+# ตรวจสอบและรวบรวมคีย์การตั้งค่าที่มีประโยชน์จากปลั๊กอินดั้งเดิมอย่างครบถ้วน 100%
+
+settings:
+  # ---------------------------------------------------------------------
+  # 1. การตั้งค่าทั่วไป (General Settings)
+  # ---------------------------------------------------------------------
+  # เปิดหรือปิดใช้งานระบบร้านค้าทั้งหมด
+  enabled: true
+
+  # ภาษาเริ่มต้นของระบบ (จะโหลดไฟล์จากโฟลเดอร์ LanguageFiles เช่น lang-th.yml, lang-en.yml)
+  language: lang-th
+
+  # คำนำหน้าข้อความแจ้งเตือนระบบร้านค้า
+  prefix: "&e&l[LuminaShop]&r"
+
+  # เปิดใช้งานโหมดดีบัก (Debug Mode) สำหรับพิมพ์ข้อความตรวจสอบในคอนโซลหรือไม่
+  debug: false
+
+  # เปิดใช้งานระบบบันทึกประวัติธุรกรรมซื้อขายลงไฟล์ Log (Transaction Logs) หรือไม่
+  transaction-log: true
+
+  # ตัวเลือกเปิด/ปิด หน้าต่างยืนยันก่อนซื้อขาย (Confirm GUI)
+  confirm-transaction: true
+
+  # แสดงข้อความ Title/Subtitle กลางหน้าจอผู้เล่นเมื่อซื้อขายสำเร็จหรือไม่
+  on-screen-title: true
+
+  # พฤติกรรมเมื่อกด ESC ในหน้าร้านค้าย่อย (false = ปิดหน้าต่าง GUI, true = ย้อนกลับไปหน้าเมนูหลัก)
+  escape-back: false
+
+  # ขนาดของเมนูหลักร้านค้า (/shop) (สล็อต: 9, 18, 27, 36, 45, 54)
+  main-menu-size: 54
+
+  # ไอเทมสำหรับเติมช่องว่างในเมนูหลักเพื่อความสวยงาม
+  main-menu-fill-item:
+    material: "GRAY_STAINED_GLASS_PANE"
+    name: " "
+
+  # ป้องกันการเปิดใช้งานร้านค้าสำหรับผู้เล่นที่อยู่ในโหมดเกมเหล่านี้ (เพื่อป้องกันปั๊มของ)
+  banned-gamemodes:
+    - CREATIVE
+    - SPECTATOR
+
+  # รายชื่อโลกที่ไม่อนุญาตให้ใช้งานคำสั่งระบบร้านค้า (/shop, /sellall ฯลฯ)
+  disabled-worlds:
+    - "world_nether_event"
+    - "spawn_pvp_arena"
+
+  # หากกระเป๋าผู้เล่นเต็มขณะสั่งซื้อ จะให้ไอเทมส่วนเกินตกพื้นหรือไม่ (false = ปฏิเสธการซื้อหากกระเป๋าเต็ม)
+  drop-remaining-items-on-ground: false
+
+# ---------------------------------------------------------------------
+# 2. การรูปแบบตัวเลขจำนวนเงินย่อ (Currency Abbreviations)
+# ---------------------------------------------------------------------
+# รูปแบบการย่อตัวเลขจำนวนเงินในการแสดงผล GUI
+abbreviations:
+  k: "K" # 1,000 (พัน)
+  m: "M" # 1,000,000 (ล้าน)
+  b: "B" # 1,000,000,000 (พันล้าน)
+  t: "T" # 1,000,000,000,000 (ล้านล้าน)
+
+# ---------------------------------------------------------------------
+# 3. กำหนดปุ่มเมาส์ในการทำธุรกรรม (Click Mappings)
+# ---------------------------------------------------------------------
+# กำหนดแอคชันคลิกเมาส์เมื่อผู้เล่นคลิกที่ไอเทมสินค้าภายใน GUI
+# แอคชันที่รองรับ: LEFT (คลิกซ้าย), SHIFT_LEFT, RIGHT (คลิกขวา), SHIFT_RIGHT
+click-mappings:
+  buy: "LEFT"
+  sell: "RIGHT"
+  sell-all: "SHIFT_RIGHT"
+
+# ---------------------------------------------------------------------
+# 4. การตั้งค่าระบบค้นหาไอเทมในร้านค้า (Shop Search System)
+# ---------------------------------------------------------------------
+shop-search:
+  # เปิดใช้งานคำสั่งค้นหาไอเทมในร้านค้า (/shop search <ชื่อไอเทม>) หรือไม่
+  enabled: true
+  # สล็อตไอเทมสำหรับปุ่มค้นหาในเมนูหลัก
+  slot: 49
+  # ไอเทมแสดงผลปุ่มค้นหา
+  item:
+    material: "COMPASS"
+    name: "&e&lค้นหาไอเทมในร้านค้า"
+    lore:
+      - "&7คลิกเพื่อพิมพ์ชื่อไอเทมที่ต้องการค้นหา"
+
+# ---------------------------------------------------------------------
+# 5. การตั้งค่าฐานข้อมูล (Database Configuration)
+# ---------------------------------------------------------------------
+database:
+  # ประเภทฐานข้อมูล: "SQLITE" หรือ "MYSQL"
+  # - หากเลือก SQLITE: ระบบจะสร้างไฟล์ SQLite (.db) แยกเฉพาะของโมดูลร้านค้า (shop.db)
+  # - หากเลือก MYSQL: ระบบจะบังคับใช้การเชื่อมต่อ MySQL ฐานข้อมูลกลางของ LuminaCore
+  type: "SQLITE"
+
+  # ชื่อไฟล์ SQLite ที่จะสร้างแยกเป็นของตัวเองเมื่อเลือกประเภท SQLITE
+  file-name: "shop.db"
+
+  # คำนำหน้าชื่อตารางในฐานข้อมูล
+  table-prefix: "luminashop_"
+
+# ---------------------------------------------------------------------
+# 6. การแจ้งเตือนผ่าน Discord Webhook (Discord Webhooks)
+# ---------------------------------------------------------------------
+discord-webhooks:
+  # เปิดใช้งานการส่งข้อความแจ้งเตือน Webhook หรือไม่
+  enabled: true
+
+  # ลิงก์ Discord Webhook URL
+  webhook-url: "https://discord.com/api/webhooks/YOUR_WEBHOOK_URL"
+  username: "LuminaShop Audit"
+  avatar-url: ""
+
+  # เปิด/ปิดการส่งแจ้งเตือนรายประเภท (bought = ซื้อของ, sold = ขายของ)
+  notify-bought: true
+  notify-sold: true
+
+  # Custom Embed สำหรับเหตุการณ์สั่งซื้อสินค้า (bought)
+  bought:
+    setTitle: "🛒 มีการสั่งซื้อสินค้าในร้านค้า (%player%)"
+    setDescription: "ผู้เล่นได้ทำการสั่งซื้อสินค้าจากระบบร้านค้า"
+    setColor: 65280
+    setThumbnail: "https://mc-heads.net/avatar/%player%/64"
+    setTimestamp: true
+    setAuthor: "LuminaCore Shop Audit"
+    setFooter: "LuminaShop System • %date% %time%"
+    fields:
+      1:
+        name: "👤 ผู้เล่น"
+        value: "`%player%`"
+        inline: true
+      2:
+        name: "📦 รายการสินค้า"
+        value: "%amount%x %item%"
+        inline: true
+      3:
+        name: "💰 ราคารวม"
+        value: "**%price%**"
+        inline: true
+
+  # Custom Embed สำหรับเหตุการณ์ขายสินค้า (sold)
+  sold:
+    setTitle: "💰 มีการขายสินค้าเข้าร้านค้า (%player%)"
+    setDescription: "ผู้เล่นได้ทำการขายสินค้าเข้าระบบร้านค้า"
+    setColor: 16753920
+    setThumbnail: "https://mc-heads.net/avatar/%player%/64"
+    setTimestamp: true
+    setAuthor: "LuminaCore Shop Audit"
+    setFooter: "LuminaShop System • %date% %time%"
+    fields:
+      1:
+        name: "👤 ผู้เล่น"
+        value: "`%player%`"
+        inline: true
+      2:
+        name: "📦 รายการสินค้า"
+        value: "%amount%x %item%"
+        inline: true
+      3:
+        name: "💵 เงินที่ได้รับ"
+        value: "**%price%**"
+        inline: true
+
+# ---------------------------------------------------------------------
+# 7. พฤติกรรมการตรวจจับไอเทมขณะรับซื้อ (Item Matching Rules)
+# ---------------------------------------------------------------------
+item-matching:
+  # ตรวจสอบ CustomModelData ให้ตรงกับร้านค้าก่อนรับซื้อหรือไม่
+  match-custom-model-data: true
+
+  # ตรวจสอบชื่อแสดงผล (DisplayName) ให้ตรงกับร้านค้าก่อนรับซื้อหรือไม่
+  match-display-name: true
+
+  # ยอมรับไอเทมที่ถูกเปลี่ยนชื่อผ่านทั่ง (Anvil) มาขายในร้านค้าหรือไม่
+  allow-renamed-items: false
+
+  # ยอมรับไอเทมที่มีคำอธิบายพิเศษ (Lore) มาขายในร้านค้าหรือไม่
+  allow-lore-items: true
+
+# ---------------------------------------------------------------------
+# 8. การตั้งค่าเสียงเอฟเฟกต์ (Sound Effects)
+# ---------------------------------------------------------------------
+sounds:
+  # เสียงเมื่อกดปุ่มปกติใน GUI
+  button-click: "UI_BUTTON_CLICK"
+  # เสียงเมื่อทำธุรกรรมซื้อ/ขายสำเร็จ
+  transaction-success: "ENTITY_PLAYER_LEVELUP"
+  # เสียงเมื่อขายของด่วน (/sellall) สำเร็จ
+  sellall-success: "ENTITY_EXPERIENCE_ORB_PICKUP"
+  # เสียงเมื่อเกิดข้อผิดพลาด เช่น เงินไม่พอ
+  transaction-fail: "ENTITY_VILLAGER_NO"
+
+# ---------------------------------------------------------------------
+# 9. การตั้งค่าระบบขายไอเทมด่วน (/sellall และ /sellgui)
+# ---------------------------------------------------------------------
+sell-settings:
+  # อนุญาตให้ผู้เล่นใช้คำสั่ง /sellall เพื่อขายของด่วนหรือไม่
+  enable-sellall: true
+
+  # อนุญาตให้ผู้เล่นใช้คำสั่ง /sellgui เปิดหน้าต่างโยนของขายหรือไม่
+  enable-sellgui: true
+
+  # หักค่าภาษีการขายคืน (0.0 = ไม่มีภาษี, 0.1 = หักภาษี 10%)
+  sell-tax: 0.0
+
+  # อนุญาตให้ใส่กล่อง Shulker Box เพื่อขายของพร้อมไอเทมด้านในหรือไม่
+  sell-shulker-boxes: false
+
+# ---------------------------------------------------------------------
+# 10. การตั้งค่ากรงมอนสเตอร์ (Spawners)
+# ---------------------------------------------------------------------
+spawners:
+  # อนุญาตให้ผู้เล่นใช้ที่ขุด Silk Touch ขุดและรับกรงคืนหรือไม่
+  enable-spawnerbreak: false
+
+  # อนุญาตให้วางกรงมอนสเตอร์ที่ซื้อมาจากร้านค้าหรือไม่
+  enable-spawnerplace: false
+
+  # อนุญาตให้คลิกขวาที่กรงมอนสเตอร์ด้วยไข่มอนสเตอร์เพื่อเปลี่ยนชนิดม็อบหรือไม่
+  allow-spawner-type-change: false
+
+  # รายชื่อเครื่องมือขุดสปอเนอร์ที่อนุญาตให้ขุดแล้วได้กรงคืน
+  spawner-break-tools:
+    1:
+      material: "DIAMOND_PICKAXE"
+      enchantments:
+        - "SILK_TOUCH:1"
+    2:
+      material: "NETHERITE_PICKAXE"
+      enchantments:
+        - "SILK_TOUCH:1"
+
+# ---------------------------------------------------------------------
+# 11. การตั้งค่าตลาดราคากลางผันผวน (Dynamic Pricing Defaults)
+# ---------------------------------------------------------------------
+dynamic-pricing:
+  # เปิดใช้งานระบบราคากลางผันผวนส่วนกลางหรือไม่
+  enabled: true
+
+  # จำนวนสต็อกอ้างอิงความยากของการแกว่งตัวราคา (ค่ายิ่งเยอะ ราคายิ่งแกว่งช้า)
+  global-max-stock: 10000
+
+  # เปอร์เซ็นต์ขีดจำกัดราคาซื้อสูงสุดผันผวน (เช่น 150% ของราคาซื้อปกติ)
+  global-buy-price-scaling: 150.0
+
+  # เปอร์เซ็นต์ขีดจำกัดราคาขายต่ำสุดผันผวน (เช่น 50% ของราคาขายปกติ)
+  global-sell-price-scaling: 50.0
+
+  # ระยะเวลารีเซ็ตราคากลางให้กลับเข้าสู่ราคาปกติ (เช่น "24h" สำหรับ 24 ชั่วโมง)
+  price-reset-interval: "24h"
+
+# ---------------------------------------------------------------------
+# 12. การตั้งค่าสิทธิ์การใช้งาน (Permissions Configuration)
+# ---------------------------------------------------------------------
+permissions:
+  # เปิดใช้งานระบบตรวจสอบสิทธิ์ทั้งหมดหรือไม่ (false = ปิดการเช็คสิทธิ์ทั้งหมด ยกเว้นคำสั่ง Admin)
+  enabled: true
+
+  # สิทธิ์เข้าใช้งานคำสั่งร้านค้าหลัก (/shop)
+  shop-use:
+    check: true
+    permission: "luminashop.use"
+
+  # สิทธิ์การเข้าถึงหมวดหมู่ร้านค้าย่อย (/shop <section>)
+  # รองรับสิทธิ์แบบ Wildcard เช่น luminashop.section.* เพื่อเข้าใช้งานได้ทุกหมวดหมู่ด้วยสิทธิ์เดียว
+  section-access:
+    check: true
+    permission-prefix: "luminashop.section."
+    wildcard-permission: "luminashop.section.*"
+
+  # สิทธิ์ใช้งานคำสั่งเปิดหน้าต่างขายของแบบ GUI (/sellgui)
+  sellgui:
+    check: true
+    permission: "luminashop.sellgui"
+
+  # สิทธิ์ใช้งานคำสั่งขายไอเทมทั้งหมดในกระเป๋า (/sellall)
+  sellall:
+    check: true
+    permission: "luminashop.sellall"
+
+  # สิทธิ์ใช้งานคำสั่งขายไอเทมเฉพาะในมือ (/sellall hand หรือ /sellhand)
+  sellall-hand:
+    check: true
+    permission: "luminashop.sellall.hand"
+
+  # สิทธิ์การสั่งซื้อสินค้าภายในร้านค้า
+  item-buy:
+    check: true
+    permission: "luminashop.buy"
+
+  # สิทธิ์การขายสินค้าภายในร้านค้า
+  item-sell:
+    check: true
+    permission: "luminashop.sell"
+
+  # สิทธิ์สำหรับผู้ดูแลระบบ (Admin Commands)
+  admin:
+    reload-permission: "luminashop.admin.reload"
+    give-permission: "luminashop.admin.give"
+

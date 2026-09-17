@@ -54,8 +54,7 @@ class TreeCapitatorListener(
         // ตรวจสอบว่าผู้เล่นมีสิทธิ์หรือไม่
         if (!module.checkPermission(player)) return
 
-        // เริ่มขั้นตอนสแกนและตัดไม้หมดต้น
-        event.isCancelled = true // ยกเลิก event ดั้งเดิมเพื่อจัดการขุดเองทั้งหมด
+        // เริ่มขั้นตอนสแกนและตัดไม้ทั้งต้น (ไม่ยกเลิก event ของ startBlock เพื่อให้ระบบหลักและปลั๊กอินอื่นประมวลผลบล็อกแรกตามปกติ)
         runTreeCapitator(player, block, material)
     }
 
@@ -97,32 +96,11 @@ class TreeCapitatorListener(
             }
         }
 
-        // ทำลายบล็อกไม้ทั้งหมด
-        for (logBlock in visitedLogs) {
-            val currentItem = player.inventory.itemInMainHand
-            if (!currentItem.type.name.endsWith("_AXE")) {
-                break
-            }
-
-            val meta = currentItem.itemMeta
-            if (meta is org.bukkit.inventory.meta.Damageable) {
-                val maxDurability = currentItem.type.maxDurability
-                val currentDamage = meta.damage
-                val remainingDurability = maxDurability - currentDamage
-                if (remainingDurability <= 1) {
-                    break
-                }
-            }
-
-            processingBlocks.add(logBlock)
-            player.breakBlock(logBlock)
-            processingBlocks.remove(logBlock)
-        }
-
-        // ตรวจสอบว่ามีต้นไม้อื่นอยู่ใกล้เคียงหรือไม่
+        // จัดการทำลายบล็อกไม้ที่เหลือผ่าน PacketBlockBreaker แบบกระจายคิวตามลำดับ Tick
+        val remainingLogs = visitedLogs.filter { it != startBlock }
         val anotherTreeNearby = isAnotherTreeNearby(visitedLogs)
 
-        // ค้นหาบล็อกใบไม้ทั้งหมดที่เชื่อมต่อกัน (BFS) เฉพาะเมื่อไม่มีต้นไม้อื่นอยู่ใกล้เคียง
+        // เตรียมบล็อกใบไม้
         if (breakLeaves && !anotherTreeNearby && leavesToBreak.isNotEmpty()) {
             val leafQueue = ArrayDeque<Pair<Block, Int>>()
             for (leaf in leavesToBreak) {
@@ -130,8 +108,7 @@ class TreeCapitatorListener(
             }
             
             val maxLeaves = maxBlocks * 8
-            val maxDepth = 6 // ระยะห่างสูงสุดจากท่อนไม้เพื่อความปลอดภัย
-            
+            val maxDepth = 6
             val visitedLeaves = HashSet<Block>(leavesToBreak)
             
             while (leafQueue.isNotEmpty() && visitedLeaves.size < maxLeaves) {
@@ -155,46 +132,42 @@ class TreeCapitatorListener(
             leavesToBreak.clear()
             leavesToBreak.addAll(visitedLeaves)
         } else if (anotherTreeNearby) {
-            // หากมีต้นไม้อื่นอยู่ใกล้เคียง จะไม่ทำลายใบไม้เลยตามความต้องการของผู้ใช้
             leavesToBreak.clear()
         }
 
-        // ทำลายบล็อกใบไม้ที่ค้นพบรอบๆ
-        if (breakLeaves && leavesToBreak.isNotEmpty()) {
-            for (leafBlock in leavesToBreak) {
-                if (isLeaves(leafBlock.type)) {
-                    val currentItem = player.inventory.itemInMainHand
-                    if (!currentItem.type.name.endsWith("_AXE")) {
-                        break
-                    }
+        // ฟังก์ชันเก็บงานทำลายใบไม้และปลูกต้นอ่อนคืน
+        val handleLeavesAndSapling: () -> Unit = {
+            if (breakLeaves && leavesToBreak.isNotEmpty()) {
+                core.luminaworld.utils.PacketBlockBreaker.breakBlocksStaggered(
+                    plugin,
+                    player,
+                    leavesToBreak.toList(),
+                    "_AXE",
+                    processingBlocks,
+                    blocksPerTick = 4
+                )
+            }
 
-                    val meta = currentItem.itemMeta
-                    if (meta is org.bukkit.inventory.meta.Damageable) {
-                        val maxDurability = currentItem.type.maxDurability
-                        val currentDamage = meta.damage
-                        val remainingDurability = maxDurability - currentDamage
-                        if (remainingDurability <= 1) {
-                            break
-                        }
-                    }
-
-                    processingBlocks.add(leafBlock)
-                    player.breakBlock(leafBlock)
-                    processingBlocks.remove(leafBlock)
+            if (replantSapling && isBottomLog) {
+                val saplingType = getSaplingForLog(logType)
+                if (saplingType != null) {
+                    plugin.server.regionScheduler.runDelayed(plugin, startBlock.location, { _ ->
+                        startBlock.type = saplingType
+                    }, 1L)
                 }
             }
         }
 
-        // ปลูกต้นอ่อนกลับคืนจุดเดิม
-        if (replantSapling && isBottomLog) {
-            val saplingType = getSaplingForLog(logType)
-            if (saplingType != null) {
-                // รอ 1 tick เพื่อให้บล็อกไม้เดิมสลายตัวเรียบร้อยก่อน
-                plugin.server.regionScheduler.runDelayed(plugin, startBlock.location, { _ ->
-                    startBlock.type = saplingType
-                }, 1L)
-            }
-        }
+        // ส่งบล็อกไม้เข้าคิว PacketBlockBreaker
+        core.luminaworld.utils.PacketBlockBreaker.breakBlocksStaggered(
+            plugin,
+            player,
+            remainingLogs,
+            "_AXE",
+            processingBlocks,
+            blocksPerTick = 2,
+            onComplete = handleLeavesAndSapling
+        )
     }
 
     private fun isLog(material: Material): Boolean {

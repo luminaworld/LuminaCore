@@ -56,7 +56,7 @@ class VeinMinerListener(
         // เช็คสิทธิ์การใช้งานของโมดูลย่อย
         if (!module.checkPermission(player)) return
 
-        event.isCancelled = true
+        // เริ่มขั้นตอนสแกนและขุดแร่ทั้งยวง (ไม่ยกเลิก event ของ startBlock เพื่อให้ระบบหลักและปลั๊กอินอื่นประมวลผลบล็อกแรกตามปกติ)
         runVeinMiner(player, block, material)
     }
 
@@ -107,27 +107,16 @@ class VeinMinerListener(
             }
         }
 
-        // ลงมือขุดบล็อกทั้งหมดทีละบล็อก
-        for (oreBlock in visitedOres) {
-            val currentItem = player.inventory.itemInMainHand
-            if (!currentItem.type.name.endsWith("_PICKAXE")) {
-                break
-            }
-
-            val meta = currentItem.itemMeta
-            if (meta is org.bukkit.inventory.meta.Damageable) {
-                val maxDurability = currentItem.type.maxDurability
-                val currentDamage = meta.damage
-                val remainingDurability = maxDurability - currentDamage
-                if (remainingDurability <= 1) {
-                    break
-                }
-            }
-
-            processingBlocks.add(oreBlock)
-            player.breakBlock(oreBlock)
-            processingBlocks.remove(oreBlock)
-        }
+        // ขุดบล็อกแร่ที่เหลือทั้งหมดผ่าน PacketBlockBreaker แบบกระจายคิวตามลำดับ Tick
+        val remainingOres = visitedOres.filter { it != startBlock }
+        core.luminaworld.utils.PacketBlockBreaker.breakBlocksStaggered(
+            plugin,
+            player,
+            remainingOres,
+            "_PICKAXE",
+            processingBlocks,
+            blocksPerTick = 2
+        )
     }
 
     private fun isOre(material: Material): Boolean {

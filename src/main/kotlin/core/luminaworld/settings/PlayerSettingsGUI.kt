@@ -177,4 +177,11 @@ class PlayerSettingsGUI(private val plugin: LuminaCore) : InventoryHolder, Liste
             }
         }
     }
+
+    @EventHandler
+    fun onInventoryDrag(event: org.bukkit.event.inventory.InventoryDragEvent) {
+        if (event.inventory.holder == this) {
+            event.isCancelled = true
+        }
+    }
 }

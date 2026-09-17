@@ -84,18 +84,10 @@ class ModuleGUI(private val plugin: LuminaCore) : InventoryHolder, Listener {
             val module = modules[slot]
             val newStatus = !module.isEnabled
 
-            // 1. เปลี่ยนสถานะและบันทึกลงในไฟล์ Config ย่อยของตัวเอง
+            // 1. เปลี่ยนสถานะและบันทึกลงในไฟล์ Config ย่อยของตัวเองทันที
             module.isEnabled = newStatus
             module.config?.set("settings.enabled", newStatus)
-
-            // บันทึกไฟล์ config ย่อยของโมดูลแบบ Async
-            Bukkit.getAsyncScheduler().runNow(plugin) { _ ->
-                try {
-                    module.config?.save(module.configFile)
-                } catch (e: Exception) {
-                    plugin.logger.severe("Failed to save configuration for module ${module.name}: ${e.message}")
-                }
-            }
+            module.saveConfig()
 
             // 2. เรียกใช้งาน / ปิดใช้งานระบบจริง
             try {
@@ -115,6 +107,13 @@ class ModuleGUI(private val plugin: LuminaCore) : InventoryHolder, Listener {
             // เล่นเสียงและ update เฉพาะ slot ที่เปลี่ยน (ไม่ต้อง rebuild ทั้ง inventory)
             player.playSound(player.location, Sound.UI_BUTTON_CLICK, 1.0f, 1.0f)
             event.inventory.setItem(slot, createModuleItem(module))
+        }
+    }
+
+    @EventHandler
+    fun onInventoryDrag(event: org.bukkit.event.inventory.InventoryDragEvent) {
+        if (event.inventory.holder == this) {
+            event.isCancelled = true
         }
     }
 }

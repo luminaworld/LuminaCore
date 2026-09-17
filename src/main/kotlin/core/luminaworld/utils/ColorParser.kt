@@ -17,18 +17,18 @@ object ColorParser {
         "&4" to "<dark_red>", "&5" to "<dark_purple>", "&6" to "<gold>", "&7" to "<gray>",
         "&8" to "<dark_gray>", "&9" to "<blue>", "&a" to "<green>", "&b" to "<aqua>",
         "&c" to "<red>", "&d" to "<light_purple>", "&e" to "<yellow>", "&f" to "<white>",
-        "&k" to "<obfuscated>", "&l" to "<bold>", "&m" to "<strikethrough>",
-        "&n" to "<underlined>", "&o" to "<italic>", "&r" to "<reset>",
+        "&k" to "<obfuscated>", "&l" to "", "&m" to "<strikethrough>",
+        "&n" to "<underlined>", "&o" to "", "&r" to "<reset>",
         "§0" to "<black>", "§1" to "<dark_blue>", "§2" to "<dark_green>", "§3" to "<dark_aqua>",
         "§4" to "<dark_red>", "§5" to "<dark_purple>", "§6" to "<gold>", "§7" to "<gray>",
         "§8" to "<dark_gray>", "§9" to "<blue>", "§a" to "<green>", "§b" to "<aqua>",
         "§c" to "<red>", "§d" to "<light_purple>", "§e" to "<yellow>", "§f" to "<white>",
-        "§k" to "<obfuscated>", "§l" to "<bold>", "§m" to "<strikethrough>",
-        "§n" to "<underlined>", "§o" to "<italic>", "§r" to "<reset>"
+        "§k" to "<obfuscated>", "§l" to "", "§m" to "<strikethrough>",
+        "§n" to "<underlined>", "§o" to "", "§r" to "<reset>"
     )
 
     /**
-     * แปลง String รหัสสีทุกรูปแบบเป็น Component ของ Adventure
+     * แปลง String รหัสสีทุกรูปแบบเป็น Component ของ Adventure (บังคับไร้ตัวเอียงและตัวหนา)
      */
     fun parse(input: String): Component {
         var formatted = input
@@ -65,9 +65,13 @@ object ColorParser {
 
         return try {
             MiniMessage.miniMessage().deserialize(formatted)
+                .decoration(net.kyori.adventure.text.format.TextDecoration.ITALIC, false)
+                .decoration(net.kyori.adventure.text.format.TextDecoration.BOLD, false)
         } catch (e: Exception) {
             // Fallback กรณีพาร์ส MiniMessage ผิดพลาด
             LegacyComponentSerializer.legacyAmpersand().deserialize(input)
+                .decoration(net.kyori.adventure.text.format.TextDecoration.ITALIC, false)
+                .decoration(net.kyori.adventure.text.format.TextDecoration.BOLD, false)
         }
     }
 }

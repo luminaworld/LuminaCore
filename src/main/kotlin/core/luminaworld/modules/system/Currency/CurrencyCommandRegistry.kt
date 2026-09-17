@@ -8,12 +8,10 @@ import org.bukkit.command.CommandMap
 import org.bukkit.command.CommandSender
 import org.bukkit.command.SimpleCommandMap
 import org.bukkit.command.TabCompleter
-import io.papermc.paper.threadedregions.scheduler.ScheduledTask
 
 /** Commands defined by a currency belong to this module, not CommandManager. */
 class CurrencyCommandRegistry(private val plugin: LuminaCore) {
     private val commands = mutableMapOf<String, CurrencyDynamicCommand>()
-    private var syncTask: ScheduledTask? = null
     private val map: CommandMap by lazy {
         val server = Bukkit.getServer()
         val getter = server.javaClass.getDeclaredMethod("getCommandMap")
@@ -27,6 +25,39 @@ class CurrencyCommandRegistry(private val plugin: LuminaCore) {
         field.isAccessible = true
         field.get(map) as? MutableMap<String, Command>
     } catch (e: Exception) { plugin.logger.warning("[Currency] Cannot inspect command registry: ${e.message}"); null }
+
+    private val brigadierRootNode: Any? by lazy {
+        try {
+            val server = Bukkit.getServer()
+            val getServerMethod = server.javaClass.getDeclaredMethod("getServer")
+            getServerMethod.isAccessible = true
+            val minecraftServer = getServerMethod.invoke(server)
+            val getCommandsMethod = minecraftServer.javaClass.getMethod("getCommands")
+            val commands = getCommandsMethod.invoke(minecraftServer)
+            val getDispatcherMethod = commands.javaClass.getMethod("getDispatcher")
+            val dispatcher = getDispatcherMethod.invoke(commands)
+            val getRootMethod = dispatcher.javaClass.getMethod("getRoot")
+            getRootMethod.invoke(dispatcher)
+        } catch (_: Exception) {
+            null
+        }
+    }
+
+    private inline fun <T> withLock(block: () -> T): T {
+        val lock1 = knownCommands() ?: map
+        val lock2 = brigadierRootNode
+        return if (lock2 != null) {
+            synchronized(lock2) {
+                synchronized(lock1) {
+                    block()
+                }
+            }
+        } else {
+            synchronized(lock1) {
+                block()
+            }
+        }
+    }
 
     fun register(name: String, aliases: List<String>, executor: CommandExecutor, completer: TabCompleter): Boolean {
         val normalized = name.lowercase()
@@ -45,29 +76,27 @@ class CurrencyCommandRegistry(private val plugin: LuminaCore) {
             }
         }
         val command = CurrencyDynamicCommand(normalized, safeAliases, executor, completer)
-        map.register(plugin.description.name.lowercase(), command)
-        commands[normalized] = command
+        withLock {
+            map.register(plugin.description.name.lowercase(), command)
+            commands[normalized] = command
+        }
         return true
     }
 
     fun unregisterAll() {
-        val known = knownCommands()
-        commands.forEach { (name, command) ->
-            val keys = listOf(name, "${plugin.description.name.lowercase()}:$name") + command.aliases.flatMap { listOf(it.lowercase(), "${plugin.description.name.lowercase()}:${it.lowercase()}") }
-            keys.forEach { key -> if (known?.get(key) === command) known.remove(key) }
-            command.unregister(map)
+        withLock {
+            val known = knownCommands()
+            if (known != null) {
+                commands.forEach { (name, command) ->
+                    val keys = listOf(name, "${plugin.description.name.lowercase()}:$name") + command.aliases.flatMap { listOf(it.lowercase(), "${plugin.description.name.lowercase()}:${it.lowercase()}") }
+                    keys.forEach { key -> if (known[key] === command) known.remove(key) }
+                    command.unregister(map)
+                }
+            } else {
+                commands.forEach { (_, command) -> command.unregister(map) }
+            }
+            commands.clear()
         }
-        commands.clear()
-    }
-
-    fun sync() {
-        syncTask?.cancel()
-        syncTask = plugin.server.globalRegionScheduler.runDelayed(plugin, { _ ->
-            try {
-                Bukkit.getServer().javaClass.getMethod("syncCommands").invoke(Bukkit.getServer())
-            } catch (_: Exception) { }
-            syncTask = null
-        }, 1L)
     }
 }
 

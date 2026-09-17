@@ -129,6 +129,7 @@ class LuminaCore : JavaPlugin() {
         // เริ่มระบบจัดการโมดูล
         moduleManager = ModuleManager(this)
         moduleManager?.loadModules()
+        commandManager?.syncServerCommands()
 
         if (!isStandalone) {
             // ลงทะเบียนคำสั่งและ alias ทั้งหมด
@@ -151,6 +152,8 @@ class LuminaCore : JavaPlugin() {
             getCommand("setting")?.setExecutor(settingsExecutor)
             getCommand("settings")?.setExecutor(settingsExecutor)
 
+            // ลงทะเบียน Listener สำหรับ GUI ส่วนกลาง
+            server.pluginManager.registerEvents(core.luminaworld.gui.LuminaGUIListener(this), this)
             // ลงทะเบียน Listener ส่วนกลางในการดักฟังปุ่มลัดการกดย่อตัว
             server.pluginManager.registerEvents(core.luminaworld.listener.SneakTriggerListener(this), this)
             // ลงทะเบียน Listener ตรวจเช็คการแจ้งเตือนอัปเดตแก่ผู้เล่นที่เข้าเซิร์ฟเวอร์
@@ -178,6 +181,7 @@ class LuminaCore : JavaPlugin() {
 
         // ปิดและล้างคำสั่งไดนามิกทั้งหมด
         commandManager?.unregisterAll()
+        commandManager?.syncServerCommands()
         commandManager = null
 
         // ปิดระบบฐานข้อมูลกลาง

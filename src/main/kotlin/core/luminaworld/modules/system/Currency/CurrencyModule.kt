@@ -68,7 +68,6 @@ class CurrencyModule(plugin: LuminaCore) : LuminaModule(plugin, "Currency") {
         commandRegistry.register(leadCmdName, leadCmdAliases, leadCmd, leadCmd)
 
         registerCurrencyCommands(currencies, payCmd)
-        commandRegistry.sync()
         LuminaPlaceholderManager.register("currency") { player, params -> placeholder(player, params) }
 
         Bukkit.getOnlinePlayers().forEach(service::preload)
@@ -81,7 +80,6 @@ class CurrencyModule(plugin: LuminaCore) : LuminaModule(plugin, "Currency") {
     override fun onDisable() {
         leaderboardTask?.cancel(); leaderboardTask = null
         commandRegistry.unregisterAll()
-        commandRegistry.sync()
         LuminaPlaceholderManager.unregister("currency")
         service.clearCache()
         if (plugin.currencyService === service) plugin.currencyService = null

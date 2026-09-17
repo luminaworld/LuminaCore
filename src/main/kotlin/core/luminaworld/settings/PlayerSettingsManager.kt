@@ -66,7 +66,7 @@ object PlayerSettingsManager : Listener {
         this.plugin = plugin
         plugin.server.pluginManager.registerEvents(this, plugin)
         
-        // สร้างตารางในฐานข้อมูลแบบ Async
+        // สร้างตารางในฐานข้อมูลแบบ Async และโหลดข้อมูลผู้เล่นที่ออนไลน์อยู่ทันที
         plugin.databaseService?.runAsync { conn ->
             val sql = """
                 CREATE TABLE IF NOT EXISTS $settingsTable (
@@ -78,6 +78,37 @@ object PlayerSettingsManager : Listener {
             """.trimIndent()
             conn.createStatement().use { stmt ->
                 stmt.execute(sql)
+            }
+            loadOnlinePlayersSettings()
+        }
+    }
+
+    /**
+     * โหลดข้อมูลการตั้งค่าสำหรับผู้เล่นทุกคนที่เชื่อมต่ออยู่บนเซิร์ฟเวอร์
+     */
+    fun loadOnlinePlayersSettings() {
+        for (player in org.bukkit.Bukkit.getOnlinePlayers()) {
+            loadPlayerSettings(player)
+        }
+    }
+
+    /**
+     * โหลดข้อมูลการตั้งค่าของผู้เล่นเฉพาะคนลงสู่แคช
+     */
+    fun loadPlayerSettings(player: Player) {
+        val uuid = player.uniqueId
+        plugin.databaseService?.runAsync { conn ->
+            val sql = "SELECT setting_key, setting_value FROM $settingsTable WHERE uuid = ?;"
+            conn.prepareStatement(sql).use { ps ->
+                ps.setString(1, uuid.toString())
+                val rs = ps.executeQuery()
+                val playerSettings = ConcurrentHashMap<String, Boolean>()
+                while (rs.next()) {
+                    val key = rs.getString("setting_key").lowercase()
+                    val value = rs.getString("setting_value").toBoolean()
+                    playerSettings[key] = value
+                }
+                settingsCache[uuid] = playerSettings
             }
         }
     }
@@ -155,23 +186,7 @@ object PlayerSettingsManager : Listener {
 
     @EventHandler
     fun onPlayerJoin(event: PlayerJoinEvent) {
-        val player = event.player
-        val uuid = player.uniqueId
-        
-        plugin.databaseService?.runAsync { conn ->
-            val sql = "SELECT setting_key, setting_value FROM $settingsTable WHERE uuid = ?;"
-            conn.prepareStatement(sql).use { ps ->
-                ps.setString(1, uuid.toString())
-                val rs = ps.executeQuery()
-                val playerSettings = ConcurrentHashMap<String, Boolean>()
-                while (rs.next()) {
-                    val key = rs.getString("setting_key").lowercase()
-                    val value = rs.getString("setting_value").toBoolean()
-                    playerSettings[key] = value
-                }
-                settingsCache[uuid] = playerSettings
-            }
-        }
+        loadPlayerSettings(event.player)
     }
 
     @EventHandler

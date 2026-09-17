@@ -79,7 +79,7 @@ class ModuleManager(private val plugin: LuminaCore) {
                                         plugin.logger.warning("[LuminaCore] Duplicate module name detected: '${module.name}' from class $className — skipped.")
                                     }
                                 }
-                            } catch (e: Exception) {
+                            } catch (e: Throwable) {
                                 plugin.logger.severe("[LuminaCore] Failed to load module class: $className - ${e.message}")
                             }
                         }

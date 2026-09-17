@@ -13,7 +13,7 @@ abstract class LuminaModule(val plugin: LuminaCore, val name: String) : Listener
     var isEnabled: Boolean = false
     var config: YamlConfiguration? = null
         protected set
-    val configFile: File by lazy {
+    open val configFile: File by lazy {
         val classPackage = javaClass.`package`.name
         val category = when {
             classPackage.contains(".modules.system") -> "system"
@@ -69,6 +69,18 @@ abstract class LuminaModule(val plugin: LuminaCore, val name: String) : Listener
 
     abstract fun onEnable()
     abstract fun onDisable()
+
+    /**
+     * บันทึกการตั้งค่าลงไฟล์คอนฟิกย่อยประจำโมดูล
+     */
+    fun saveConfig() {
+        val cfg = config ?: return
+        try {
+            cfg.save(configFile)
+        } catch (e: Exception) {
+            plugin.logger.severe("Failed to save configuration for module $name: ${e.message}")
+        }
+    }
 
     /**
      * ล้าง ActionBar Task ของผู้เล่นที่ออกจากเซิร์ฟเวอร์เพื่อป้องกัน Memory Leak
